@@ -65,5 +65,6 @@ function onError(error) {
 function onListening() {
     let addr = server.address();
     let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    console.log('NodeJS server started at port ' + addr.port + '...');
     debug('Listening on ' + bind);
 }
