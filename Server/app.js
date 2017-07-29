@@ -6,11 +6,18 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const express_session = require('express-session');
 
+const models = require('./models');
+models.sequelize.sync({
+    force: true
+});
+
 const server_routes = {
     index: require('./routes/index'),
     users: require('./routes/users'),
     stats: require('./routes/stats'),
-    routes_api: require('./routes/stats')
+    api: require('./routes/api'),
+    api_auth: require('./routes/api_auth'),
+    api_contacts: require('./routes/api_contacts')
 };
 
 let app = express();
@@ -34,7 +41,9 @@ app.use(express_session({
 app.use('/', server_routes.index);
 app.use('/users', server_routes.users);
 app.use('/stats', server_routes.stats);
-app.use('/api', server_routes.routes_api);
+app.use('/api', server_routes.api);
+app.use('/api/auth', server_routes.api_auth);
+app.use('/api/contact', server_routes.api_contacts);
 
 app.use(function (req, res, next) {
     let err = new Error('Not Found');
