@@ -7,9 +7,7 @@ const bodyParser = require('body-parser');
 const express_session = require('express-session');
 
 const models = require('./models');
-models.sequelize.sync({
-    force: true
-});
+models.sequelize.sync();
 
 const server_routes = {
     index: require('./routes/index'),
@@ -17,7 +15,8 @@ const server_routes = {
     stats: require('./routes/stats'),
     api: require('./routes/api'),
     api_auth: require('./routes/api_auth'),
-    api_contacts: require('./routes/api_contacts')
+    api_contacts: require('./routes/api_contacts'),
+    fill: require('./routes/fill')
 };
 
 let app = express();
@@ -44,6 +43,7 @@ app.use('/stats', server_routes.stats);
 app.use('/api', server_routes.api);
 app.use('/api/auth', server_routes.api_auth);
 app.use('/api/contact', server_routes.api_contacts);
+app.use('/api/fill', server_routes.fill);
 
 app.use(function (req, res, next) {
     let err = new Error('Not Found');

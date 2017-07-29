@@ -5,14 +5,17 @@ const models = require('../models');
 const User = models.User;
 const Contact = models.Contact;
 
-router.get('/contact/request/:id_user_to_request', function(req, res) {
+router.get('/request/:id_user_to_request', function(req, res) {
     res.type('json');
 
-    let idUser = req.body.id_user_to_request || 0;
+    let idUser = parseInt(req.params.id_user_to_request) || 0;
     if (idUser === 0)
         res.json({err: 'ERR_ID_USER_NOT_PROVIDED', content: {}});
-
     let sess = req.session;
+    if (sess.email)
+        if (sess.userid === idUser)
+            res.json({err: 'ERR_NOT_REQUEST_YOURSELF', content: {}});
+
     if (sess.email) {
         User.find({
             where: { email: sess.email }
@@ -20,23 +23,39 @@ router.get('/contact/request/:id_user_to_request', function(req, res) {
             User.find({
                 where: { userid: idUser }
             }).then(user_requested => {
-                Contact.create({
-                    user: user,
-                    contact: user_requested,
-                    status: 'PENDING'
+                Contact.find({
+                    where: { user: user.userid, contact: user_requested.userid }
                 }).then(contact => {
-                    res.json({ USER_A: contact.user, USER_B: contact.contact, STATUS: contact.status });
-                }).catch(err => { res.json({err: 'ERR_CONTACT_CREATE', content: err}); });
+                    if (!contact) {
+                        Contact.find({
+                            where: { user: user_requested.userid, contact: user.userid }
+                        }).then(contact => {
+                            if (!contact) {
+                                Contact.create({
+                                    user: user,
+                                    contact: user_requested,
+                                    status: 'PENDING'
+                                }).then(contact => {
+                                    res.json({ userA: contact.user, userB: contact.contact, status: contact.status });
+                                }).catch(err => { res.json({err: 'ERR_CONTACT_CREATE', content: err}); });
+                            } else
+                                res.json({err: 'ERR_EXISTING_CONTACT', content: {}});
+                        }).catch(err => {
+                            res.json({err: 'ERR_CONTACT_FIND', content: err});
+                        });
+                    } else
+                        res.json({err: 'ERR_EXISTING_CONTACT', content: {}});
+                }).catch(err => { res.json({err: 'ERR_CONTACT_FIND', content: err}); });
             }).catch(err => { res.json({err: 'ERR_USER_FIND_ALL', content: err}); });
         }).catch(err => { res.json({err: 'ERR_USER_FIND', content: err}); });
     } else
         res.json({err: 'ERR_USER_NOT_CONNECTED', content: {}});
 });
 
-router.get('/contact/accept/:id_user_to_accept', function(req, res) {
+router.get('/accept/:id_user_to_accept', function(req, res) {
     res.type('json');
 
-    let idUser = req.body.id_user_to_accept || 0;
+    let idUser = parseInt(req.params.id_user_to_accept) || 0;
     if (idUser === 0)
         res.json({err: 'ERR_ID_USER_NOT_PROVIDED', content: {}});
 
@@ -65,7 +84,7 @@ router.get('/contact/accept/:id_user_to_accept', function(req, res) {
         res.json({err: 'ERR_USER_NOT_CONNECTED', content: {}});
 });
 
-router.get('/contact/get/:id_user_for_contact', function(req, res) {
+router.get('/get/:id_user_for_contact', function(req, res) {
     res.type('json');
 
     let idUser = req.body.id_user_for_contact || 0;
