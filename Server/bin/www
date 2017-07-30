@@ -26,6 +26,11 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
+ * Initialization of socket
+ */
+server.on('connection', onConnection);
+
+/**
  * Normalize a port into a number, string, or false.
  */
 function normalizePort(val) {
@@ -57,6 +62,15 @@ function onError(error) {
         default:
             throw error;
     }
+}
+
+/**
+ * Socket management
+ */
+function onConnection(socket) {
+    socket.on('data', socketOnData(data));
+    socket.on('close', socketOnClose(data));
+    socket.on('error', socketOnError(data));
 }
 
 /**
