@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import slyx.communication.API_auth;
+import slyx.communication.SlyxSocket;
 import slyx.utils.User;
 import slyx.validators.Validator;
 
@@ -38,6 +39,9 @@ public class LoginController {
     public void launch_next_screen() throws IOException {
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
 
+        SlyxSocket.init();
+        System.out.println(SlyxSocket.read());
+
         String u_email = tf_email.getText();
         String u_pwd = tf_password.getText();
 
@@ -47,11 +51,9 @@ public class LoginController {
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
             User u = API_auth.connect(u_email, u_pwd);
-
             if (u.isConnected()) {
                 Stage stage = (Stage) btn_sign_in.getScene().getWindow();
                 stage.close();
-
                 Stage next_stage = new Stage();
                 next_stage.setTitle("Slyx");
                 next_stage.setScene(new Scene(next_root));
@@ -60,5 +62,7 @@ public class LoginController {
                 label_error_hint.setText(getError(ERR_CONNECTION));
             }
         }
+    }
+    public void initialize() {
     }
 }

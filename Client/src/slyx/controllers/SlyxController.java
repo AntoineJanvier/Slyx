@@ -3,13 +3,16 @@ package slyx.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import slyx.communication.API_contact;
+import slyx.communication.SlyxSocket;
 import slyx.utils.User;
 
 import java.io.IOException;
@@ -29,6 +32,19 @@ public class SlyxController {
     Button btn_send_message;
     @FXML
     TextArea ta_message_to_send;
+    @FXML
+    Button btn_disconnection;
+
+    public void disconnect() throws IOException {
+        SlyxSocket.close();
+        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
+        Stage stage = (Stage) btn_disconnection.getScene().getWindow();
+        stage.close();
+        Stage next_stage = new Stage();
+        next_stage.setTitle("Slyx");
+        next_stage.setScene(new Scene(next_root));
+        next_stage.show();
+    }
 
     public void initialize() throws IOException {
         User[] contacts = API_contact.getContacts(1);

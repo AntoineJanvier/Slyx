@@ -20,7 +20,6 @@ public class User {
         this.setEmail(email);
         this.setGender(gender);
         this.setPassword(password);
-
         this.setConnected(false);
     }
 
@@ -36,7 +35,6 @@ public class User {
     public void setGender(Gender gender) { this.gender = gender; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
     public boolean isConnected() { return isConnected; }
     public void setConnected(boolean connected) { isConnected = connected; }
 }

@@ -6,12 +6,15 @@
 let app = require('../app');
 let debug = require('debug')('server:server');
 let http = require('http');
+let nodenet = require('net');
+const socketManagement = require('../socket_management');
 
 /**
  * Get port from environment and store in Express.
  */
 let port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+const socketPort = 3895;
 
 /**
  * Create HTTP server.
@@ -23,12 +26,38 @@ let server = http.createServer(app);
  */
 server.listen(port);
 server.on('error', onError);
+
+let nodeSocket = nodenet.createServer((socket) => {
+    console.log('Client connected');
+
+    socket.on('data', function(data) {
+        socketManagement.socketOnData(data, socket);
+    });
+    socket.on('end', function() {
+        socketManagement.socketOnEnd();
+    });
+    socket.on('close', function() {
+        socketManagement.socketOnClose();
+    });
+    socket.on('error', function(err) {
+        socketManagement.socketOnError(err);
+    });
+});
+
 server.on('listening', onListening);
 
 /**
  * Initialization of socket
  */
-server.on('connection', onConnection);
+// nodeSocket.on('connection', function (socket) {
+
+//
+// });
+
+nodeSocket.listen(socketPort, function () {
+    console.log('Socket server started at port ' + socketPort + '...');
+    console.log();
+});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -62,15 +91,6 @@ function onError(error) {
         default:
             throw error;
     }
-}
-
-/**
- * Socket management
- */
-function onConnection(socket) {
-    socket.on('data', socketOnData(data));
-    socket.on('close', socketOnClose(data));
-    socket.on('error', socketOnError(data));
 }
 
 /**
