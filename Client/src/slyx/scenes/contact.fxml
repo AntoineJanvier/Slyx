@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+
+<AnchorPane prefHeight="60.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactController">
+   <children>
+      <WebView fx:id="webView_contact_icon" layoutX="110.0" layoutY="10.0" prefHeight="40.0" prefWidth="40.0" />
+      <Label fx:id="label_firstname" layoutX="7.0" layoutY="9.0" text="Firstname">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_lastname" layoutX="7.0" layoutY="27.0" text="Lastname">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="7.0" layoutY="48.0" text="Online">
+         <font>
+            <Font name="System Italic" size="8.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

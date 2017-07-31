@@ -12,10 +12,10 @@
         <HBox fx:id="hBox_top" prefHeight="92.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
     </top>
     <left>
-        <VBox fx:id="vBox_left" alignment="TOP_RIGHT" prefHeight="348.0" prefWidth="154.0" BorderPane.alignment="CENTER" />
+        <VBox fx:id="vBox_left" alignment="TOP_RIGHT" prefHeight="350.0" prefWidth="160.0" BorderPane.alignment="CENTER" />
     </left>
     <bottom>
-        <HBox prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <HBox fx:id="hBox_bottom" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
                 <Pane prefHeight="62.0" prefWidth="260.0" />
                 <TextArea fx:id="ta_message_to_send" prefHeight="62.0" prefWidth="283.0" />

@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
@@ -10,12 +11,13 @@
 <AnchorPane fx:id="anchorPane_general" prefHeight="271.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.LoginController">
     <children>
         <Label fx:id="label_connection" layoutX="79.0" layoutY="14.0" text="Connection to Slyx" />
-        <TextField fx:id="tf_email" layoutX="55.0" layoutY="46.0" text="Email" />
-        <TextField fx:id="tf_password" layoutX="55.0" layoutY="83.0" text="Password" />
+        <TextField fx:id="tf_email" layoutX="55.0" layoutY="46.0" promptText="Email" />
+      <PasswordField fx:id="tf_password" layoutX="55.0" layoutY="88.0" promptText="password" />
         <Button fx:id="btn_sign_in" layoutX="109.0" layoutY="132.0" mnemonicParsing="false" onAction="#launch_next_screen" text="Sign In" />
         <Line endX="100.0" layoutX="140.0" layoutY="182.0" startX="-100.0" />
         <Hyperlink fx:id="hyperlink_sign_up" layoutX="133.0" layoutY="206.0" text="Sign Up" />
         <Label layoutX="48.0" layoutY="210.0" text="No account ?" />
         <Label layoutX="191.0" layoutY="210.0" text="now !" />
+      <Label fx:id="label_error_hint" layoutX="48.0" layoutY="241.0" />
     </children>
 </AnchorPane>
