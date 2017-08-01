@@ -36,11 +36,10 @@ public class LoginController {
     Label label_error_hint;
 
     @FXML
-    public void launch_next_screen() throws IOException {
+    public void launch_next_screen() throws Exception {
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
 
-        SlyxSocket.init();
-        System.out.println(SlyxSocket.read());
+        SlyxSocket socket =  SlyxSocket.getInstance();
 
         String u_email = tf_email.getText();
         String u_pwd = tf_password.getText();
@@ -50,7 +49,8 @@ public class LoginController {
         else if (!Validator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
-            User u = API_auth.connect(u_email, u_pwd);
+            API_auth api_auth = new API_auth();
+            User u = api_auth.sendConnectionRequest(u_email, u_pwd);
             if (u.isConnected()) {
                 Stage stage = (Stage) btn_sign_in.getScene().getWindow();
                 stage.close();
@@ -64,5 +64,6 @@ public class LoginController {
         }
     }
     public void initialize() {
+
     }
 }

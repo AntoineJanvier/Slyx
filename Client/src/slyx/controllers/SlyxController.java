@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import slyx.communication.API_auth;
 import slyx.communication.API_contact;
 import slyx.communication.SlyxSocket;
 import slyx.utils.User;
@@ -36,7 +37,12 @@ public class SlyxController {
     Button btn_disconnection;
 
     public void disconnect() throws IOException {
-        SlyxSocket.close();
+        API_auth api_auth = new API_auth();
+        try {
+            api_auth.sendDisconnectionRequest();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         Stage stage = (Stage) btn_disconnection.getScene().getWindow();
         stage.close();
@@ -47,6 +53,7 @@ public class SlyxController {
     }
 
     public void initialize() throws IOException {
+        SlyxSocket socket = SlyxSocket.getInstance();
         User[] contacts = API_contact.getContacts(1);
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));

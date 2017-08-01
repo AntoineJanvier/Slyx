@@ -19,7 +19,14 @@ module.exports = (sequelize, DataTypes) => {
             freezeTableName: true
         });
     User.prototype.responsify = function () {
-        return {name: this.userid + ' : ' + this.first_name + ' ' + this.last_name, email: this.email, age: this.age};
+        return {
+            type: 'user',
+            id: this.userid,
+            firstname: this.first_name,
+            lastname: this.last_name,
+            age: this.age,
+            email: this.email
+        };
     };
     return User;
 };

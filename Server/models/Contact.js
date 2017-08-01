@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     Contact.prototype.responsify = function () {
         return {
+            type: 'contact',
             USER: this.user.responsify(),
             CONTACT: this.contact.responsify(),
             STATUS: this.status

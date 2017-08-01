@@ -1,6 +1,7 @@
 package slyx.communication;
 
 import slyx.utils.Gender;
+import slyx.utils.Jison;
 import slyx.utils.User;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,51 +18,66 @@ import static slyx.utils.Gender.MALE;
  * on 31/07/17.
  */
 public class API_auth {
+    private final String USER_AGENT = "Mozilla/5.0";
+    private final String port = "3000";
+    private final String route = "http://127.0.0.1:"+ this.port +"/api/auth";
+
+    public API_auth() {
+    }
+
     public static User connect(String email, String password) {
-        User u = new User("Antoine", "Janvier", 21, "antoine@janvier.com", MALE, "tototiti");
+        User u = new User(1, "Antoine", "Janvier", 21, "antoine@janvier.com", MALE, "tototiti");
         u.setConnected(true);
         return u;
     }
-    // HTTP POST request
 
+    public void sendDisconnectionRequest() throws Exception {
+        URL url = new URL(this.route + "/sign_out");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        rd.close();
+    }
 
-    public static void sendConnectionRequest(String email, String password) throws Exception {
-        final String USER_AGENT = "Mozilla/5.0";
-        String url = "http://127.0.0.1:3000/api/auth/sign_in";
+    public User sendConnectionRequest(String email, String password) throws Exception {
+        /*
+        URL
+         */
+        String url = this.route + "/sign_in";
         URL obj = new URL(url);
+        /*
+        Connection
+         */
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        //add reuqest header
+        /*
+        Set request parameters
+         */
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
         String urlParameters = "email=" + email + "&pwd=" + password;
-
-        // Send post request
         con.setDoOutput(true);
+        /*
+        Data output
+         */
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
         wr.writeBytes(urlParameters);
         wr.flush();
         wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        /*
+        Data input
+         */
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
-
+        StringBuilder response = new StringBuilder();
+        /*
+        Read
+         */
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
         in.close();
-
-        //print result
-        System.out.println(response.toString());
-
+        Jison j = new Jison(response.toString());
+        return new User();
     }
 }

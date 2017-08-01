@@ -24,14 +24,22 @@ let server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+let clients = [];
+
 server.listen(port);
 server.on('error', onError);
 
-let nodeSocket = nodenet.createServer((socket) => {
+let nodeSocket = nodenet.createServer();
+nodeSocket.on('connection', function (socket) {
+
+    clients.push(socket);
+    socket.write('Hello\n');
+
     console.log('Client connected');
 
     socket.on('data', function(data) {
-        socketManagement.socketOnData(data, socket);
+        socketManagement.socketOnData(data, socket)
     });
     socket.on('end', function() {
         socketManagement.socketOnEnd();

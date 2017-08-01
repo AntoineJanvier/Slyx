@@ -60,7 +60,7 @@ router.post('/sign_in', (req, res) => {
                         sess.last_name = user.last_name;
                         sess.age = user.age;
                         sess.email = user.email;
-                        res.json({User: user.responsify()});
+                        res.json(user.responsify());
                     } else
                         res.json({err: 'ERR_BAD_LOGIN_INPUT', content: {}});
                 } else

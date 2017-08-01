@@ -1,39 +1,105 @@
 package slyx.communication;
 
-import jdk.nashorn.internal.parser.JSONParser;
-import slyx.exceptions.SocketConnectionException;
+import slyx.libs.JSONObject;
+import slyx.utils.Call;
+import slyx.utils.Gender;
+import slyx.utils.User;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ConnectException;
+import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  * Created by Antoine Janvier
  * on 31/07/17.
  */
 public class SlyxSocket extends Thread {
-    private static Socket socket;
+    private Socket socket;
+    private BufferedReader bufferedReader;
+    private PrintWriter printWriter;
 
-    public static void init() throws IOException {
-        socket = new Socket(getIpAddress(), getPort());
+    public JSONObject jsonObject;
+
+    public HashMap<Integer, User> contacts;
+
+    private static SlyxSocket instance = null;
+
+    private SlyxSocket() throws IOException {
+        this.socket = new Socket(getIpAddress(), getPort());
+        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.printWriter = new PrintWriter(socket.getOutputStream(), true);
+        contacts = null;
+        this.start();
     }
 
-    public static void write(String message) throws IOException {
-        PrintWriter printWriter = new PrintWriter(getSocket().getOutputStream(), true);
+    public static SlyxSocket getInstance() throws IOException {
+        if (instance == null)
+            instance = new SlyxSocket();
+        return instance;
+    }
+
+    @Override
+    public void run() {
+        super.run();
+
+        while(!this.isInterrupted()) {
+            try {
+                jsonObject = new JSONObject(bufferedReader.readLine());
+                if (jsonObject.has("type")) {
+                    switch (jsonObject.get("type").toString()) {
+                        case "user":
+                            User new_user = new User(
+                                    jsonObject.getInt("id"),
+                                    jsonObject.getString("firstname"),
+                                    jsonObject.getString("lastname"),
+                                    jsonObject.getInt("age"),
+                                    jsonObject.getString("email"),
+                                    Gender.MALE
+                            );
+                            contacts.put(contacts.size() + 1, new_user);
+                            break;
+                        case "call":
+                            Call new_call = new Call(
+                                    new User(
+                                            jsonObject.getInt("id"),
+                                            jsonObject.getString("firstname"),
+                                            jsonObject.getString("lastname"),
+                                            jsonObject.getInt("age"),
+                                            jsonObject.getString("email"),
+                                            Gender.MALE
+                                    ),
+                                    new User(
+                                            jsonObject.getInt("id"),
+                                            jsonObject.getString("firstname"),
+                                            jsonObject.getString("lastname"),
+                                            jsonObject.getInt("age"),
+                                            jsonObject.getString("email"),
+                                            Gender.MALE
+                                    )
+                            )
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void write(String message) throws IOException {
         printWriter.print(message);
     }
-    public static String read() {
-        return "Bonjour";
+    public String read() throws IOException {
+        return bufferedReader.readLine();
     }
-    public static void close() throws IOException {
+    public void close() throws IOException {
         socket.close();
     }
-
-    private static Socket getSocket() { return socket; }
-    private static void setSocket(Socket socket) { socket = socket; }
-    private static String getIpAddress() { return "localhost"; }
-    private static int getPort() { return 3895; }
+    public Socket getSocket() { return this.socket; }
+    public BufferedReader getBufferedReader() { return bufferedReader; }
+    public PrintWriter getPrintWriter() { return printWriter; }
+    public String getIpAddress() { return "127.0.0.1"; }
+    public int getPort() { return 3895; }
+    public void setSocket(Socket socket) { this.socket = socket; }
+    public void setBufferedReader(BufferedReader bufferedReader) { this.bufferedReader = bufferedReader; }
+    public void setPrintWriter(PrintWriter printWriter) { this.printWriter = printWriter; }
 }

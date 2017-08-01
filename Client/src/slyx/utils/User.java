@@ -5,6 +5,7 @@ package slyx.utils;
  * on 31/07/17.
  */
 public class User {
+    private int id;
     private String firstname;
     private String lastname;
     private int age;
@@ -13,16 +14,30 @@ public class User {
     private String password;
     private boolean isConnected;
 
-    public User(String firstname, String lastname, int age, String email, Gender gender, String password) {
-        this.setFirstname(firstname);
-        this.setLastname(lastname);
-        this.setAge(age);
-        this.setEmail(email);
-        this.setGender(gender);
-        this.setPassword(password);
+    public User() {
+    }
+    public User(int id, String firstname, String lastname, int age, String email, Gender gender) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.age = age;
+        this.email = email;
+        this.gender = gender;
+        this.setConnected(false);
+    }
+    public User(int id, String firstname, String lastname, int age, String email, Gender gender, String password) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.age = age;
+        this.email = email;
+        this.gender = gender;
+        this.password = password;
         this.setConnected(false);
     }
 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getFirstname() { return firstname; }
     public void setFirstname(String firstname) { this.firstname = firstname; }
     public String getLastname() { return lastname; }

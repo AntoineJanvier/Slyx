@@ -1,8 +1,8 @@
 module.exports = {
     socketOnData: function (data, socket) {
         console.log('SOCKET_ON_DATA');
-        console.log(JSON.parse(data));
-        socket.write("bonjour");
+        let o = JSON.parse(data);
+        console.log(o);
     },
     socketOnClose: function() {
         console.log('SOCKET_ON_CLOSE');
