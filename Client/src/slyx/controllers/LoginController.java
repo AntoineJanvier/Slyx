@@ -9,10 +9,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import slyx.communication.API_auth;
 import slyx.communication.SlyxSocket;
+import slyx.libs.JSONObject;
+import slyx.utils.Me;
 import slyx.utils.User;
 import slyx.validators.Validator;
 
 import java.io.IOException;
+import java.util.Date;
 
 import static slyx.exceptions.SlyxError.ERR_CONNECTION;
 import static slyx.exceptions.SlyxError.ERR_EMAIL;
@@ -50,8 +53,12 @@ public class LoginController {
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
             API_auth api_auth = new API_auth();
-            User u = api_auth.sendConnectionRequest(u_email, u_pwd);
-            if (u.isConnected()) {
+            socket.sendConnectionRequest(u_email, u_pwd);
+
+            Me me = Me.getInstance();
+            System.out.println(me.toString());
+            if (me.isConnected()) {
+
                 Stage stage = (Stage) btn_sign_in.getScene().getWindow();
                 stage.close();
                 Stage next_stage = new Stage();
@@ -64,6 +71,5 @@ public class LoginController {
         }
     }
     public void initialize() {
-
     }
 }

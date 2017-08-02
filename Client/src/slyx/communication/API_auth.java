@@ -1,7 +1,10 @@
 package slyx.communication;
 
+import slyx.jsonsimple.*;
+import slyx.jsonsimple.parser.*;
 import slyx.utils.Gender;
 import slyx.utils.Jison;
+import slyx.utils.Me;
 import slyx.utils.User;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -77,7 +80,25 @@ public class API_auth {
             response.append(inputLine);
         }
         in.close();
-        Jison j = new Jison(response.toString());
-        return new User();
+
+        JSONParser jsonParser = new JSONParser();
+
+        Object o = jsonParser.parse(response.toString());
+        JSONObject j = (JSONObject) o;
+
+//        System.out.println(response.toString());
+//        System.out.println(j);
+//        System.out.println(j.get("firstname"));
+
+        Me me = new Me(
+                Math.toIntExact((long) j.get("id")),
+                j.get("firstname").toString(),
+                j.get("lastname").toString(),
+                Math.toIntExact((long) j.get("age")),
+                j.get("email").toString()
+                );
+        me.setConnected(true);
+        System.out.println(me.toString());
+        return me;
     }
 }

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import slyx.communication.API_auth;
 import slyx.communication.API_contact;
 import slyx.communication.SlyxSocket;
+import slyx.utils.Me;
 import slyx.utils.User;
 
 import java.io.IOException;
@@ -37,6 +38,8 @@ public class SlyxController {
     Button btn_disconnection;
 
     public void disconnect() throws IOException {
+        Me me = Me.getInstance();
+        me.setNULL();
         API_auth api_auth = new API_auth();
         try {
             api_auth.sendDisconnectionRequest();

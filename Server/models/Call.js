@@ -11,23 +11,30 @@ module.exports = (sequelize, DataTypes) => {
         underscored: true,
         freezeTableName: true,
     });
-    Call.associate = function (models) {
-        Call.hasOne(models.User, {
-            foreignKey: 'from'
-        });
-        Call.hasOne(models.User, {
-            foreignKey: 'to'
-        });
-    };
+    // Call.associate = function (models) {
+    //     Call.hasOne(models.User, {
+    //         foreignKey: 'from'
+    //     });
+    //     Call.hasOne(models.User, {
+    //         foreignKey: 'to'
+    //     });
+    // };
     Call.prototype.responsify = function () {
         return {
-            type: 'call',
+            type: 'CALL',
             from: this.from.responsify(),
             to: this.to.responsify(),
             begin: this.begin,
             end: this.end,
             duration: this.duration
         };
+    };
+    Call.prototype.inlineResponse = function () {
+        return 'CALL;' +
+            this.id + ';' +
+            this.begin + ';' +
+            this.end + ';' +
+            this.duration + '\n';
     };
     return Call;
 };

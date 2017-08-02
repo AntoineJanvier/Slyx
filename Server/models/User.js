@@ -20,13 +20,21 @@ module.exports = (sequelize, DataTypes) => {
         });
     User.prototype.responsify = function () {
         return {
-            type: 'user',
+            type: 'USER',
             id: this.userid,
             firstname: this.first_name,
             lastname: this.last_name,
             age: this.age,
             email: this.email
         };
+    };
+    User.prototype.inlineResponse = function () {
+        return 'USER;' +
+            this.id + ';' +
+            this.first_name + ';' +
+            this.last_name + ';' +
+            this.age + ';' +
+            this.email + '\n';
     };
     return User;
 };

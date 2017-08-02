@@ -8,6 +8,7 @@ let debug = require('debug')('server:server');
 let http = require('http');
 let nodenet = require('net');
 const socketManagement = require('../socket_management');
+const clientHandler = require('../clientRequestManager');
 
 /**
  * Get port from environment and store in Express.
@@ -30,42 +31,72 @@ let clients = [];
 server.listen(port);
 server.on('error', onError);
 
-let nodeSocket = nodenet.createServer();
-nodeSocket.on('connection', function (socket) {
+nodenet.createServer(function (socket) {
+    console.log('SOCKET_CONNECTED');
+    // socket.write(JSON.stringify({ status: 'ok' }));
 
-    clients.push(socket);
-    socket.write('Hello\n');
+    socket.on('data', function (data) {
 
-    console.log('Client connected');
+        let json = JSON.parse(data);
 
-    socket.on('data', function(data) {
-        socketManagement.socketOnData(data, socket)
+        let resp = clientHandler.handleClientRequest(json);
+        // console.log('RESPONSE : ');
+        console.log(resp);
+        console.log(resp);
+        console.log(resp.toString());
+        console.log(resp);
+
+        socket.write(resp + '\n');
     });
-    socket.on('end', function() {
-        socketManagement.socketOnEnd();
+    
+    socket.on('close', function () {
+        console.log('SOCKET_CLOSED');
     });
-    socket.on('close', function() {
-        socketManagement.socketOnClose();
+
+    socket.on('error', function (err) {
+        console.log('SOCKET_ERROR');
+        console.log(err);
     });
-    socket.on('error', function(err) {
-        socketManagement.socketOnError(err);
-    });
-});
+}).listen(socketPort, '127.0.0.1');
 
-server.on('listening', onListening);
-
-/**
- * Initialization of socket
- */
-// nodeSocket.on('connection', function (socket) {
-
+// let nodeSocket = nodenet.createServer();
 //
+// nodeSocket.on('connection', function (socket) {
+//
+//     clients.push(socket);
+//
+//     console.log('Client connected');
+//
+//     socket.write('{"status":"ok"}\n');
+//
+//     socket.on('data', function(data) {
+//         // socketManagement.socketOnData(data, socket)
+//         let o = JSON.parse(data);
+//         console.log('SOCKET_ON_DATA');
+//         console.log(o);
+//         socket.write(JSON.stringify({
+//             id: 4,
+//             firstname: 'Antoine',
+//             lastname: 'Janvier',
+//             age: 21,
+//             email: 'antoine.jan95@gmail.com'
+//         }));
+//     });
+//     socket.on('end', function() {
+//         socketManagement.socketOnEnd();
+//     });
+//     socket.on('close', function() {
+//         socketManagement.socketOnClose();
+//     });
+//     socket.on('error', function(err) {
+//         socketManagement.socketOnError(err);
+//     });
+// }).listen(socketPort, function () {
+//     console.log('Socket server started at port ' + socketPort + '...');
+//     console.log();
 // });
 
-nodeSocket.listen(socketPort, function () {
-    console.log('Socket server started at port ' + socketPort + '...');
-    console.log();
-});
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.

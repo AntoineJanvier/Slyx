@@ -23,5 +23,12 @@ module.exports = (sequelize, DataTypes) => {
             STATUS: this.status
         };
     };
+    Contact.prototype.inlineResponse = function () {
+        return 'CONTACT;' +
+            this.id + ';' +
+            this.status + ';' +
+            this.user.userid + ';' +
+            this.contact.userid + '\n';
+    };
     return Contact;
 };

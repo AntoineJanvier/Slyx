@@ -52,4 +52,18 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public boolean isConnected() { return isConnected; }
     public void setConnected(boolean connected) { isConnected = connected; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                ", password='" + password + '\'' +
+                ", isConnected=" + isConnected +
+                '}';
+    }
 }

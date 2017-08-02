@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
         underscored: true,
         freezeTableName: true,
     });
-    Message.associate = function (models) {
-        Message.hasOne(models.User, {
-            foreignKey: 'from'
-        });
-        Message.hasOne(models.User, {
-            foreignKey: 'to'
-        });
-    };
+    // Message.associate = function (models) {
+    //     Message.hasOne(models.User, {
+    //         foreignKey: 'from'
+    //     });
+    //     Message.hasOne(models.User, {
+    //         foreignKey: 'to'
+    //     });
+    // };
     Message.prototype.responsify = function () {
         return {
             type: 'message',
@@ -26,6 +26,14 @@ module.exports = (sequelize, DataTypes) => {
             sent: this.sent,
             content: this.content
         };
+    };
+    Message.prototype.inlineResponse = function () {
+        return 'MESSAGE;' +
+            this.id + ';' +
+            this.sent + ';' +
+            this.content + ';' +
+            this.from.userid + ';' +
+            this.to.userid + '\n';
     };
     return Message;
 };

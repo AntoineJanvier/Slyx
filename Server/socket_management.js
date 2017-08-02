@@ -1,3 +1,5 @@
+const db = require('./goGetInDB');
+
 module.exports = {
     socketOnData: function (data, socket) {
         console.log('SOCKET_ON_DATA');

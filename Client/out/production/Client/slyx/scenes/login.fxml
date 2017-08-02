@@ -8,16 +8,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="anchorPane_general" prefHeight="271.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.LoginController">
+<AnchorPane fx:id="anchorPane_general" prefHeight="275.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.LoginController">
     <children>
-        <Label fx:id="label_connection" layoutX="79.0" layoutY="14.0" text="Connection to Slyx" />
-        <TextField fx:id="tf_email" layoutX="55.0" layoutY="46.0" promptText="Email" />
-      <PasswordField fx:id="tf_password" layoutX="55.0" layoutY="88.0" promptText="password" />
-        <Button fx:id="btn_sign_in" layoutX="109.0" layoutY="132.0" mnemonicParsing="false" onAction="#launch_next_screen" text="Sign In" />
-        <Line endX="100.0" layoutX="140.0" layoutY="182.0" startX="-100.0" />
-        <Hyperlink fx:id="hyperlink_sign_up" layoutX="133.0" layoutY="206.0" text="Sign Up" />
-        <Label layoutX="48.0" layoutY="210.0" text="No account ?" />
-        <Label layoutX="191.0" layoutY="210.0" text="now !" />
+        <Label fx:id="label_connection" layoutX="239.0" layoutY="24.0" text="Connection to Slyx" />
+        <TextField fx:id="tf_email" layoutX="150.0" layoutY="54.0" prefHeight="26.0" prefWidth="300.0" promptText="Email" text="antoine.jan95@gmail.com" />
+      <PasswordField fx:id="tf_password" layoutX="150.0" layoutY="92.0" prefHeight="26.0" prefWidth="300.0" promptText="password" text="tototiti" />
+        <Button fx:id="btn_sign_in" layoutX="269.0" layoutY="138.0" mnemonicParsing="false" onAction="#launch_next_screen" text="Sign In" />
+        <Line endX="300.0" layoutX="200.0" layoutY="200.0" startX="-100.0" />
+        <Hyperlink fx:id="hyperlink_sign_up" layoutX="295.0" layoutY="217.0" text="Sign Up" />
+        <Label layoutX="210.0" layoutY="221.0" text="No account ?" />
+        <Label layoutX="353.0" layoutY="221.0" text="now !" />
       <Label fx:id="label_error_hint" layoutX="48.0" layoutY="241.0" />
     </children>
 </AnchorPane>
