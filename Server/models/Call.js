@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
         underscored: true,
         freezeTableName: true,
     });
-    // Call.associate = function (models) {
-    //     Call.hasOne(models.User, {
-    //         foreignKey: 'from'
-    //     });
-    //     Call.hasOne(models.User, {
-    //         foreignKey: 'to'
-    //     });
-    // };
+    Call.associate = function (models) {
+        Call.belongsTo(models.User, {
+            foreignKey: 'from'
+        });
+        Call.belongsTo(models.User, {
+            foreignKey: 'to'
+        });
+    };
     Call.prototype.responsify = function () {
         return {
             type: 'CALL',

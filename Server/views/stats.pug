@@ -4,4 +4,34 @@ block content
     include header
     section
         h1= title
-        p Welcome to #{title}
+        p Here you have all statistics for the Slyx app !
+        div.container
+            div.row
+                - if (nbUsers > 0)
+                    div.col-xs-12.col-md-6
+                        div.panel.panel-primary
+                            div.panel-heading <b>Users</b> <i>(total of #{nbUsers})</i>
+                            div.panel-body
+                                table.table.table-bordered
+                                    tr
+                                        th Firstname
+                                        th Lastname
+                                        th Email
+                                        - console.log(users)
+                                    each user in users
+                                        tr
+                                            td #{user.first_name}
+                                            td #{user.last_name}
+                                            td #{user.email}
+                    - if (nbMessages > 0)
+                        div.col-xs-12.col-md-6
+                            div.panel.panel-primary
+                                div.panel-heading <b>Messages</b>
+                                div.panel-body
+                                    p Total of <b>#{nbMessages} </b> messages.
+                    - if (nbCalls > 0)
+                        div.col-xs-12.col-md-6
+                            div.panel.panel-primary
+                                div.panel-heading <b>Calls</b>
+                                div.panel-body
+                                    p Total of <b>#{nbCalls} </b> calls.
