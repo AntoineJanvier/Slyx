@@ -52,13 +52,12 @@ public class LoginController {
         else if (!Validator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
-            API_auth api_auth = new API_auth();
+            // API_auth api_auth = new API_auth();
             socket.sendConnectionRequest(u_email, u_pwd);
 
             Me me = Me.getInstance();
             System.out.println(me.toString());
             if (me.isConnected()) {
-
                 Stage stage = (Stage) btn_sign_in.getScene().getWindow();
                 stage.close();
                 Stage next_stage = new Stage();

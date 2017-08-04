@@ -28,9 +28,9 @@ public class API_contact {
     private final String route = "http://127.0.0.1:"+ this.port +"/api";
 
     public static User[] getContacts(int idUser) {
-        User u1 = new User(1, "Antoine", "Janvier", 21, "antoine@janvier.com", MALE, "tototiti");
+        User u1 = new User(1, "Antoine", "Janvier", 21, "antoine@janvier.com", "tototiti");
         u1.setConnected(true);
-        User u2 = new User(2, "Tata", "Titi", 19, "tata@toto.com", FEMALE, "tototiti");
+        User u2 = new User(2, "Tata", "Titi", 19, "tata@toto.com", "tototiti");
         u2.setConnected(false);
 
         User[] users = new User[2];

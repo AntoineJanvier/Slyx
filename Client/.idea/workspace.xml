@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Communication by socket almost OK, need to test a real connection">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Server/tools/objectParser.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../Server/clientRequestManager.js" afterPath="$PROJECT_DIR$/../Server/tools/clientRequestManager.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../Server/goGetInDB.js" afterPath="$PROJECT_DIR$/../Server/tools/goGetInDB.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../Server/socket_management.js" afterPath="$PROJECT_DIR$/../Server/tools/socket_management.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/slyx/controllers/LoginController.class" afterPath="$PROJECT_DIR$/out/production/Client/slyx/controllers/LoginController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/communication/API_auth.java" afterPath="$PROJECT_DIR$/src/slyx/communication/API_auth.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/communication/API_contact.java" afterPath="$PROJECT_DIR$/src/slyx/communication/API_contact.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/controllers/LoginController.java" afterPath="$PROJECT_DIR$/src/slyx/controllers/LoginController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/scenes/login.fxml" afterPath="$PROJECT_DIR$/src/slyx/scenes/login.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/utils/Jison.java" afterPath="$PROJECT_DIR$/src/slyx/utils/Jison.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/utils/Me.java" afterPath="$PROJECT_DIR$/src/slyx/utils/Me.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/utils/User.java" afterPath="$PROJECT_DIR$/src/slyx/utils/User.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/models/Call.js" afterPath="$PROJECT_DIR$/../Server/models/Call.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/routes/fill.js" afterPath="$PROJECT_DIR$/../Server/routes/fill.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/routes/stats.js" afterPath="$PROJECT_DIR$/../Server/routes/stats.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/views/stats.pug" afterPath="$PROJECT_DIR$/../Server/views/stats.pug" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/bin/www" afterPath="$PROJECT_DIR$/../Server/bin/www" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,11 +79,21 @@
       <file leaf-file-name="LoginController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/controllers/LoginController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="684">
-              <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+            <state relative-caret-position="300">
+              <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SlyxError.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/slyx/exceptions/SlyxError.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -81,7 +102,7 @@
         <entry file="file://$PROJECT_DIR$/src/slyx/communication/API_auth.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1278">
-              <caret line="85" column="8" lean-forward="false" selection-start-line="85" selection-start-column="8" selection-end-line="98" selection-end-column="18" />
+              <caret line="85" column="8" lean-forward="false" selection-start-line="85" selection-start-column="8" selection-end-line="85" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -92,33 +113,31 @@
       <file leaf-file-name="SlyxSocket.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="482">
-              <caret line="67" column="12" lean-forward="false" selection-start-line="67" selection-start-column="12" selection-end-line="67" selection-end-column="12" />
+            <state relative-caret-position="700">
+              <caret line="97" column="25" lean-forward="true" selection-start-line="97" selection-start-column="25" selection-end-line="97" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#run#0;class#SlyxSocket#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JSONObject.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/slyx/jsonsimple/JSONObject.java">
+      <file leaf-file-name="User.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/slyx/utils/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="23" column="11" lean-forward="false" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
-              <folding>
-                <element signature="e#610#611#0" expanded="true" />
-                <element signature="e#624#625#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="162">
+              <caret line="13" column="28" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/slyx/Main.java">
+      <file leaf-file-name="RequestTypes.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/slyx/utils/RequestTypes.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="14" column="44" lean-forward="false" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+            <state relative-caret-position="162">
+              <caret line="9" column="59" lean-forward="false" selection-start-line="9" selection-start-column="59" selection-end-line="9" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -134,21 +153,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ContactController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/slyx/controllers/ContactController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="23" column="5" lean-forward="false" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="API_contact.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/communication/API_contact.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="29" column="25" lean-forward="false" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
+            <state relative-caret-position="212">
+              <caret line="27" column="72" lean-forward="false" selection-start-line="27" selection-start-column="72" selection-end-line="27" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -157,14 +166,9 @@
       <file leaf-file-name="Me.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/utils/Me.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding>
-                <element signature="e#221#222#0" expanded="true" />
-                <element signature="e#252#253#0" expanded="true" />
-                <element signature="e#281#282#0" expanded="true" />
-                <element signature="e#312#313#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="486">
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -186,6 +190,7 @@
       <find>static</find>
       <find>parse(</find>
       <find>j</find>
+      <find>new User</find>
     </findStrings>
     <replaceStrings>
       <replace>public</replace>
@@ -193,6 +198,7 @@
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/slyx/communication</dir>
+      <dir>$PROJECT_DIR$/src/slyx</dir>
     </dirStrings>
   </component>
   <component name="FindManager">
@@ -230,18 +236,19 @@
         <option value="$PROJECT_DIR$/src/slyx/utils/Call.java" />
         <option value="$PROJECT_DIR$/src/slyx/utils/History.java" />
         <option value="$PROJECT_DIR$/src/slyx/libs/CDL.java" />
-        <option value="$PROJECT_DIR$/src/slyx/communication/API_contact.java" />
         <option value="$PROJECT_DIR$/src/slyx/utils/Message.java" />
         <option value="$PROJECT_DIR$/src/slyx/utils/Jison.java" />
         <option value="$PROJECT_DIR$/src/slyx/jsonsimple/parser/Yylex.java" />
         <option value="$PROJECT_DIR$/src/slyx/jsonsimple/JSONValue.java" />
         <option value="$PROJECT_DIR$/src/slyx/jsonsimple/parser/JSONParser.java" />
-        <option value="$PROJECT_DIR$/src/slyx/utils/User.java" />
         <option value="$PROJECT_DIR$/src/slyx/communication/API_auth.java" />
         <option value="$PROJECT_DIR$/src/slyx/Main.java" />
-        <option value="$PROJECT_DIR$/src/slyx/utils/Me.java" />
         <option value="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" />
+        <option value="$PROJECT_DIR$/src/slyx/utils/Types.java" />
         <option value="$PROJECT_DIR$/src/slyx/controllers/LoginController.java" />
+        <option value="$PROJECT_DIR$/src/slyx/utils/User.java" />
+        <option value="$PROJECT_DIR$/src/slyx/communication/API_contact.java" />
+        <option value="$PROJECT_DIR$/src/slyx/utils/Me.java" />
         <option value="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" />
       </list>
     </option>
@@ -278,6 +285,8 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -343,8 +352,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -573,7 +580,8 @@
       <workItem from="1501576237329" duration="1000" />
       <workItem from="1501576262069" duration="15573000" />
       <workItem from="1501656374809" duration="15116000" />
-      <workItem from="1501834224134" duration="2526000" />
+      <workItem from="1501834224134" duration="3016000" />
+      <workItem from="1501859061802" duration="5508000" />
     </task>
     <task id="LOCAL-00001" summary="Add errors handler, User class, validators and templates">
       <created>1501502101973</created>
@@ -593,7 +601,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60801000" />
+    <option name="totallyTimeSpent" value="66799000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="2048" height="1125" extended-state="7" />
@@ -601,18 +609,20 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902583" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20477137" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19880715" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16796875" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -627,11 +637,9 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902583" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -656,24 +664,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/slyx/communication/API_auth.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="48" column="71" lean-forward="true" selection-start-line="48" selection-start-column="71" selection-end-line="48" selection-end-column="71" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/exceptions/SlyxErrors.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="59" lean-forward="false" selection-start-line="16" selection-start-column="59" selection-end-line="16" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SettingsController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
@@ -720,6 +710,7 @@
           <caret line="19" column="50" lean-forward="true" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#SlyxSocket#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -739,6 +730,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="10" column="14" lean-forward="false" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+          <folding>
+            <marker date="1501862475228" expanded="true" signature="1458:1477" ph="..." />
+            <marker date="1501862475228" expanded="true" signature="1458:1491" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -785,6 +780,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="7" column="11" lean-forward="true" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+          <folding>
+            <marker date="1501862475228" expanded="true" signature="1458:1477" ph="..." />
+            <marker date="1501862475228" expanded="true" signature="1458:1491" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -805,6 +804,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="11" column="14" lean-forward="false" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
+          <folding>
+            <marker date="1501862475228" expanded="true" signature="1458:1477" ph="..." />
+            <marker date="1501862475228" expanded="true" signature="1458:1491" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -905,14 +908,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/exceptions/SlyxError.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/libs/CDL.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -993,39 +988,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/utils/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="56" column="18" lean-forward="false" selection-start-line="56" selection-start-column="18" selection-end-line="56" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="14" column="44" lean-forward="false" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/utils/Me.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#221#222#0" expanded="true" />
-            <element signature="e#252#253#0" expanded="true" />
-            <element signature="e#281#282#0" expanded="true" />
-            <element signature="e#312#313#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/communication/API_contact.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="29" column="25" lean-forward="false" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
           <folding />
         </state>
       </provider>
@@ -1059,7 +1025,7 @@
     <entry file="file://$PROJECT_DIR$/src/slyx/communication/API_auth.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1278">
-          <caret line="85" column="8" lean-forward="false" selection-start-line="85" selection-start-column="8" selection-end-line="98" selection-end-column="18" />
+          <caret line="85" column="8" lean-forward="false" selection-start-line="85" selection-start-column="8" selection-end-line="85" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1074,22 +1040,71 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/exceptions/SlyxError.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/utils/RequestTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="59" lean-forward="false" selection-start-line="9" selection-start-column="59" selection-end-line="9" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/controllers/LoginController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+        <state relative-caret-position="300">
+          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/utils/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="13" column="28" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/communication/API_contact.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="27" column="72" lean-forward="false" selection-start-line="27" selection-start-column="72" selection-end-line="27" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/utils/Me.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Desktop/jdk1.8.0_112/src.zip!/java/io/BufferedReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-560">
+          <caret line="311" column="11" lean-forward="false" selection-start-line="311" selection-start-column="11" selection-end-line="311" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="482">
-          <caret line="67" column="12" lean-forward="false" selection-start-line="67" selection-start-column="12" selection-end-line="67" selection-end-column="12" />
+        <state relative-caret-position="700">
+          <caret line="97" column="25" lean-forward="true" selection-start-line="97" selection-start-column="25" selection-end-line="97" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#SlyxSocket#0" expanded="false" />
           </folding>
         </state>
       </provider>

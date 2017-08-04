@@ -10,28 +10,28 @@ public class User {
     private String lastname;
     private int age;
     private String email;
-    private Gender gender;
+//    private Gender gender;
     private String password;
     private boolean isConnected;
 
     public User() {
     }
-    public User(int id, String firstname, String lastname, int age, String email, Gender gender) {
+    public User(int id, String firstname, String lastname, int age, String email) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;
         this.email = email;
-        this.gender = gender;
+//        this.gender = gender;
         this.setConnected(false);
     }
-    public User(int id, String firstname, String lastname, int age, String email, Gender gender, String password) {
+    public User(int id, String firstname, String lastname, int age, String email, String password) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;
         this.email = email;
-        this.gender = gender;
+//        this.gender = gender;
         this.password = password;
         this.setConnected(false);
     }
@@ -46,8 +46,8 @@ public class User {
     public void setAge(int age) { this.age = age; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public Gender getGender() { return gender; }
-    public void setGender(Gender gender) { this.gender = gender; }
+//    public Gender getGender() { return gender; }
+//    public void setGender(Gender gender) { this.gender = gender; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     public boolean isConnected() { return isConnected; }
@@ -55,13 +55,12 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "{" +
                 "id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
-                ", gender=" + gender +
                 ", password='" + password + '\'' +
                 ", isConnected=" + isConnected +
                 '}';

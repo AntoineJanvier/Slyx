@@ -11,6 +11,11 @@ public class Me extends User {
     private static Me instance = null;
 
     public static Me getInstance() {
+        if (instance == null) {
+            Me m = new Me(0, "Test", "Toto", 12, "test@toto.com");
+            m.setConnected(true);
+            return m;
+        }
         return instance;
     }
 
@@ -19,6 +24,6 @@ public class Me extends User {
     }
 
     public Me(int id, String firstname, String lastname, int age, String email) {
-        super(id, firstname, lastname, age, email, MALE);
+        super(id, firstname, lastname, age, email);
     }
 }

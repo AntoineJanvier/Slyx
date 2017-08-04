@@ -29,7 +29,7 @@ public class API_auth {
     }
 
     public static User connect(String email, String password) {
-        User u = new User(1, "Antoine", "Janvier", 21, "antoine@janvier.com", MALE, "tototiti");
+        User u = new User(1, "Antoine", "Janvier", 21, "antoine@janvier.com", "tototiti");
         u.setConnected(true);
         return u;
     }

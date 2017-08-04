@@ -21,7 +21,7 @@ public class Jison {
             case "err":
                 return null;
             case "User":
-                User u = new User(1, "Ahah", "Hihi", 12, "string", MALE);
+                User u = new User(1, "Ahah", "Hihi", 12, "string");
                 u.setConnected(true);
                 return u;
             case "Call":

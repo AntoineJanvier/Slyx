@@ -3,14 +3,15 @@ package slyx.communication;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
 import slyx.jsonsimple.parser.ParseException;
-import slyx.utils.Me;
-import slyx.utils.Message;
-import slyx.utils.User;
+import slyx.utils.*;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
+
+import static slyx.utils.Gender.FEMALE;
+import static slyx.utils.Gender.MALE;
 
 /**
  * Created by Antoine Janvier
@@ -47,14 +48,31 @@ public class SlyxSocket extends Thread {
         printWriter.write(m.toObject().toString());
     }
 
+    public User[] sendGetContactRequest(User u) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.CONNECTION_REQUEST);
+        j.put("userid", u.getId());
+
+        String returned = echo(j.toString());
+        /*
+        TODO : Parsing of the returned string to get a list of contacts for the connected User
+         */
+
+        /*
+        TODO : Remove this part (Tests)
+         */
+        User[] contacts = new User[2];
+        contacts[0] = new User(1, "Antoine", "Janvier", 21, "antoine.jan95@gmail.com");
+        contacts[1] = new User(2, "Titi", "Tata", 20, "titi@tata.com");
+        return contacts;
+    }
+
     public void sendConnectionRequest(String email, String password) throws IOException {
         JSONObject j = new JSONObject();
-        j.put("request", "CONNECTION");
+        j.put("request", RequestTypes.CONNECTION_REQUEST);
         j.put("email", email);
         j.put("password", password);
-        /*
-        TODO : Create instance of "Me()"
-         */
+
         System.out.println("A");
         String returned = echo(j.toString());
         System.out.println("RETURN => " + returned);
@@ -65,7 +83,7 @@ public class SlyxSocket extends Thread {
 
         System.out.println("C");
         try {
-            o = jsonParser.parse(returned.toString());
+            o = jsonParser.parse(returned);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -88,7 +106,6 @@ public class SlyxSocket extends Thread {
             );
             System.out.println("H");
             me.setConnected(true);
-
         }
 
     }
@@ -96,11 +113,13 @@ public class SlyxSocket extends Thread {
 
     public String echo(String message) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out.println(message);
-            String r = in.readLine();
+//            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+//            BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            printWriter.println(message);
+            String r = bufferedReader.readLine();
+            System.out.println("==========");
             System.out.println(r);
+            System.out.println("==========");
             return r;
         } catch (IOException e) {
             e.printStackTrace();

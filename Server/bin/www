@@ -7,8 +7,13 @@ let app = require('../app');
 let debug = require('debug')('server:server');
 let http = require('http');
 let nodenet = require('net');
-const socketManagement = require('../socket_management');
-const clientHandler = require('../clientRequestManager');
+const socketManagement = require('../tools/socket_management');
+const clientHandler = require('../tools/clientRequestManager');
+const objParser = require('../tools/objectParser');
+const passwordHash = require('password-hash');
+
+const models = require('../models');
+const User = models.User;
 
 /**
  * Get port from environment and store in Express.
@@ -38,14 +43,20 @@ nodenet.createServer(function (socket) {
     socket.on('data', function (data) {
 
         let json = JSON.parse(data);
+        console.log();
+        console.log();
+        console.log('DATA');
+        console.log(json);
+        console.log();
+        console.log();
 
-        let resp = clientHandler.handleClientRequest(json);
-        // console.log('RESPONSE : ');
+        let resp = handleClientRequest(json);
+        console.log();
+        console.log('=============================================');
+        console.log('RESPONSE');
+        console.log('=============================================');
         console.log(resp);
-        console.log(resp);
-        console.log(resp.toString());
-        console.log(resp);
-
+        console.log();
         socket.write(resp + '\n');
     });
     
@@ -58,43 +69,6 @@ nodenet.createServer(function (socket) {
         console.log(err);
     });
 }).listen(socketPort, '127.0.0.1');
-
-// let nodeSocket = nodenet.createServer();
-//
-// nodeSocket.on('connection', function (socket) {
-//
-//     clients.push(socket);
-//
-//     console.log('Client connected');
-//
-//     socket.write('{"status":"ok"}\n');
-//
-//     socket.on('data', function(data) {
-//         // socketManagement.socketOnData(data, socket)
-//         let o = JSON.parse(data);
-//         console.log('SOCKET_ON_DATA');
-//         console.log(o);
-//         socket.write(JSON.stringify({
-//             id: 4,
-//             firstname: 'Antoine',
-//             lastname: 'Janvier',
-//             age: 21,
-//             email: 'antoine.jan95@gmail.com'
-//         }));
-//     });
-//     socket.on('end', function() {
-//         socketManagement.socketOnEnd();
-//     });
-//     socket.on('close', function() {
-//         socketManagement.socketOnClose();
-//     });
-//     socket.on('error', function(err) {
-//         socketManagement.socketOnError(err);
-//     });
-// }).listen(socketPort, function () {
-//     console.log('Socket server started at port ' + socketPort + '...');
-//     console.log();
-// });
 
 server.on('listening', onListening);
 
@@ -141,3 +115,37 @@ function onListening() {
     console.log('NodeJS server started at port ' + addr.port + '...');
     debug('Listening on ' + bind);
 }
+
+let handleClientRequest = function(jsonObj) {
+    let r = {};
+    switch (jsonObj.request) {
+        case 'CONNECTION':
+            return User.find({
+                where: {'email': jsonObj.email}
+            }).then(function (user) {
+                if (user) {
+                    if (passwordHash.verify(jsonObj.password, user.pwd)) {
+                        console.log();
+                        console.log('IN SEQUELIZE REQUEST');
+                        console.log(user.responsify());
+                        console.log();
+                        console.log();
+                        r = user.responsify();
+                        return r;
+                    } else {
+                        console.log('Bad login input');
+                        return {};
+                    }
+                } else {
+                    console.log('No user');
+                    return {};
+                }
+            }).catch(err => {
+                console.log(err);
+                return {};
+            });
+            break;
+        default:
+            return {};
+    }
+};
