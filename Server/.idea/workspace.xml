@@ -2,20 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd4d519e-039a-4ace-adc5-4c767e1ab79c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/icon_profile.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/img1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/img2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/Version.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/LoginController.class" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/LoginController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/SlyxController.class" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/SlyxController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/slyx.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/login.fxml" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/login.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/ContactController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/ContactController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/LoginController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/LoginController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/SlyxController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/SlyxController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/slyx.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/login.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/login.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/RequestTypes.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/RequestTypes.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/www" afterPath="$PROJECT_DIR$/bin/www" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/index.js" afterPath="$PROJECT_DIR$/models/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tools/socket_management.js" afterPath="$PROJECT_DIR$/tools/socket_management.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,8 +28,8 @@
       <file leaf-file-name="api_auth.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/api_auth.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1242">
-              <caret line="69" column="15" lean-forward="false" selection-start-line="52" selection-start-column="12" selection-end-line="69" selection-end-column="15" />
+            <state relative-caret-position="0">
+              <caret line="33" column="12" lean-forward="true" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -39,18 +38,18 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+            <state relative-caret-position="544">
+              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="objectParser.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/objectParser.js">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="1" column="4" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+            <state relative-caret-position="180">
+              <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -96,21 +95,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="socket_management.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
+      <file leaf-file-name="www" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/www">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+            <state relative-caret-position="450">
+              <caret line="67" column="22" lean-forward="true" selection-start-line="50" selection-start-column="19" selection-end-line="67" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="www" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/bin/www">
+      <file leaf-file-name="socket_management.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="81" column="25" lean-forward="true" selection-start-line="81" selection-start-column="25" selection-end-line="81" selection-end-column="25" />
+            <state relative-caret-position="180">
+              <caret line="10" column="12" lean-forward="false" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -152,6 +151,7 @@
       <find>nodeSocket</find>
       <find>return {};</find>
       <find>jsonObj</find>
+      <find>logger</find>
     </findStrings>
     <replaceStrings>
       <replace>slyx</replace>
@@ -177,7 +177,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/models/index.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/RUN.sh" />
         <option value="$PROJECT_DIR$/views/index.pug" />
@@ -199,13 +198,15 @@
         <option value="$PROJECT_DIR$/javaRequestManager.js" />
         <option value="$PROJECT_DIR$/clientRequestManager.js" />
         <option value="$PROJECT_DIR$/models/Call.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/views/stats.pug" />
         <option value="$PROJECT_DIR$/routes/stats.js" />
         <option value="$PROJECT_DIR$/routes/fill.js" />
         <option value="$PROJECT_DIR$/tools/objectParser.js" />
         <option value="$PROJECT_DIR$/tools/clientRequestManager.js" />
         <option value="$PROJECT_DIR$/bin/www" />
+        <option value="$PROJECT_DIR$/models/index.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/tools/socket_management.js" />
       </list>
     </option>
   </component>
@@ -225,7 +226,7 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="27" />
     <option name="width" value="1024" />
     <option name="height" value="1125" />
@@ -452,7 +453,7 @@
       <workItem from="1501656356896" duration="12524000" />
       <workItem from="1501833550672" duration="4042000" />
       <workItem from="1501859024155" duration="6121000" />
-      <workItem from="1501923284183" duration="3296000" />
+      <workItem from="1501923284183" duration="5639000" />
     </task>
     <task id="LOCAL-00001" summary="First refacto, clean code">
       <created>1501254996808</created>
@@ -521,10 +522,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58901000" />
+    <option name="totallyTimeSpent" value="61244000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="2048" height="1125" extended-state="7" />
+    <frame x="0" y="27" width="2048" height="1125" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -758,13 +759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="1" lean-forward="false" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
@@ -898,38 +892,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tools/objectParser.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="4" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/api_auth.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1242">
-          <caret line="69" column="15" lean-forward="false" selection-start-line="52" selection-start-column="12" selection-end-line="69" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tools/clientRequestManager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -956,8 +918,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/www">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="81" column="25" lean-forward="true" selection-start-line="81" selection-start-column="25" selection-end-line="81" selection-end-column="25" />
+        <state relative-caret-position="450">
+          <caret line="67" column="22" lean-forward="true" selection-start-line="50" selection-start-column="19" selection-end-line="67" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/objectParser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="4" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api_auth.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="33" column="12" lean-forward="true" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="12" lean-forward="false" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
           <folding />
         </state>
       </provider>

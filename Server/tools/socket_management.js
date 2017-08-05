@@ -1,19 +1,33 @@
-const db = require('./goGetInDB');
+const passwordHash = require('password-hash');
+
+const models = require('../models');
+const User = models.User;
+const Contact = models.Contact;
 
 module.exports = {
-    socketOnData: function (data, socket) {
-        console.log('SOCKET_ON_DATA');
-        let o = JSON.parse(data);
-        console.log(o);
+    sockGetUpdate: function (socket) {
+        socket.write(JSON.stringify({
+            version: "1.0.0"
+        }));
     },
-    socketOnClose: function() {
-        console.log('SOCKET_ON_CLOSE');
-    },
-    socketOnEnd: function() {
-        console.log('SOCKET_ON_END');
-    },
-    socketOnError: function(err) {
-        console.log('SOCKET_ON_ERROR');
-        throw err;
+    sockConnect: function (socket, json) {
+        return User.find({
+            where: {'email': json.email}
+        }).then(function (user) {
+            if (user) {
+                if (passwordHash.verify(json.password, user.pwd)) {
+                    socket.write(JSON.stringify(user.responsify()) + '\n');
+                } else {
+                    console.log('Bad login input');
+                    socket.write({} + '\n');
+                }
+            } else {
+                console.log('No user');
+                socket.write({} + '\n');
+            }
+        }).catch(err => {
+            console.log(err);
+            socket.write({} + '\n');
+        });
     }
 };

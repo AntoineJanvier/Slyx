@@ -57,6 +57,20 @@ public class SlyxSocket extends Thread {
         /*
         TODO : Parsing of the returned string to get a list of contacts for the connected User
          */
+        JSONParser jsonParser = new JSONParser();
+        Object o = null;
+
+        try {
+            o = jsonParser.parse(returned);
+        } catch (ParseException e) {
+            System.out.println("JSON PARSE EXCEPTION IN SEND CONNECTION REQUEST");
+            e.printStackTrace();
+        }
+        JSONObject jsonMe = (JSONObject) o;
+
+        if (jsonMe != null) {
+            System.out.println(jsonMe);
+        }
 
         /*
         TODO : Remove this part (Tests)
@@ -98,6 +112,29 @@ public class SlyxSocket extends Thread {
             );
             me.setConnected(true);
         }
+    }
+
+    public String sendGetUpdateRequest() throws IOException {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.GET_UPDATE_REQUEST);
+
+        String returned = echo(j.toString());
+
+        JSONParser jsonParser = new JSONParser();
+        Object o = null;
+
+        try {
+            o = jsonParser.parse(returned);
+        } catch (ParseException e) {
+            System.out.println("JSON PARSE EXCEPTION IN SEND GET UPDATE REQUEST");
+            e.printStackTrace();
+        }
+        JSONObject jsonUpdate = (JSONObject) o;
+
+        if (jsonUpdate != null) {
+            return jsonUpdate.get("version").toString();
+        }
+        return "0.0.0";
     }
 
 

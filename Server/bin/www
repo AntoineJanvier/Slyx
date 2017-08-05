@@ -47,24 +47,25 @@ nodenet.createServer(function (socket) {
 
         switch (json.request) {
             case 'CONNECTION':
-                return User.find({
-                    where: {'email': json.email}
-                }).then(function (user) {
-                    if (user) {
-                        if (passwordHash.verify(json.password, user.pwd)) {
-                            socket.write(JSON.stringify(user.responsify()) + '\n');
-                        } else {
-                            console.log('Bad login input');
-                            socket.write({} + '\n');
-                        }
-                    } else {
-                        console.log('No user');
-                        socket.write({} + '\n');
-                    }
-                }).catch(err => {
-                    console.log(err);
-                    socket.write({} + '\n');
-                });
+                socketManagement.sockConnect(socket, json);
+                // return User.find({
+                //     where: {'email': json.email}
+                // }).then(function (user) {
+                //     if (user) {
+                //         if (passwordHash.verify(json.password, user.pwd)) {
+                //             socket.write(JSON.stringify(user.responsify()) + '\n');
+                //         } else {
+                //             console.log('Bad login input');
+                //             socket.write({} + '\n');
+                //         }
+                //     } else {
+                //         console.log('No user');
+                //         socket.write({} + '\n');
+                //     }
+                // }).catch(err => {
+                //     console.log(err);
+                //     socket.write({} + '\n');
+                // });
                 break;
             case 'GET_CONTACTS':
                 return User.find({
@@ -144,7 +145,7 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
-let handleClientRequest = function(jsonObj) {
+let handleClientRequest = function(socket, jsonObj) {
     let r = {};
     switch (jsonObj.request) {
         case 'CONNECTION':
