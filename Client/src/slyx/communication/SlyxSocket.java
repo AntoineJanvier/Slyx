@@ -73,30 +73,22 @@ public class SlyxSocket extends Thread {
         j.put("email", email);
         j.put("password", password);
 
-        System.out.println("A");
         String returned = echo(j.toString());
-        System.out.println("RETURN => " + returned);
 
-        System.out.println("B");
         JSONParser jsonParser = new JSONParser();
         Object o = null;
 
-        System.out.println("C");
         try {
             o = jsonParser.parse(returned);
         } catch (ParseException e) {
+            System.out.println("JSON PARSE EXCEPTION IN SEND CONNECTION REQUEST");
             e.printStackTrace();
         }
-
-        System.out.println("D");
         JSONObject jsonMe = (JSONObject) o;
 
-        System.out.println("E");
         if (jsonMe != null) {
-            System.out.println("F");
             Me me = Me.getInstance();
             me.setNULL();
-            System.out.println("G");
             me = new Me(
                     Math.toIntExact((long) jsonMe.get("id")),
                     jsonMe.get("firstname").toString(),
@@ -104,23 +96,15 @@ public class SlyxSocket extends Thread {
                     Math.toIntExact((long) jsonMe.get("age")),
                     jsonMe.get("email").toString()
             );
-            System.out.println("H");
             me.setConnected(true);
         }
-
     }
 
 
-    public String echo(String message) {
+    private String echo(String message) {
         try {
-//            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-//            BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             printWriter.println(message);
-            String r = bufferedReader.readLine();
-            System.out.println("==========");
-            System.out.println(r);
-            System.out.println("==========");
-            return r;
+            return bufferedReader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }

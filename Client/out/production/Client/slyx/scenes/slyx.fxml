@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderPane_general" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.SlyxController">
+<BorderPane fx:id="borderPane_general" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.SlyxController">
     <top>
-        <HBox fx:id="hBox_top" alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <HBox fx:id="hBox_top" alignment="TOP_RIGHT" prefHeight="95.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" />
-            <Button fx:id="btn_disconnection" mnemonicParsing="false" onAction="#disconnect" text="Disconnection" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="btn_disconnection" minWidth="153.0" mnemonicParsing="false" onAction="#disconnect" prefHeight="74.0" prefWidth="153.0" text="Disconnection" />
+               </children></VBox>
          </children></HBox>
     </top>
     <left>
@@ -21,8 +23,8 @@
     <bottom>
         <HBox fx:id="hBox_bottom" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <Pane prefHeight="62.0" prefWidth="260.0" />
-                <TextArea fx:id="ta_message_to_send" prefHeight="62.0" prefWidth="283.0" />
+                <Pane prefHeight="62.0" prefWidth="513.0" />
+            <TextField fx:id="tf_message_to_send" prefHeight="62.0" prefWidth="600.0" promptText="Type your message here..." />
                 <Button fx:id="btn_send_message" alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="96.0" text="Send" textAlignment="CENTER" />
             </children>
         </HBox>

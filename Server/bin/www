@@ -14,6 +14,7 @@ const passwordHash = require('password-hash');
 
 const models = require('../models');
 const User = models.User;
+const Contact = models.Contact;
 
 /**
  * Get port from environment and store in Express.
@@ -43,21 +44,48 @@ nodenet.createServer(function (socket) {
     socket.on('data', function (data) {
 
         let json = JSON.parse(data);
-        console.log();
-        console.log();
-        console.log('DATA');
-        console.log(json);
-        console.log();
-        console.log();
 
-        let resp = handleClientRequest(json);
-        console.log();
-        console.log('=============================================');
-        console.log('RESPONSE');
-        console.log('=============================================');
-        console.log(resp);
-        console.log();
-        socket.write(resp + '\n');
+        switch (json.request) {
+            case 'CONNECTION':
+                return User.find({
+                    where: {'email': json.email}
+                }).then(function (user) {
+                    if (user) {
+                        if (passwordHash.verify(json.password, user.pwd)) {
+                            socket.write(JSON.stringify(user.responsify()) + '\n');
+                        } else {
+                            console.log('Bad login input');
+                            socket.write({} + '\n');
+                        }
+                    } else {
+                        console.log('No user');
+                        socket.write({} + '\n');
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    socket.write({} + '\n');
+                });
+                break;
+            case 'GET_CONTACTS':
+                return User.find({
+                    where: { email: json.email }
+                }).then(user => {
+                    Contact.findAll({
+                        user: user,
+                        status: 'ACCEPTED'
+                    }).then(contacts => {
+                        let resp = {};
+                        for (let c of contacts) {
+                            // resp.push(c.responsify());
+                            let n = c.responsify().userid;
+                            resp.n = c.responsify();
+                        }
+                        socket.write(resp + '\n');
+                    }).catch(err => { console.log(err); socket.write({} + '\n'); });
+                }).catch(err => { console.log(err); socket.write({} + '\n'); });
+            default:
+                socket.write({} + '\n');
+        }
     });
     
     socket.on('close', function () {

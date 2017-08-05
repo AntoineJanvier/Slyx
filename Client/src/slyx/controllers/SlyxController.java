@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -33,7 +33,7 @@ public class SlyxController {
     @FXML
     Button btn_send_message;
     @FXML
-    TextArea ta_message_to_send;
+    TextField tf_message_to_send;
     @FXML
     Button btn_disconnection;
 
@@ -56,6 +56,9 @@ public class SlyxController {
     }
 
     public void initialize() throws IOException {
+        /*
+        TODO : Get real contacts
+         */
         SlyxSocket socket = SlyxSocket.getInstance();
         User[] contacts = API_contact.getContacts(1);
         for (User u : contacts) {
