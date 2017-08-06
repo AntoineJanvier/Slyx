@@ -39,34 +39,30 @@ server.on('error', onError);
 
 nodenet.createServer(function (socket) {
     console.log('SOCKET_CONNECTED');
-    // socket.write(JSON.stringify({ status: 'ok' }));
+
+    clients.push(socket);
+
+    for (let i = 0 ; i < clients.length; i++) {
+        console.log(clients[i].remoteAddress);
+    }
 
     socket.on('data', function (data) {
 
+        // Parse input
         let json = JSON.parse(data);
 
+        // Switch JSON input
         switch (json.request) {
+            // Know if the client is up to date
+            case 'GET_UPDATE':
+                console.log('GET UPDATE');
+                socketManagement.sockGetUpdate(socket);
+                break;
+            // Client connection
             case 'CONNECTION':
                 socketManagement.sockConnect(socket, json);
-                // return User.find({
-                //     where: {'email': json.email}
-                // }).then(function (user) {
-                //     if (user) {
-                //         if (passwordHash.verify(json.password, user.pwd)) {
-                //             socket.write(JSON.stringify(user.responsify()) + '\n');
-                //         } else {
-                //             console.log('Bad login input');
-                //             socket.write({} + '\n');
-                //         }
-                //     } else {
-                //         console.log('No user');
-                //         socket.write({} + '\n');
-                //     }
-                // }).catch(err => {
-                //     console.log(err);
-                //     socket.write({} + '\n');
-                // });
                 break;
+            // Client loading its contacts
             case 'GET_CONTACTS':
                 return User.find({
                     where: { email: json.email }
@@ -77,7 +73,6 @@ nodenet.createServer(function (socket) {
                     }).then(contacts => {
                         let resp = {};
                         for (let c of contacts) {
-                            // resp.push(c.responsify());
                             let n = c.responsify().userid;
                             resp.n = c.responsify();
                         }
@@ -88,7 +83,7 @@ nodenet.createServer(function (socket) {
                 socket.write({} + '\n');
         }
     });
-    
+
     socket.on('close', function () {
         console.log('SOCKET_CLOSED');
     });

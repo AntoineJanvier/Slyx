@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import slyx.Version;
 import slyx.communication.SlyxSocket;
 import slyx.utils.Me;
+import slyx.utils.User;
 import slyx.validators.Validator;
 
 import java.io.IOException;
@@ -53,50 +54,57 @@ public class LoginController {
         else if (!Validator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
-
             // If all seems ok, request the server a connection
-            socket.sendConnectionRequest(u_email, u_pwd);
+            User me = socket.sendConnectionRequest(u_email, u_pwd);
 
             // Test singleton of Me object to know if we can launch the app just if he is connected
-            Me me = Me.getInstance();
-            if (me.isConnected()) {
+//            Me me = Me.getInstance();
+            if (me != null) {
+                if (me.isConnected()) {
 
-                // Close login window
-                Stage stage = (Stage) btn_sign_in.getScene().getWindow();
-                stage.close();
+                    // Close login window
+                    Stage stage = (Stage) btn_sign_in.getScene().getWindow();
+                    stage.close();
 
-                // Launch app window
-                Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
-                Stage next_stage = new Stage();
-                next_stage.setTitle("Slyx");
-                next_stage.setScene(new Scene(next_root));
-                next_stage.show();
-            } else {
-                label_error_hint.setText(getError(ERR_CONNECTION));
+                    // Launch app window
+                    Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
+                    Stage next_stage = new Stage();
+                    next_stage.setTitle("Slyx");
+                    next_stage.setScene(new Scene(next_root));
+                    next_stage.show();
+                } else {
+                    label_error_hint.setText(getError(ERR_CONNECTION));
+                }
             }
         }
     }
     public void initialize() {
         try {
+            label_get_update.setText("Checking updates...");
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             String version = slyxSocket.sendGetUpdateRequest();
+            initSetUpdateLabel(version.split("\\."));
 
-            String[] v = version.split("\\.");
-            if (Integer.parseInt(v[0]) > Version.MAJOR) {
-                label_get_update.setText("A new major update is available, download it");
-                hyperlink_get_update.setText("here");
-            } else if (Integer.parseInt(v[1]) > Version.INTERMEDIATE) {
-                label_get_update.setText("A new intermediate update is available, download it");
-                hyperlink_get_update.setText("here");
-            } else if (Integer.parseInt(v[2]) > Version.MINOR) {
-                label_get_update.setText("A new minor update is available, download it");
-                hyperlink_get_update.setText("here");
-            } else {
-                label_get_update.setText("Up to date");
-            }
         } catch (IOException e) {
+            System.out.println("TOO BAD");
+            label_get_update.setText("Error while checking updates");
             e.printStackTrace();
         }
+    }
 
+    private void initSetUpdateLabel(String[] v) {
+        if (Integer.parseInt(v[0]) > Version.MAJOR) {
+            label_get_update.setText("A new major update is available, download it");
+            hyperlink_get_update.setText("here");
+        } else if (Integer.parseInt(v[1]) > Version.INTERMEDIATE) {
+            label_get_update.setText("A new intermediate update is available, download it");
+            label_get_update.setLayoutX(label_get_update.getLayoutX() - 200);
+            hyperlink_get_update.setText("here");
+        } else if (Integer.parseInt(v[2]) > Version.MINOR) {
+            label_get_update.setText("A new minor update is available, download it");
+            hyperlink_get_update.setText("here");
+        } else {
+            label_get_update.setText("Up to date");
+        }
     }
 }

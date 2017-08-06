@@ -12,9 +12,7 @@ public class Me extends User {
 
     public static Me getInstance() {
         if (instance == null) {
-            Me m = new Me(0, "Test", "Toto", 12, "test@toto.com");
-            m.setConnected(true);
-            return m;
+            return null;
         }
         return instance;
     }

@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
             last_name: {type: DataTypes.STRING},
             age: {type: DataTypes.BIGINT},
             email: {type: DataTypes.STRING},
-            pwd: {type: DataTypes.STRING}
+            pwd: {type: DataTypes.STRING},
+            connected: {type: DataTypes.BOOLEAN}
         },
         {
             paranoid: true,

@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    include header
+    section
+        h1= title
+        div.blocks
+            div.block_for_page
+                h3 Sign In
+                form(action='/api/auth/sign_in' method='post')
+                    div.form-group
+                        label Email
+                        input.form-control(type='email', placeholder='Email', name='email')
+                    div.form-group
+                        label Password
+                        input.form-control(type='password', placeholder='Password', name='pwd')
+                    button.btn.btn-default(type='submit') Sign In
+
+            div.block_for_page
+                h3 Sign Up
+                form(action='/api/auth/sign_up' method='post')
+                    div.form-group
+                        label Firstname
+                        input.form-control(type='text', placeholder='Firstname', name='firstname')
+                    div.form-group
+                        label Lastname
+                        input.form-control(type='text', placeholder='Lastname', name='lastname')
+                    div.form-group
+                        label Age
+                        input.form-control(type='number', placeholder='Age', name='age')
+                    div.form-group
+                        label Email
+                        input.form-control(type='email', placeholder='Email', name='email')
+                    div.form-group
+                        label Password
+                        input.form-control(type='password', placeholder='Password', name='pwd')
+                    button.btn.btn-default(type='submit') Sign Up

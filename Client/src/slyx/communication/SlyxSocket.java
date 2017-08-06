@@ -81,7 +81,7 @@ public class SlyxSocket extends Thread {
         return contacts;
     }
 
-    public void sendConnectionRequest(String email, String password) throws IOException {
+    public User sendConnectionRequest(String email, String password) throws IOException {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.CONNECTION_REQUEST);
         j.put("email", email);
@@ -101,17 +101,19 @@ public class SlyxSocket extends Thread {
         JSONObject jsonMe = (JSONObject) o;
 
         if (jsonMe != null) {
-            Me me = Me.getInstance();
-            me.setNULL();
-            me = new Me(
-                    Math.toIntExact((long) jsonMe.get("id")),
-                    jsonMe.get("firstname").toString(),
-                    jsonMe.get("lastname").toString(),
-                    Math.toIntExact((long) jsonMe.get("age")),
-                    jsonMe.get("email").toString()
-            );
-            me.setConnected(true);
+            if ("ACCEPT_CONNECTION".equals(jsonMe.get("request").toString())) {
+                User me = new User(
+                        Math.toIntExact((long) jsonMe.get("id")),
+                        jsonMe.get("firstname").toString(),
+                        jsonMe.get("lastname").toString(),
+                        Math.toIntExact((long) jsonMe.get("age")),
+                        jsonMe.get("email").toString()
+                );
+                me.setConnected(true);
+                return me;
+            }
         }
+        return null;
     }
 
     public String sendGetUpdateRequest() throws IOException {
@@ -140,8 +142,11 @@ public class SlyxSocket extends Thread {
 
     private String echo(String message) {
         try {
+            System.out.println("Sending : " + message);
             printWriter.println(message);
-            return bufferedReader.readLine();
+            String s = bufferedReader.readLine();
+            System.out.println("Receiving : " + s);
+            return s;
         } catch (IOException e) {
             e.printStackTrace();
         }

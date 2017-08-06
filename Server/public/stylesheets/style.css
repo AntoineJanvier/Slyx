@@ -29,8 +29,12 @@ section {
 }
 
 .blocks {
+    position: relative;
+    padding: 30px;
     box-shadow: 0 0 10px black;
     margin-bottom: 2%;
+    width: 80%;
+    left: 10%;
 }
 
 .icon-bar {

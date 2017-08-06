@@ -18,8 +18,8 @@
         <Hyperlink fx:id="hyperlink_sign_up" layoutX="295.0" layoutY="217.0" text="Sign Up" />
         <Label layoutX="210.0" layoutY="221.0" text="No account ?" />
         <Label layoutX="353.0" layoutY="221.0" text="now !" />
-      <Label fx:id="label_error_hint" layoutX="48.0" layoutY="241.0" />
-      <Label layoutX="328.0" layoutY="249.0" text="New update available, download it" />
-      <Hyperlink fx:id="hyperlink_get_update" layoutX="552.0" layoutY="245.0" text="here" />
+      <Label fx:id="label_error_hint" layoutX="68.0" layoutY="241.0" />
+      <Label fx:id="label_get_update" alignment="BASELINE_RIGHT" contentDisplay="RIGHT" layoutX="195.0" layoutY="249.0" prefHeight="16.0" prefWidth="357.0" />
+      <Hyperlink fx:id="hyperlink_get_update" layoutX="552.0" layoutY="245.0" AnchorPane.rightAnchor="10.0" />
     </children>
 </AnchorPane>
