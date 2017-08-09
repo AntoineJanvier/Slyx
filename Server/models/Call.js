@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     const Call = sequelize.define('Call', {
-        id: {type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true},
+        callid: {type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true},
         begin: {type: DataTypes.DATE},
         end: {type: DataTypes.DATE},
         duration: {type: DataTypes.DATE},
@@ -12,29 +12,19 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true,
     });
     Call.associate = function (models) {
-        Call.belongsTo(models.User, {
-            foreignKey: 'from'
-        });
-        Call.belongsTo(models.User, {
-            foreignKey: 'to'
+        Call.belongsTo(models.Contact, {
+            foreignKey: 'contact'
         });
     };
     Call.prototype.responsify = function () {
         return {
             type: 'CALL',
-            from: this.from.responsify(),
-            to: this.to.responsify(),
+            id: this.callid,
+            contact: this.contact.responsify(),
             begin: this.begin,
             end: this.end,
             duration: this.duration
         };
-    };
-    Call.prototype.inlineResponse = function () {
-        return 'CALL;' +
-            this.id + ';' +
-            this.begin + ';' +
-            this.end + ';' +
-            this.duration + '\n';
     };
     return Call;
 };

@@ -24,7 +24,8 @@ public class SlyxSocket extends Thread {
 
     public JSONObject jsonObject;
 
-    private HashMap<Integer, User> contacts;
+    private static User me;
+    private static HashMap<Integer, User> contacts;
 
     private static SlyxSocket instance = null;
 
@@ -36,41 +37,54 @@ public class SlyxSocket extends Thread {
         this.start();
     }
 
-    public static SlyxSocket getInstance() throws IOException {
+    public static synchronized SlyxSocket getInstance() throws IOException {
         if (instance == null)
             instance = new SlyxSocket();
         return instance;
     }
 
+    /**
+     * Send a message from a User to another User
+     * @param content: Message to send
+     * @param from: User who is sending the message
+     * @param to: User who will receive the message
+     */
     public void sendMessage(String content, User from, User to) {
         Date d = new Date();
         Message m = new Message(from, to, content);
         printWriter.write(m.toObject().toString());
     }
 
-    public User[] sendGetContactRequest(User u) {
+    /**
+     * Ask a contact list for a defined User
+     * @param user: User who asking his contact list
+     * @return A list of User who are contacts of the current User
+     */
+    public User[] sendGetContactsRequest(User user) {
         JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.CONNECTION_REQUEST);
-        j.put("userid", u.getId());
+        j.put("request", RequestTypes.GET_CONTACTS_REQUEST);
+        j.put("userid", user.getId());
 
         String returned = echo(j.toString());
-        /*
-        TODO : Parsing of the returned string to get a list of contacts for the connected User
-         */
         JSONParser jsonParser = new JSONParser();
         Object o = null;
 
-        try {
-            o = jsonParser.parse(returned);
-        } catch (ParseException e) {
-            System.out.println("JSON PARSE EXCEPTION IN SEND CONNECTION REQUEST");
-            e.printStackTrace();
-        }
-        JSONObject jsonMe = (JSONObject) o;
 
-        if (jsonMe != null) {
-            System.out.println(jsonMe);
-        }
+        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
+//        arrayJsonParser.process();
+//        return arrayJsonParser.getUsers();
+
+//        try {
+//            o = jsonParser.parse(returned);
+//        } catch (ParseException e) {
+//            System.out.println("JSON PARSE EXCEPTION IN GET CONTACTS REQUEST");
+//            e.printStackTrace();
+//        }
+//        JSONObject jsonMe = (JSONObject) o;
+//
+//        if (jsonMe != null) {
+//            System.out.println(jsonMe);
+//        }
 
         /*
         TODO : Remove this part (Tests)
@@ -81,7 +95,13 @@ public class SlyxSocket extends Thread {
         return contacts;
     }
 
-    public User sendConnectionRequest(String email, String password) throws IOException {
+    /**
+     * Request a connection to the server for a User
+     * @param email: Email
+     * @param password: Password
+     * @return User found in database
+     */
+    public void sendConnectionRequest(String email, String password) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.CONNECTION_REQUEST);
         j.put("email", email);
@@ -102,7 +122,7 @@ public class SlyxSocket extends Thread {
 
         if (jsonMe != null) {
             if ("ACCEPT_CONNECTION".equals(jsonMe.get("request").toString())) {
-                User me = new User(
+                me = new User(
                         Math.toIntExact((long) jsonMe.get("id")),
                         jsonMe.get("firstname").toString(),
                         jsonMe.get("lastname").toString(),
@@ -110,13 +130,17 @@ public class SlyxSocket extends Thread {
                         jsonMe.get("email").toString()
                 );
                 me.setConnected(true);
-                return me;
+//                return me;
             }
         }
-        return null;
+        return;
     }
 
-    public String sendGetUpdateRequest() throws IOException {
+    /**
+     * Ask if there is updates available to check the current version of the application
+     * @return Latest version number of the application
+     */
+    public String sendGetUpdateRequest() {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_UPDATE_REQUEST);
 
@@ -139,10 +163,14 @@ public class SlyxSocket extends Thread {
         return "0.0.0";
     }
 
-
+    /**
+     * Send a message to the socket and receive the answer from it
+     * @param message: Message to send to the server
+     * @return Response from the server after have processed the message sent
+     */
     private String echo(String message) {
         try {
-            System.out.println("Sending : " + message);
+            System.out.println("\nSending : " + message);
             printWriter.println(message);
             String s = bufferedReader.readLine();
             System.out.println("Receiving : " + s);
@@ -152,7 +180,6 @@ public class SlyxSocket extends Thread {
         }
         return null;
     }
-
 
     @Override
     public void run() {
@@ -207,48 +234,18 @@ public class SlyxSocket extends Thread {
 //            }
 //        }
     }
-
-    public void write(String message) throws IOException {
-        printWriter.print(message);
-    }
-
-    public String read() throws IOException {
-        return bufferedReader.readLine();
-    }
-
     public void close() throws IOException {
         socket.close();
     }
-
-    public Socket getSocket() {
-        return this.socket;
-    }
-
-    public BufferedReader getBufferedReader() {
-        return bufferedReader;
-    }
-
-    public PrintWriter getPrintWriter() {
-        return printWriter;
-    }
-
-    public String getIpAddress() {
+    private String getIpAddress() {
         return "127.0.0.1";
     }
-
-    public int getPort() {
+    private int getPort() {
         return 3895;
     }
 
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
-
-    public void setBufferedReader(BufferedReader bufferedReader) {
-        this.bufferedReader = bufferedReader;
-    }
-
-    public void setPrintWriter(PrintWriter printWriter) {
-        this.printWriter = printWriter;
-    }
+    public static User getMe() { return me; }
+    public void setMe(User me) { SlyxSocket.me = me; }
+    public HashMap<Integer, User> getContacts() { return contacts; }
+    public void setContacts(HashMap<Integer, User> contacts) { this.contacts = contacts; }
 }

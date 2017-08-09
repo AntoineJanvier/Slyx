@@ -25,10 +25,50 @@ router.get('/fill_a', function (req, res) {
             email: 'toto@titi.com',
             pwd: passwordHash.generate('tototiti')
         }).then(u2 => {
+            User.create({
+                first_name: 'Toto',
+                last_name: 'Titi',
+                age: 12,
+                email: 'toto@titi.com',
+                pwd: passwordHash.generate('tototiti')
+            }).then(u3 => {
+                Contact.create({
+                    user: u1.userid,
+                    contact: u2.userid,
+                    status: 'ACCEPTED'
+                }).then(() => {
+                    Contact.create({
+                        user: u1.userid,
+                        contact: u3.userid,
+                        status: 'ACCEPTED'
+                    });
+                });
+            });
+        });
+    });
+    res.json({msg: 'OK'});
+});
+
+router.get('/fill_contact', function (req, res) {
+    res.type('json');
+
+    User.find({
+        where: {
+            userid: 1
+        }
+    }).then(u1 => {
+        User.find({
+            where: {
+                userid: 2
+            }
+        }).then(u2 => {
             Contact.create({
-                user: u1,
-                contact: u2,
                 status: 'ACCEPTED'
+            }).then(c => {
+                c.update({
+                    user: u1.userid,
+                    contact: u2.userid
+                });
             });
         });
     });

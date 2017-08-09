@@ -10,7 +10,7 @@ public class Me extends User {
 
     private static Me instance = null;
 
-    public static Me getInstance() {
+    public static synchronized Me getInstance() {
         if (instance == null) {
             return null;
         }

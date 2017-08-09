@@ -55,12 +55,13 @@ public class LoginController {
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
             // If all seems ok, request the server a connection
-            User me = socket.sendConnectionRequest(u_email, u_pwd);
+//            User me = socket.sendConnectionRequest(u_email, u_pwd);
+            socket.sendConnectionRequest(u_email, u_pwd);
 
             // Test singleton of Me object to know if we can launch the app just if he is connected
 //            Me me = Me.getInstance();
-            if (me != null) {
-                if (me.isConnected()) {
+            if (SlyxSocket.getMe() != null) {
+                if (SlyxSocket.getMe().isConnected()) {
 
                     // Close login window
                     Stage stage = (Stage) btn_sign_in.getScene().getWindow();
@@ -80,8 +81,8 @@ public class LoginController {
     }
     public void initialize() {
         try {
-            label_get_update.setText("Checking updates...");
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
+            label_get_update.setText("Checking updates...");
             String version = slyxSocket.sendGetUpdateRequest();
             initSetUpdateLabel(version.split("\\."));
 

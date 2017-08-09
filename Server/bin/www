@@ -32,19 +32,16 @@ let server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-let clients = [];
+let clients = {};
+let nb_clients = 0;
 
 server.listen(port);
 server.on('error', onError);
 
 nodenet.createServer(function (socket) {
     console.log('SOCKET_CONNECTED');
-
-    clients.push(socket);
-
-    for (let i = 0 ; i < clients.length; i++) {
-        console.log(clients[i].remoteAddress);
-    }
+    nb_clients++;
+    console.log(nb_clients + ' clients connected');
 
     socket.on('data', function (data) {
 
@@ -64,27 +61,15 @@ nodenet.createServer(function (socket) {
                 break;
             // Client loading its contacts
             case 'GET_CONTACTS':
-                return User.find({
-                    where: { email: json.email }
-                }).then(user => {
-                    Contact.findAll({
-                        user: user,
-                        status: 'ACCEPTED'
-                    }).then(contacts => {
-                        let resp = {};
-                        for (let c of contacts) {
-                            let n = c.responsify().userid;
-                            resp.n = c.responsify();
-                        }
-                        socket.write(resp + '\n');
-                    }).catch(err => { console.log(err); socket.write({} + '\n'); });
-                }).catch(err => { console.log(err); socket.write({} + '\n'); });
+                socketManagement.sockGetContacts(socket, json);
+                break;
             default:
                 socket.write({} + '\n');
         }
     });
 
     socket.on('close', function () {
+
         console.log('SOCKET_CLOSED');
     });
 

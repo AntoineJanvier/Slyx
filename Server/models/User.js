@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
             underscored: true,
             freezeTableName: true
         });
+    // User.associate = function (models) {
+    //     User.hasMany(models.Contact, {
+    //         as: 'user1',
+    //         foreignKey: 'user'
+    //     });
+    // };
     User.prototype.responsify = function () {
         return {
             type: 'USER',
@@ -28,14 +34,6 @@ module.exports = (sequelize, DataTypes) => {
             age: this.age,
             email: this.email
         };
-    };
-    User.prototype.inlineResponse = function () {
-        return 'USER;' +
-            this.id + ';' +
-            this.first_name + ';' +
-            this.last_name + ';' +
-            this.age + ';' +
-            this.email + '\n';
     };
     return User;
 };

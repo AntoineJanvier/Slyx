@@ -2,9 +2,8 @@
 
 module.exports = (sequelize, DataTypes) => {
     const Contact = sequelize.define('Contact', {
-        id: {type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true},
-        status: {type: DataTypes.STRING},
-        user: {type: DataTypes.BIGINT, foreignKey: true}
+        contactid: {type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true},
+        status: {type: DataTypes.STRING}
     }, {
         paranoid: true,
         underscored: true,
@@ -12,23 +11,22 @@ module.exports = (sequelize, DataTypes) => {
     });
     Contact.associate = function (models) {
         Contact.belongsTo(models.User, {
+            as: 'user1',
+            foreignKey: 'user'
+        });
+        Contact.belongsTo(models.User, {
+            as: 'user2',
             foreignKey: 'contact'
         });
     };
     Contact.prototype.responsify = function () {
         return {
-            type: 'contact',
-            USER: this.user.responsify(),
-            CONTACT: this.contact.responsify(),
-            STATUS: this.status
+            type: 'CONTACT',
+            id: this.contactid,
+            user: this.user,
+            contact: this.contact,
+            status: this.status
         };
-    };
-    Contact.prototype.inlineResponse = function () {
-        return 'CONTACT;' +
-            this.id + ';' +
-            this.status + ';' +
-            this.user.userid + ';' +
-            this.contact.userid + '\n';
     };
     return Contact;
 };
