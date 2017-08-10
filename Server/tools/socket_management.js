@@ -44,7 +44,7 @@ module.exports = {
     },
     sockGetContacts: function (socket, json) {
         User.find({
-            where: { email: json.email }
+            where: { userid: json.userid }
         }).then(user => {
             return Contact.findAll({
                 user: user,
@@ -59,7 +59,9 @@ module.exports = {
                     where: {userid: {$in: userIDs}}
                 }).then(userContacts => {
                     let resp = [];
+                    let nb = 0;
                     for (let uc of userContacts) {
+                        nb++;
                         resp.push(uc.responsify());
                     }
                     socket.write(JSON.stringify(resp) + '\n');
@@ -68,24 +70,6 @@ module.exports = {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
                 });
-                let j = {
-                    nbContacts: 2,
-                    1: {
-                        firstname: 'Titi',
-                        lastname: 'Toto',
-                        email: '',
-                        age: 21
-                    },
-                    2: {
-                        firstname: 'Titi',
-                        lastname: 'Toto',
-                        email: '',
-                        age: 21
-                    }
-                };
-
-                socket.write(JSON.stringify(userIDs) + '\n');
-                socket.Contacts = userIDs;
             }).catch(err => {
                 console.log(err);
                 socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
@@ -97,26 +81,41 @@ module.exports = {
     },
     sockGetMessagesOfContact: function (socket, json) {
         User.find({
-            where: { userid: json.u1_userid }
+            where: { userid: json.u1userid }
         }).then(user1 => {
             return User.find({
-                where: { userid: json.u2_userid }
+                where: { userid: json.u2userid }
             }).then(user2 => {
                 return Contact.find({
                     where: {user: user1, contact: user2}
                 }).then(contact => {
-                    return Message.findAll({
-                        users: contact
-                    }).then(messages => {
-                        let resp = {};
-                        for (let m of messages) {
-                            let msgResp = m.responsify();
-                            let n = msgResp.messageid;
-                            resp.n = msgResp;
 
-                            socket.write(resp + '\n');
+                    return Contact.find({
+                        where: {user: user2, contact: user1}
+                    }).then(contact2 => {
+
+                        let contactIDs = [];
+                        if (contact)
+                            contactIDs.push(contact.contactid);
+                        if (contact2)
+                            contactIDs.push(contact2.contactid);
+
+                        return Message.findAll({
+                            where: {users: {$in: contactIDs}}
+                        }).then(messages => {
+
+                            let resp = [];
+                            let nb = 0;
+                            for (let m of messages) {
+                                nb++;
+                                resp.push(m.responsify());
+                            }
+                            socket.write(JSON.stringify(resp) + '\n');
                             socket.Messages = resp;
-                        }
+                        }).catch(err => {
+                            console.log(err);
+                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                        });
                     }).catch(err => {
                         console.log(err);
                         socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');

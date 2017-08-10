@@ -52,7 +52,6 @@ nodenet.createServer(function (socket) {
         switch (json.request) {
             // Know if the client is up to date
             case 'GET_UPDATE':
-                console.log('GET UPDATE');
                 socketManagement.sockGetUpdate(socket);
                 break;
             // Client connection
@@ -62,6 +61,9 @@ nodenet.createServer(function (socket) {
             // Client loading its contacts
             case 'GET_CONTACTS':
                 socketManagement.sockGetContacts(socket, json);
+                break;
+            case 'GET_MESSAGES_OF_CONTACT':
+                socketManagement.sockGetMessagesOfContact(socket, json);
                 break;
             default:
                 socket.write({} + '\n');

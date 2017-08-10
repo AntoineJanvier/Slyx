@@ -49,9 +49,9 @@ public class SlyxSocket extends Thread {
      * @param from: User who is sending the message
      * @param to: User who will receive the message
      */
-    public void sendMessage(String content, User from, User to) {
+    public void sendMessage(String content, User to) {
         Date d = new Date();
-        Message m = new Message(from, to, content);
+        Message m = new Message(to, new Date(), content);
         printWriter.write(m.toObject().toString());
     }
 
@@ -69,30 +69,24 @@ public class SlyxSocket extends Thread {
         JSONParser jsonParser = new JSONParser();
         Object o = null;
 
+        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
+        arrayJsonParser.processUser();
+        return arrayJsonParser.getUsers();
+    }
+
+    public Message[] sendGetMessagesOfContactRequest(User user, User to) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.GET_MESSAGES_OF_CONTACT_REQUEST);
+        j.put("u1userid", user.getId());
+        j.put("u2userid", to.getId());
+
+        String returned = echo(j.toString());
+        JSONParser jsonParser = new JSONParser();
+        Object o = null;
 
         ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-//        arrayJsonParser.process();
-//        return arrayJsonParser.getUsers();
-
-//        try {
-//            o = jsonParser.parse(returned);
-//        } catch (ParseException e) {
-//            System.out.println("JSON PARSE EXCEPTION IN GET CONTACTS REQUEST");
-//            e.printStackTrace();
-//        }
-//        JSONObject jsonMe = (JSONObject) o;
-//
-//        if (jsonMe != null) {
-//            System.out.println(jsonMe);
-//        }
-
-        /*
-        TODO : Remove this part (Tests)
-         */
-        User[] contacts = new User[2];
-        contacts[0] = new User(1, "Antoine", "Janvier", 21, "antoine.jan95@gmail.com");
-        contacts[1] = new User(2, "Titi", "Tata", 20, "titi@tata.com");
-        return contacts;
+        arrayJsonParser.processMessage();
+        return arrayJsonParser.getMessages();
     }
 
     /**
@@ -130,10 +124,8 @@ public class SlyxSocket extends Thread {
                         jsonMe.get("email").toString()
                 );
                 me.setConnected(true);
-//                return me;
             }
         }
-        return;
     }
 
     /**

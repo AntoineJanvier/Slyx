@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="60.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactController">
+<AnchorPane prefHeight="62.0" prefWidth="250.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactController">
    <children>
-      <WebView fx:id="webView_contact_icon" layoutX="110.0" layoutY="10.0" prefHeight="40.0" prefWidth="40.0" />
+      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="188.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+         <image>
+            <Image url="@../../../../../../Pictures/icon_profile.png" />
+         </image>
+      </ImageView>
       <Label fx:id="label_firstname" layoutX="7.0" layoutY="7.0" text="Firstname">
          <font>
             <Font size="12.0" />

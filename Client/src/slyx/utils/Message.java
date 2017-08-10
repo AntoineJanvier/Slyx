@@ -9,20 +9,16 @@ import java.util.Date;
  * on 01/08/17.
  */
 public class Message {
-    private User from;
     private User to;
     private Date sent;
     private String content;
 
-    public Message(User from, User to, String content) {
-        this.from = from;
+    public Message(User to, Date sent, String content) {
         this.to = to;
-        this.sent = new Date();
+        this.sent = sent;
         this.content = content;
     }
 
-    public User getFrom() { return from; }
-    public void setFrom(User from) { this.from = from; }
     public User getTo() { return to; }
     public void setTo(User to) { this.to = to; }
     public Date getSent() { return sent; }
@@ -33,7 +29,6 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "from=" + this.from +
                 ", to=" + this.to +
                 ", sent=" + this.sent +
                 ", content='" + this.content + '\'' +
@@ -42,7 +37,6 @@ public class Message {
 
     public JSONObject toObject() {
         JSONObject o = new JSONObject();
-        o.put("from", this.from.getId());
         o.put("to", this.to.getId());
         o.put("sent", this.sent);
         o.put("content", this.content);

@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,8 +19,10 @@ import slyx.communication.API_auth;
 import slyx.communication.API_contact;
 import slyx.communication.SlyxSocket;
 import slyx.utils.Me;
+import slyx.utils.Message;
 import slyx.utils.User;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -39,7 +43,7 @@ public class SlyxController {
     @FXML
     Button btn_disconnection;
     @FXML
-    WebView webView_my_icon;
+    ImageView imageView_my_icon;
     @FXML
     Label label_my_id;
     @FXML
@@ -48,6 +52,19 @@ public class SlyxController {
     Label label_my_lastname;
     @FXML
     Label label_my_email;
+
+    public void getMessagesOfContactSelected() throws IOException {
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+        Message[] messages = slyxSocket.sendGetMessagesOfContactRequest(SlyxSocket.getMe(), new User());
+        for (Message message : messages) {
+            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
+            Label l_firstname = (Label) p.lookup("#label_content");
+            Label l_lastname = (Label) p.lookup("#label_lastname");
+            l_content.setText(message.getContent());
+            l_sent.setText(message.getSent());
+            vBox_left.getChildren().add(p);
+        }
+    }
 
     public void disconnect() throws IOException {
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
@@ -61,9 +78,9 @@ public class SlyxController {
 
     public void initialize() throws IOException {
         // Set default icon for my profile
-        WebEngine engine = webView_my_icon.getEngine();
-        String url = "http://localhost:3000/images/my_icon_profile.png";
-        engine.load(url);
+        String imagePath = "http://localhost:3000/images/my_icon_profile.png";
+        Image image = new Image(imagePath);
+        imageView_my_icon.setImage(image);
 
         // Set my informations
         SlyxSocket slyxSocket = SlyxSocket.getInstance();

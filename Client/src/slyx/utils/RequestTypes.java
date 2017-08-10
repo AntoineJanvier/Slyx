@@ -10,4 +10,5 @@ public class RequestTypes {
     public final static String MESSAGE_REQUEST = "MESSAGE";
     public final static String GET_UPDATE_REQUEST = "GET_UPDATE";
     public final static String GET_CONTACTS_REQUEST = "GET_CONTACTS";
+    public final static String GET_MESSAGES_OF_CONTACT_REQUEST = "GET_MESSAGES_OF_CONTACT";
 }
