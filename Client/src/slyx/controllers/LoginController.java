@@ -54,12 +54,12 @@ public class LoginController {
         else if (!Validator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
+            SlyxSocket.setMe(null);
             // If all seems ok, request the server a connection
-//            User me = socket.sendConnectionRequest(u_email, u_pwd);
             socket.sendConnectionRequest(u_email, u_pwd);
 
             // Test singleton of Me object to know if we can launch the app just if he is connected
-//            Me me = Me.getInstance();
+
             if (SlyxSocket.getMe() != null) {
                 if (SlyxSocket.getMe().isConnected()) {
 

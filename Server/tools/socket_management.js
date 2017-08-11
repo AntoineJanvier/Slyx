@@ -47,7 +47,7 @@ module.exports = {
             where: { userid: json.userid }
         }).then(user => {
             return Contact.findAll({
-                user: user,
+                user: user.userid,
                 status: 'ACCEPTED'
             }).then(contacts => {
                 let userIDs = [];

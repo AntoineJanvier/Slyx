@@ -237,7 +237,7 @@ public class SlyxSocket extends Thread {
     }
 
     public static User getMe() { return me; }
-    public void setMe(User me) { SlyxSocket.me = me; }
+    public static void setMe(User me) { SlyxSocket.me = me; }
     public HashMap<Integer, User> getContacts() { return contacts; }
     public void setContacts(HashMap<Integer, User> contacts) { this.contacts = contacts; }
 }

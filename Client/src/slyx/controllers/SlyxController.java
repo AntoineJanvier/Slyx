@@ -53,18 +53,18 @@ public class SlyxController {
     @FXML
     Label label_my_email;
 
-    public void getMessagesOfContactSelected() throws IOException {
-        SlyxSocket slyxSocket = SlyxSocket.getInstance();
-        Message[] messages = slyxSocket.sendGetMessagesOfContactRequest(SlyxSocket.getMe(), new User());
-        for (Message message : messages) {
-            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
-            Label l_firstname = (Label) p.lookup("#label_content");
-            Label l_lastname = (Label) p.lookup("#label_lastname");
-            l_content.setText(message.getContent());
-            l_sent.setText(message.getSent());
-            vBox_left.getChildren().add(p);
-        }
-    }
+//    public void getMessagesOfContactSelected() throws IOException {
+//        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+//        Message[] messages = slyxSocket.sendGetMessagesOfContactRequest(SlyxSocket.getMe(), new User());
+//        for (Message message : messages) {
+//            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
+//            Label l_firstname = (Label) p.lookup("#label_content");
+//            Label l_lastname = (Label) p.lookup("#label_lastname");
+//            l_content.setText(message.getContent());
+//            l_sent.setText(message.getSent());
+//            vBox_left.getChildren().add(p);
+//        }
+//    }
 
     public void disconnect() throws IOException {
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
