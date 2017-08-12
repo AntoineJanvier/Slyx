@@ -2,24 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd4d519e-039a-4ace-adc5-4c767e1ab79c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/css/contact.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/css/message.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/css/slyx.css" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/History.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/Jison.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/LoginController.class" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/LoginController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/SlyxController.class" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/SlyxController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/slyx.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/ContactController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/ContactController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/LoginController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/LoginController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/SettingsController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/SettingsController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/SlyxController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/SlyxController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/contact.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/contact.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/message.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/message.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/settings.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/settings.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/slyx.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/RequestTypes.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/RequestTypes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/ArrayJsonParser.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/ArrayJsonParser.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/www" afterPath="$PROJECT_DIR$/bin/www" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tools/socket_management.js" afterPath="$PROJECT_DIR$/tools/socket_management.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -64,8 +57,8 @@
       <file leaf-file-name="www" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/www">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1170">
-              <caret line="65" column="57" lean-forward="false" selection-start-line="65" selection-start-column="57" selection-end-line="65" selection-end-column="57" />
+            <state relative-caret-position="122">
+              <caret line="46" column="33" lean-forward="false" selection-start-line="46" selection-start-column="33" selection-end-line="46" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -74,8 +67,8 @@
       <file leaf-file-name="socket_management.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="49" column="33" lean-forward="false" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+            <state relative-caret-position="266">
+              <caret line="50" column="37" lean-forward="false" selection-start-line="50" selection-start-column="37" selection-end-line="50" selection-end-column="37" />
               <folding>
                 <element signature="e#335#453#0" expanded="false" />
                 <element signature="e#496#1428#0" expanded="false" />
@@ -162,6 +155,7 @@
       <find>jsonObj</find>
       <find>logger</find>
       <find>block</find>
+      <find>push</find>
     </findStrings>
     <replaceStrings>
       <replace>slyx</replace>
@@ -474,7 +468,7 @@
       <workItem from="1502027899304" duration="15324000" />
       <workItem from="1502283299903" duration="881000" />
       <workItem from="1502366147276" duration="6345000" />
-      <workItem from="1502454479458" duration="862000" />
+      <workItem from="1502454479458" duration="3403000" />
     </task>
     <task id="LOCAL-00001" summary="First refacto, clean code">
       <created>1501254996808</created>
@@ -543,7 +537,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84656000" />
+    <option name="totallyTimeSpent" value="87197000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="2048" height="1125" extended-state="7" />
@@ -967,16 +961,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/www">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="65" column="57" lean-forward="false" selection-start-line="65" selection-start-column="57" selection-end-line="65" selection-end-column="57" />
+        <state relative-caret-position="122">
+          <caret line="46" column="33" lean-forward="false" selection-start-line="46" selection-start-column="33" selection-end-line="46" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="49" column="33" lean-forward="false" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+        <state relative-caret-position="266">
+          <caret line="50" column="37" lean-forward="false" selection-start-line="50" selection-start-column="37" selection-end-line="50" selection-end-column="37" />
           <folding>
             <element signature="e#335#453#0" expanded="false" />
             <element signature="e#496#1428#0" expanded="false" />

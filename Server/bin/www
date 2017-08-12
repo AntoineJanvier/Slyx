@@ -32,7 +32,7 @@ let server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-let clients = {};
+let clients = [];
 let nb_clients = 0;
 
 server.listen(port);
@@ -40,8 +40,13 @@ server.on('error', onError);
 
 nodenet.createServer(function (socket) {
     console.log('SOCKET_CONNECTED');
+
+    clients.push(socket);
     nb_clients++;
-    console.log(nb_clients + ' clients connected');
+
+    socket.socketId = nb_clients;
+
+    console.log(clients.length + ' clients connected');
 
     socket.on('data', function (data) {
 
@@ -71,6 +76,14 @@ nodenet.createServer(function (socket) {
     });
 
     socket.on('close', function () {
+
+        // console.log(clients[0]);
+        for (let i = 0; i < clients.length; i++) {
+            if (clients[i].socketId === socket.socketId) {
+                // clients.slice(i, 1);
+                clients.splice(i, 1);
+            }
+        }
 
         console.log('SOCKET_CLOSED');
     });

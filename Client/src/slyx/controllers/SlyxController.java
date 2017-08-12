@@ -66,7 +66,19 @@ public class SlyxController {
 //        }
 //    }
 
+    public void launchSettingsWindow() throws IOException {
+        // Launch Settings window
+        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/settings.fxml"));
+        Stage next_stage = new Stage();
+        next_stage.setTitle("Settings");
+        next_stage.setScene(new Scene(next_root));
+        next_stage.show();
+    }
+
     public void disconnect() throws IOException {
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+        slyxSocket.close();
+
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         Stage stage = (Stage) btn_disconnection.getScene().getWindow();
         stage.close();

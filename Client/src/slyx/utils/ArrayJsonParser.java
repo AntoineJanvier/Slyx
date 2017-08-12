@@ -64,30 +64,35 @@ public class ArrayJsonParser {
         if (base.charAt(0) == '[' && base.charAt(base.length() - 1) == ']') {
             // Remove '[' and ']'
             String s1 = base.split("\\[")[1];
-            String s2 = s1.split("]")[0];
 
-            // Split to have all objects (need to re-add brackets at the end to parse correctly objects)
-            String[] toParse = s2.split("}");
+            if (s1.length() > 1) {
+                String s2 = s1.split("]")[0];
 
-            for (int i = 0; i < toParse.length; i++) {
-                JSONParser jsonParser = new JSONParser();
-                Object o = null;
+                // Split to have all objects (need to re-add brackets at the end to parse correctly objects)
+                String[] toParse = s2.split("}");
 
-                o = tryParse(i, jsonParser, o, toParse);
+                for (int i = 0; i < toParse.length; i++) {
+                    JSONParser jsonParser = new JSONParser();
+                    Object o = null;
 
-                // Create a User and add it to HashMap
-                JSONObject jsonMe = (JSONObject) o;
-                if (jsonMe != null) {
-                    User u = new User(
-                            Math.toIntExact((long) jsonMe.get("id")),
-                            jsonMe.get("firstname").toString(),
-                            jsonMe.get("lastname").toString(),
-                            Math.toIntExact((long) jsonMe.get("age")),
-                            jsonMe.get("email").toString()
-                    );
-                    userHashMap.put(++key, u);
+                    o = tryParse(i, jsonParser, o, toParse);
+
+                    // Create a User and add it to HashMap
+                    JSONObject jsonMe = (JSONObject) o;
+                    if (jsonMe != null) {
+                        User u = new User(
+                                Math.toIntExact((long) jsonMe.get("id")),
+                                jsonMe.get("firstname").toString(),
+                                jsonMe.get("lastname").toString(),
+                                Math.toIntExact((long) jsonMe.get("age")),
+                                jsonMe.get("email").toString()
+                        );
+                        userHashMap.put(++key, u);
+                    }
+                    nbKeys = key;
                 }
-                nbKeys = key;
+            } else {
+                System.out.println("Empty JSON detected");
             }
         }
     }

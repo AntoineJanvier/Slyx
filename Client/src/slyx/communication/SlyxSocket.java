@@ -46,7 +46,6 @@ public class SlyxSocket extends Thread {
     /**
      * Send a message from a User to another User
      * @param content: Message to send
-     * @param from: User who is sending the message
      * @param to: User who will receive the message
      */
     public void sendMessage(String content, User to) {
@@ -228,6 +227,7 @@ public class SlyxSocket extends Thread {
     }
     public void close() throws IOException {
         socket.close();
+        instance = null;
     }
     private String getIpAddress() {
         return "127.0.0.1";

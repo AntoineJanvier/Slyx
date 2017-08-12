@@ -47,13 +47,16 @@ module.exports = {
             where: { userid: json.userid }
         }).then(user => {
             return Contact.findAll({
-                user: user.userid,
-                status: 'ACCEPTED'
+                where : {
+                    user: user.userid,
+                    status: 'ACCEPTED'
+                }
             }).then(contacts => {
                 let userIDs = [];
                 for (let c of contacts) {
                     userIDs.push(c.contact);
                 }
+                console.log('IDS => ' + userIDs);
 
                 return User.findAll({
                     where: {userid: {$in: userIDs}}
