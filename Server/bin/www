@@ -75,6 +75,10 @@ nodenet.createServer(function (socket) {
             case 'ADD_CONTACT':
                 socketManagement.sockAddNewContact(socket, json);
                 break;
+            // Client want to print all contact requests
+            case 'GET_PENDING_CONTACT_REQUESTS':
+                socketManagement.sockGetPendingContactRequests(socket, json);
+                break;
             // Get messages of a specific contact
             case 'GET_MESSAGES_OF_CONTACT':
                 socketManagement.sockGetMessagesOfContact(socket, json);

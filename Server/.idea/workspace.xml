@@ -2,19 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd4d519e-039a-4ace-adc5-4c767e1ab79c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/ContactProfileController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/ContactRequestController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/contactProfile.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/contactRequest.fxml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/API_auth.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/API_contact.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/SlyxController.class" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/controllers/SlyxController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/../Client/out/production/Client/slyx/scenes/slyx.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/AddContactController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/AddContactController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/SlyxController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/SlyxController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/addContact.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/addContact.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/contact.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/contact.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/slyx.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/RequestTypes.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/RequestTypes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/www" afterPath="$PROJECT_DIR$/bin/www" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tools/socket_management.js" afterPath="$PROJECT_DIR$/tools/socket_management.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/stats.pug" afterPath="$PROJECT_DIR$/views/stats.pug" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -28,8 +33,8 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+            <state relative-caret-position="504">
+              <caret line="28" column="12" lean-forward="false" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -48,8 +53,8 @@
       <file leaf-file-name="www" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/www">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="75" column="50" lean-forward="false" selection-start-line="75" selection-start-column="33" selection-end-line="75" selection-end-column="50" />
+            <state relative-caret-position="559">
+              <caret line="79" column="62" lean-forward="false" selection-start-line="79" selection-start-column="62" selection-end-line="79" selection-end-column="62" />
               <folding />
             </state>
           </provider>
@@ -58,11 +63,13 @@
       <file leaf-file-name="socket_management.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="644">
-              <caret line="99" column="102" lean-forward="false" selection-start-line="99" selection-start-column="102" selection-end-line="99" selection-end-column="102" />
+            <state relative-caret-position="457">
+              <caret line="179" column="17" lean-forward="false" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
               <folding>
                 <element signature="e#335#453#0" expanded="false" />
                 <element signature="e#496#1428#0" expanded="false" />
+                <element signature="e#1475#2859#0" expanded="false" />
+                <element signature="e#2908#4959#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -204,8 +211,8 @@
         <option value="$PROJECT_DIR$/models/Message.js" />
         <option value="$PROJECT_DIR$/models/Contact.js" />
         <option value="$PROJECT_DIR$/routes/fill.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/views/stats.pug" />
+        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/bin/www" />
         <option value="$PROJECT_DIR$/tools/socket_management.js" />
       </list>
@@ -464,7 +471,7 @@
       <workItem from="1502027899304" duration="15324000" />
       <workItem from="1502283299903" duration="881000" />
       <workItem from="1502366147276" duration="6345000" />
-      <workItem from="1502454479458" duration="6103000" />
+      <workItem from="1502454479458" duration="10225000" />
     </task>
     <task id="LOCAL-00001" summary="First refacto, clean code">
       <created>1501254996808</created>
@@ -533,7 +540,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89897000" />
+    <option name="totallyTimeSpent" value="94019000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="2048" height="1125" extended-state="7" />
@@ -601,6 +608,8 @@
           <folding>
             <element signature="e#335#453#0" expanded="false" />
             <element signature="e#496#1428#0" expanded="false" />
+            <element signature="e#1475#2859#0" expanded="false" />
+            <element signature="e#2908#4959#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -926,14 +935,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/stats.pug">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -950,14 +951,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/www">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="75" column="50" lean-forward="false" selection-start-line="75" selection-start-column="33" selection-end-line="75" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/api_contacts.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="663">
@@ -966,13 +959,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/www">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="559">
+          <caret line="79" column="62" lean-forward="false" selection-start-line="79" selection-start-column="62" selection-end-line="79" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="28" column="12" lean-forward="false" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tools/socket_management.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="644">
-          <caret line="99" column="102" lean-forward="false" selection-start-line="99" selection-start-column="102" selection-end-line="99" selection-end-column="102" />
+        <state relative-caret-position="457">
+          <caret line="179" column="17" lean-forward="false" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
           <folding>
             <element signature="e#335#453#0" expanded="false" />
             <element signature="e#496#1428#0" expanded="false" />
+            <element signature="e#1475#2859#0" expanded="false" />
+            <element signature="e#2908#4959#0" expanded="false" />
           </folding>
         </state>
       </provider>

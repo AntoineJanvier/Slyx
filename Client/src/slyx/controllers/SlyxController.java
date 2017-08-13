@@ -12,17 +12,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import slyx.communication.API_auth;
-import slyx.communication.API_contact;
 import slyx.communication.SlyxSocket;
-import slyx.utils.Me;
-import slyx.utils.Message;
 import slyx.utils.User;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -52,6 +45,9 @@ public class SlyxController {
     Label label_my_lastname;
     @FXML
     Label label_my_email;
+
+    @FXML
+    VBox vBox_request;
 
 //    public void getMessagesOfContactSelected() throws IOException {
 //        SlyxSocket slyxSocket = SlyxSocket.getInstance();
@@ -119,6 +115,29 @@ public class SlyxController {
             l_firstname.setText(u.getFirstname());
             l_lastname.setText(u.getLastname());
             vBox_left.getChildren().add(p);
+        }
+
+        User[] requests = slyxSocket.sendGetPendingContactRequests(SlyxSocket.getMe());
+        for (User u : requests) {
+            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
+            Label l_name = (Label) p.lookup("#label_name");
+            l_name.setText(u.getFirstname() + " " + u.getLastname());
+
+            Button button_Reject = (Button) p.lookup("#button_reject_request");
+            button_Reject.setOnAction(event -> {
+                slyxSocket.sendRejectContactRequest(u.getId());
+                p.setDisable(true);
+                button_Reject.setDisable(true);
+            });
+
+            Button button_Accept = (Button) p.lookup("#button_add_accept_request");
+            button_Accept.setOnAction(event -> {
+                slyxSocket.sendAcceptContactRequest(u.getId());
+                p.setDisable(true);
+                button_Accept.setDisable(true);
+            });
+
+            vBox_request.getChildren().add(p);
         }
     }
 }

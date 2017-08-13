@@ -16,7 +16,9 @@ public class RequestTypes {
     // Contacts
     public final static String GET_CONTACTS_REQUEST = "GET_CONTACTS";
     public final static String GET_USERS_NOT_IN_CONTACT_LIST_REQUEST = "GET_USERS_NOT_IN_CONTACT_LIST";
+    public final static String GET_PENDING_CONTACT_REQUESTS_REQUEST = "GET_PENDING_CONTACT_REQUESTS";
     public final static String ADD_CONTACT_REQUEST = "ADD_CONTACT";
+    public final static String REMOVE_CONTACT_REQUEST = "REMOVE_CONTACT";
 
     // On contact
     public final static String GET_MESSAGES_OF_CONTACT_REQUEST = "GET_MESSAGES_OF_CONTACT";

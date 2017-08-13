@@ -82,40 +82,45 @@ module.exports = {
     },
     sockAddNewContact: function (socket, json) {
         User.find({
-            where: { userid: idUser }
-        }).then(user_requested => {
-            Contact.find({
-                where: { user: user.userid, contact: user_requested.userid }
-            }).then(contact => {
-                if (!contact) {
-                    Contact.find({
-                        where: { user: user_requested.userid, contact: user.userid }
-                    }).then(contact => {
-                        if (!contact) {
-                            Contact.create({
-                                user: user,
-                                contact: user_requested,
-                                status: 'PENDING'
-                            }).then(contact => {
-                                socket.write(JSON.stringify({request: 'ADD_CONTACT_IS_IN_PENDING_STATE'}) + '\n');
-                            }).catch(err => {
-                                console.log(err);
-                                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');});
-                        } else
-                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
-                    }).catch(err => {
-                        console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
-                    });
-                } else
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            where: {userid: json.me}
+        }).then(user => {
+            return User.find({
+                where: { userid: json.userid }
+            }).then(user_requested => {
+                return Contact.find({
+                    where: { user: user.userid, contact: user_requested.userid }
+                }).then(contact => {
+                    if (!contact) {
+                        return Contact.find({
+                            where: { user: user_requested.userid, contact: user.userid }
+                        }).then(contact => {
+                            if (!contact) {
+                                return Contact.create({
+                                    user: user.userid,
+                                    contact: user_requested.userid,
+                                    status: 'PENDING'
+                                }).then(contact => {
+                                    socket.write(JSON.stringify({request: 'OK'}) + '\n');
+                                }).catch(err => {
+                                    console.log(err);
+                                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_F'}) + '\n');});
+                            } else
+                                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_E'}) + '\n');
+                        }).catch(err => {
+                            console.log(err);
+                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                        });
+                    } else
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                }).catch(err => {
+                    console.log(err);
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
             });
-        }).catch(err => {
-            console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');});
+        });
     },
     sockGetUsersNotInContactList: function (socket, json) {
         User.find({
@@ -124,14 +129,16 @@ module.exports = {
             return Contact.findAll({
                 where : {
                     user: user.userid,
-                    status: 'ACCEPTED'
+                    status: {
+                        $in: ['ACCEPTED', 'PENDING']
+                    }
                 }
             }).then(contacts => {
                 let userIDs = [];
                 for (let c of contacts) {
                     userIDs.push(c.contact);
                 }
-                console.log('IDS => ' + userIDs);
+                userIDs.push(user.userid);
 
                 return User.findAll({
                     where: {userid: {$notIn: userIDs}}
@@ -155,6 +162,45 @@ module.exports = {
         }).catch(err => {
             console.log(err);
             socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+        });
+    },
+    sockGetPendingContactRequests: function (socket, json) {
+        User.find({
+            where: { userid: json.userid }
+        }).then(user => {
+            return Contact.findAll({
+                where : {
+                    user: user.userid,
+                    status: 'PENDING'
+                }
+            }).then(contacts => {
+                let userIDs = [];
+                for (let c of contacts) {
+                    userIDs.push(c.contact);
+                }
+
+                return User.findAll({
+                    where: {userid: {$in: userIDs}}
+                }).then(userContacts => {
+                    let resp = [];
+                    let nb = 0;
+                    for (let uc of userContacts) {
+                        nb++;
+                        resp.push(uc.responsify());
+                    }
+                    socket.write(JSON.stringify(resp) + '\n');
+                    socket.Contacts = resp;
+                }).catch(err => {
+                    console.log(err);
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                });
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
         });
     },
     sockGetMessagesOfContact: function (socket, json) {

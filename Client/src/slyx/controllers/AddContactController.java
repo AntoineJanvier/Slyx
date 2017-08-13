@@ -36,25 +36,22 @@ public class AddContactController {
     public void initialize() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
-        User[] contacts = slyxSocket.sendGetContactsRequest(SlyxSocket.getMe());
+        User[] contacts = slyxSocket.sendGetUsersNotInContactList(SlyxSocket.getMe());
         for (User u : contacts) {
-            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
-            Label l_firstname = (Label) p.lookup("#label_firstname");
-            Label l_lastname = (Label) p.lookup("#label_lastname");
-            Label l_connected = (Label) p.lookup("#label_connected");
-            l_firstname.setText(u.getFirstname());
-            l_lastname.setText(u.getLastname());
-            l_connected.setVisible(false);
+            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
+            Label l_name = (Label) p.lookup("#label_name");
+            l_name.setText(u.getFirstname() + " " + u.getLastname());
 
-            Button b = new Button("Add " + u.getFirstname() + " " + u.getLastname());
-            b.setOnAction(event -> {
+            Button button_AddOrRemove = (Button) p.lookup("#button_add_or_remove");
+            button_AddOrRemove.setText("+");
+            button_AddOrRemove.setOnAction(event -> {
                 slyxSocket.sendAddContactRequest(u.getId());
                 p.setDisable(true);
-                b.setDisable(true);
+                button_AddOrRemove.setDisable(true);
             });
 
             vBox_in_scrollPane.getChildren().add(p);
-            vBox_in_scrollPane.getChildren().add(b);
+            vBox_in_scrollPane.getChildren().add(button_AddOrRemove);
         }
     }
 }
