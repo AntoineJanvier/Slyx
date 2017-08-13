@@ -73,6 +73,34 @@ public class SlyxSocket extends Thread {
         return arrayJsonParser.getUsers();
     }
 
+    public void sendAddContactRequest(int userID) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.ADD_CONTACT_REQUEST);
+        j.put("userid", userID);
+
+        String returned = echo(j.toString());
+        JSONParser jsonParser = new JSONParser();
+        Object o = null;
+
+//        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
+//        arrayJsonParser.processUser();
+//        return arrayJsonParser.getUsers();
+    }
+
+    public User[] sendGetUsersNotInContactList(User user) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.GET_USERS_NOT_IN_CONTACT_LIST_REQUEST);
+        j.put("userid", user.getId());
+
+        String returned = echo(j.toString());
+        JSONParser jsonParser = new JSONParser();
+        Object o = null;
+
+        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
+        arrayJsonParser.processUser();
+        return arrayJsonParser.getUsers();
+    }
+
     public Message[] sendGetMessagesOfContactRequest(User user, User to) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_MESSAGES_OF_CONTACT_REQUEST);
@@ -238,6 +266,4 @@ public class SlyxSocket extends Thread {
 
     public static User getMe() { return me; }
     public static void setMe(User me) { SlyxSocket.me = me; }
-    public HashMap<Integer, User> getContacts() { return contacts; }
-    public void setContacts(HashMap<Integer, User> contacts) { this.contacts = contacts; }
 }

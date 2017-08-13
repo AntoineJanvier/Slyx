@@ -66,6 +66,15 @@ public class SlyxController {
 //        }
 //    }
 
+    public void launchAddNewContactWindow() throws IOException {
+        // Launch Settings window
+        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/addContact.fxml"));
+        Stage next_stage = new Stage();
+        next_stage.setTitle("Add Contact");
+        next_stage.setScene(new Scene(next_root));
+        next_stage.show();
+    }
+
     public void launchSettingsWindow() throws IOException {
         // Launch Settings window
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/settings.fxml"));

@@ -23,7 +23,7 @@
             <Font size="12.0" />
          </font>
       </Label>
-      <Label layoutX="7.0" layoutY="46.0" text="Online">
+      <Label fx:id="label_connected" layoutX="7.0" layoutY="46.0" text="Online">
          <font>
             <Font name="System Italic" size="8.0" />
          </font>

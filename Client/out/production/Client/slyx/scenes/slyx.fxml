@@ -62,9 +62,12 @@
     <bottom>
         <HBox fx:id="hBox_bottom" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <Pane prefHeight="62.0" prefWidth="513.0" />
-            <TextField fx:id="tf_message_to_send" prefHeight="62.0" prefWidth="600.0" promptText="Type your message here..." />
-                <Button fx:id="btn_send_message" alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="96.0" text="Send" textAlignment="CENTER" />
+                <Pane prefHeight="62.0" prefWidth="253.0">
+               <children>
+                  <Button layoutX="14.0" layoutY="18.0" mnemonicParsing="false" onAction="#launchAddNewContactWindow" text="Add contact" />
+               </children></Pane>
+            <TextField fx:id="tf_message_to_send" prefHeight="62.0" prefWidth="841.0" promptText="Type your message here..." />
+                <Button fx:id="btn_send_message" alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="115.0" text="Send" textAlignment="CENTER" />
             </children>
         </HBox>
     </bottom>

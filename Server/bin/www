@@ -67,6 +67,15 @@ nodenet.createServer(function (socket) {
             case 'GET_CONTACTS':
                 socketManagement.sockGetContacts(socket, json);
                 break;
+            // Client loading new possible contacts
+            case 'GET_USERS_NOT_IN_CONTACT_LIST':
+                socketManagement.sockGetUsersNotInContactList(socket, json);
+                break;
+            // Client want to add a new contact
+            case 'ADD_CONTACT':
+                socketManagement.sockAddNewContact(socket, json);
+                break;
+            // Get messages of a specific contact
             case 'GET_MESSAGES_OF_CONTACT':
                 socketManagement.sockGetMessagesOfContact(socket, json);
                 break;
@@ -76,15 +85,11 @@ nodenet.createServer(function (socket) {
     });
 
     socket.on('close', function () {
-
-        // console.log(clients[0]);
         for (let i = 0; i < clients.length; i++) {
             if (clients[i].socketId === socket.socketId) {
-                // clients.slice(i, 1);
                 clients.splice(i, 1);
             }
         }
-
         console.log('SOCKET_CLOSED');
     });
 
@@ -139,37 +144,3 @@ function onListening() {
     console.log('NodeJS server started at port ' + addr.port + '...');
     debug('Listening on ' + bind);
 }
-
-let handleClientRequest = function(socket, jsonObj) {
-    let r = {};
-    switch (jsonObj.request) {
-        case 'CONNECTION':
-            return User.find({
-                where: {'email': jsonObj.email}
-            }).then(function (user) {
-                if (user) {
-                    if (passwordHash.verify(jsonObj.password, user.pwd)) {
-                        console.log();
-                        console.log('IN SEQUELIZE REQUEST');
-                        console.log(user.responsify());
-                        console.log();
-                        console.log();
-                        r = user.responsify();
-                        return r;
-                    } else {
-                        console.log('Bad login input');
-                        return {};
-                    }
-                } else {
-                    console.log('No user');
-                    return {};
-                }
-            }).catch(err => {
-                console.log(err);
-                return {};
-            });
-            break;
-        default:
-            return {};
-    }
-};

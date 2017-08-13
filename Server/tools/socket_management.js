@@ -56,8 +56,6 @@ module.exports = {
                 for (let c of contacts) {
                     userIDs.push(c.contact);
                 }
-                console.log('IDS => ' + userIDs);
-
                 return User.findAll({
                     where: {userid: {$in: userIDs}}
                 }).then(userContacts => {
@@ -82,7 +80,87 @@ module.exports = {
             socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
         });
     },
+    sockAddNewContact: function (socket, json) {
+        User.find({
+            where: { userid: idUser }
+        }).then(user_requested => {
+            Contact.find({
+                where: { user: user.userid, contact: user_requested.userid }
+            }).then(contact => {
+                if (!contact) {
+                    Contact.find({
+                        where: { user: user_requested.userid, contact: user.userid }
+                    }).then(contact => {
+                        if (!contact) {
+                            Contact.create({
+                                user: user,
+                                contact: user_requested,
+                                status: 'PENDING'
+                            }).then(contact => {
+                                socket.write(JSON.stringify({request: 'ADD_CONTACT_IS_IN_PENDING_STATE'}) + '\n');
+                            }).catch(err => {
+                                console.log(err);
+                                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');});
+                        } else
+                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    }).catch(err => {
+                        console.log(err);
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    });
+                } else
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');});
+    },
+    sockGetUsersNotInContactList: function (socket, json) {
+        User.find({
+            where: { userid: json.userid }
+        }).then(user => {
+            return Contact.findAll({
+                where : {
+                    user: user.userid,
+                    status: 'ACCEPTED'
+                }
+            }).then(contacts => {
+                let userIDs = [];
+                for (let c of contacts) {
+                    userIDs.push(c.contact);
+                }
+                console.log('IDS => ' + userIDs);
+
+                return User.findAll({
+                    where: {userid: {$notIn: userIDs}}
+                }).then(userContacts => {
+                    let resp = [];
+                    let nb = 0;
+                    for (let uc of userContacts) {
+                        nb++;
+                        resp.push(uc.responsify());
+                    }
+                    socket.write(JSON.stringify(resp) + '\n');
+                    socket.Contacts = resp;
+                }).catch(err => {
+                    console.log(err);
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                });
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+        });
+    },
     sockGetMessagesOfContact: function (socket, json) {
+        /**
+         * TODO : Get UserA, UserB, Contact, THEN, messages linked to Contact
+         */
         User.find({
             where: { userid: json.u1userid }
         }).then(user1 => {

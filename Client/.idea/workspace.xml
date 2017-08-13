@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Communication by socket almost OK, need to test a real connection">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/slyx/controllers/AddContactController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/slyx/scenes/addContact.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/controllers/AddContactController.java" afterPath="$PROJECT_DIR$/src/slyx/controllers/AddContactController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" afterPath="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/scenes/addContact.fxml" afterPath="$PROJECT_DIR$/src/slyx/scenes/addContact.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/scenes/contact.fxml" afterPath="$PROJECT_DIR$/src/slyx/scenes/contact.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/src/slyx/scenes/slyx.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" afterPath="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/bin/www" afterPath="$PROJECT_DIR$/../Server/bin/www" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/tools/socket_management.js" afterPath="$PROJECT_DIR$/../Server/tools/socket_management.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/views/stats.pug" afterPath="$PROJECT_DIR$/../Server/views/stats.pug" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -64,11 +70,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SlyxSocket.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SlyxSocket.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="31" column="45" lean-forward="true" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
+            <state relative-caret-position="456">
+              <caret line="84" column="10" lean-forward="false" selection-start-line="84" selection-start-column="10" selection-end-line="86" selection-end-column="44" />
               <folding>
                 <element signature="docComment;class#SlyxSocket#0" expanded="false" />
                 <element signature="docComment;method#sendGetContactsRequest#0;class#SlyxSocket#0" expanded="false" />
@@ -77,9 +83,9 @@
                 <element signature="docComment;method#sendGetUpdateRequest#0;class#SlyxSocket#0" expanded="false" />
                 <element signature="method#sendGetUpdateRequest#0;class#SlyxSocket#0" expanded="false" />
                 <element signature="method#run#0;class#SlyxSocket#0" expanded="false" />
-                <element signature="e#5627#5668#0" expanded="false" />
-                <element signature="e#8213#8214#0" expanded="true" />
-                <element signature="e#8247#8248#0" expanded="true" />
+                <element signature="e#6607#6648#0" expanded="false" />
+                <element signature="e#9193#9194#0" expanded="true" />
+                <element signature="e#9227#9228#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -98,19 +104,24 @@
       <file leaf-file-name="AddContactController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/controllers/AddContactController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="6" column="33" lean-forward="false" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
-              <folding />
+            <state relative-caret-position="540">
+              <caret line="50" column="40" lean-forward="false" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addContact.fxml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="addContact.fxml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/scenes/addContact.fxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-              <folding />
+            <state relative-caret-position="288">
+              <caret line="16" column="18" lean-forward="false" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+              <folding>
+                <marker date="1502625746957" expanded="true" signature="1021:1036" ph="..." />
+                <marker date="1502625746957" expanded="true" signature="1021:1050" ph="..." />
+              </folding>
             </state>
           </provider>
           <provider editor-type-id="JavaFX-Scene-Builder">
@@ -118,11 +129,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="RequestTypes.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/slyx/utils/RequestTypes.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="18" column="65" lean-forward="false" selection-start-line="18" selection-start-column="65" selection-end-line="18" selection-end-column="65" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="SlyxController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SlyxController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="79" column="27" lean-forward="false" selection-start-line="79" selection-start-column="27" selection-end-line="79" selection-end-column="27" />
+            <state relative-caret-position="540">
+              <caret line="120" column="43" lean-forward="true" selection-start-line="120" selection-start-column="43" selection-end-line="120" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -142,49 +163,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="contact.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/slyx/scenes/contact.fxml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="12" lean-forward="false" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="JavaFX-Scene-Builder">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoginController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/slyx/controllers/LoginController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="83" column="61" lean-forward="false" selection-start-line="83" selection-start-column="61" selection-end-line="83" selection-end-column="61" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SettingsController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SettingsController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="39" column="11" lean-forward="false" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
+            <state relative-caret-position="340">
+              <caret line="31" column="9" lean-forward="true" selection-start-line="31" selection-start-column="9" selection-end-line="31" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="contact.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/slyx/css/contact.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="1" column="30" lean-forward="false" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -269,16 +255,17 @@
         <option value="$PROJECT_DIR$/src/slyx/design/message.css" />
         <option value="$PROJECT_DIR$/src/slyx/css/message.css" />
         <option value="$PROJECT_DIR$/src/slyx/css/slyx.css" />
-        <option value="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" />
         <option value="$PROJECT_DIR$/src/slyx/css/contact.css" />
-        <option value="$PROJECT_DIR$/src/slyx/scenes/contact.fxml" />
         <option value="$PROJECT_DIR$/src/slyx/controllers/LoginController.java" />
         <option value="$PROJECT_DIR$/src/slyx/controllers/SettingsController.java" />
         <option value="$PROJECT_DIR$/src/slyx/controllers/ContactController.java" />
-        <option value="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" />
-        <option value="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" />
         <option value="$PROJECT_DIR$/src/slyx/utils/ArrayJsonParser.java" />
         <option value="$PROJECT_DIR$/src/slyx/scenes/addContact.fxml" />
+        <option value="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" />
+        <option value="$PROJECT_DIR$/src/slyx/scenes/contact.fxml" />
+        <option value="$PROJECT_DIR$/src/slyx/controllers/AddContactController.java" />
+        <option value="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" />
+        <option value="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" />
       </list>
     </option>
   </component>
@@ -355,13 +342,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="slyx" type="462c0819:PsiDirectoryNode" />
               <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Client" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="slyx" type="462c0819:PsiDirectoryNode" />
-              <item name="scenes" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Client" type="b2602c69:ProjectViewProjectNode" />
@@ -611,7 +591,7 @@
       <workItem from="1502027878809" duration="14813000" />
       <workItem from="1502283288239" duration="609000" />
       <workItem from="1502366115468" duration="8112000" />
-      <workItem from="1502454478908" duration="6483000" />
+      <workItem from="1502454478908" duration="10194000" />
     </task>
     <task id="LOCAL-00001" summary="Add errors handler, User class, validators and templates">
       <created>1501502101973</created>
@@ -631,7 +611,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="103027000" />
+    <option name="totallyTimeSpent" value="106738000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1006,49 +986,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/utils/RequestTypes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="27" lean-forward="false" selection-start-line="6" selection-start-column="27" selection-end-line="6" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/css/contact.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
           <caret line="1" column="30" lean-forward="false" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SettingsController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="39" column="11" lean-forward="false" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/ContactController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SlyxController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="79" column="27" lean-forward="false" selection-start-line="79" selection-start-column="27" selection-end-line="79" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1068,42 +1010,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/scenes/contact.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="12" lean-forward="false" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/controllers/LoginController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
           <caret line="83" column="61" lean-forward="false" selection-start-line="83" selection-start-column="61" selection-end-line="83" selection-end-column="61" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="31" column="45" lean-forward="true" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
-          <folding>
-            <element signature="docComment;class#SlyxSocket#0" expanded="false" />
-            <element signature="docComment;method#sendGetContactsRequest#0;class#SlyxSocket#0" expanded="false" />
-            <element signature="docComment;method#sendConnectionRequest#0;class#SlyxSocket#0" expanded="false" />
-            <element signature="method#sendConnectionRequest#0;class#SlyxSocket#0" expanded="false" />
-            <element signature="docComment;method#sendGetUpdateRequest#0;class#SlyxSocket#0" expanded="false" />
-            <element signature="method#sendGetUpdateRequest#0;class#SlyxSocket#0" expanded="false" />
-            <element signature="method#run#0;class#SlyxSocket#0" expanded="false" />
-            <element signature="e#5627#5668#0" expanded="false" />
-            <element signature="e#8213#8214#0" expanded="true" />
-            <element signature="e#8247#8248#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1116,23 +1028,96 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/AddContactController.java">
+    <entry file="file://$PROJECT_DIR$/src/slyx/scenes/addContact.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="33" lean-forward="false" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
-          <folding />
+        <state relative-caret-position="288">
+          <caret line="16" column="18" lean-forward="false" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+          <folding>
+            <marker date="1502625746957" expanded="true" signature="1021:1036" ph="..." />
+            <marker date="1502625746957" expanded="true" signature="1021:1050" ph="..." />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SlyxController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="120" column="43" lean-forward="true" selection-start-line="120" selection-start-column="43" selection-end-line="120" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/slyx/scenes/addContact.fxml">
+    <entry file="file://$PROJECT_DIR$/src/slyx/scenes/contact.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        <state relative-caret-position="450">
+          <caret line="25" column="35" lean-forward="false" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="35" />
           <folding />
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/ContactController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SettingsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="31" column="9" lean-forward="true" selection-start-line="31" selection-start-column="9" selection-end-line="31" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/controllers/AddContactController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="50" column="40" lean-forward="false" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/utils/RequestTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="65" lean-forward="false" selection-start-line="18" selection-start-column="65" selection-end-line="18" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="84" column="10" lean-forward="false" selection-start-line="84" selection-start-column="10" selection-end-line="86" selection-end-column="44" />
+          <folding>
+            <element signature="docComment;class#SlyxSocket#0" expanded="false" />
+            <element signature="docComment;method#sendGetContactsRequest#0;class#SlyxSocket#0" expanded="false" />
+            <element signature="docComment;method#sendConnectionRequest#0;class#SlyxSocket#0" expanded="false" />
+            <element signature="method#sendConnectionRequest#0;class#SlyxSocket#0" expanded="false" />
+            <element signature="docComment;method#sendGetUpdateRequest#0;class#SlyxSocket#0" expanded="false" />
+            <element signature="method#sendGetUpdateRequest#0;class#SlyxSocket#0" expanded="false" />
+            <element signature="method#run#0;class#SlyxSocket#0" expanded="false" />
+            <element signature="e#6607#6648#0" expanded="false" />
+            <element signature="e#9193#9194#0" expanded="true" />
+            <element signature="e#9227#9228#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>
