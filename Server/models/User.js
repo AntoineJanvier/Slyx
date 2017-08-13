@@ -19,12 +19,6 @@ module.exports = (sequelize, DataTypes) => {
             underscored: true,
             freezeTableName: true
         });
-    // User.associate = function (models) {
-    //     User.hasMany(models.Contact, {
-    //         as: 'user1',
-    //         foreignKey: 'user'
-    //     });
-    // };
     User.prototype.responsify = function () {
         return {
             type: 'USER',

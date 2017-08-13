@@ -83,6 +83,12 @@ nodenet.createServer(function (socket) {
             case 'GET_MESSAGES_OF_CONTACT':
                 socketManagement.sockGetMessagesOfContact(socket, json);
                 break;
+            case 'ACCEPT_CONTACT':
+                socketManagement.sockAcceptContactRequest(socket, json);
+                break;
+            case 'REJECT_CONTACT':
+                socketManagement.sockRejectContactRequest(socket, json);
+                break;
             default:
                 socket.write({} + '\n');
         }

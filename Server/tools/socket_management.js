@@ -51,22 +51,32 @@ module.exports = {
                     user: user.userid,
                     status: 'ACCEPTED'
                 }
-            }).then(contacts => {
-                let userIDs = [];
-                for (let c of contacts) {
-                    userIDs.push(c.contact);
-                }
-                return User.findAll({
-                    where: {userid: {$in: userIDs}}
-                }).then(userContacts => {
-                    let resp = [];
-                    let nb = 0;
-                    for (let uc of userContacts) {
-                        nb++;
-                        resp.push(uc.responsify());
+            }).then(contacts1 => {
+
+                return Contact.findAll({
+                    where : {
+                        user: user.userid,
+                        status: 'ACCEPTED'
                     }
-                    socket.write(JSON.stringify(resp) + '\n');
-                    socket.Contacts = resp;
+                }).then(contacts2 => {
+                    let userIDs = [];
+                    for (let c of contacts1)
+                        userIDs.push(c.contact);
+                    for (let c of contacts2)
+                        userIDs.push(c.contact);
+
+                    return User.findAll({
+                        where: {userid: {$in: userIDs}}
+                    }).then(userContacts => {
+                        let resp = [];
+                        for (let uc of userContacts)
+                            resp.push(uc.responsify());
+                        socket.write(JSON.stringify(resp) + '\n');
+                        socket.Contacts = resp;
+                    }).catch(err => {
+                        console.log(err);
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    });
                 }).catch(err => {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
@@ -127,28 +137,18 @@ module.exports = {
             where: { userid: json.userid }
         }).then(user => {
             return Contact.findAll({
-                where : {
-                    user: user.userid,
-                    status: {
-                        $in: ['ACCEPTED', 'PENDING']
-                    }
-                }
+                where : {user: user.userid, status: {$in: ['ACCEPTED', 'PENDING']}}
             }).then(contacts => {
                 let userIDs = [];
-                for (let c of contacts) {
+                for (let c of contacts)
                     userIDs.push(c.contact);
-                }
                 userIDs.push(user.userid);
-
                 return User.findAll({
                     where: {userid: {$notIn: userIDs}}
                 }).then(userContacts => {
                     let resp = [];
-                    let nb = 0;
-                    for (let uc of userContacts) {
-                        nb++;
+                    for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    }
                     socket.write(JSON.stringify(resp) + '\n');
                     socket.Contacts = resp;
                 }).catch(err => {
@@ -169,25 +169,17 @@ module.exports = {
             where: { userid: json.userid }
         }).then(user => {
             return Contact.findAll({
-                where : {
-                    user: user.userid,
-                    status: 'PENDING'
-                }
+                where : {contact: user.userid, status: 'PENDING'}
             }).then(contacts => {
                 let userIDs = [];
-                for (let c of contacts) {
-                    userIDs.push(c.contact);
-                }
-
+                for (let c of contacts)
+                    userIDs.push(c.user);
                 return User.findAll({
                     where: {userid: {$in: userIDs}}
                 }).then(userContacts => {
                     let resp = [];
-                    let nb = 0;
-                    for (let uc of userContacts) {
-                        nb++;
+                    for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    }
                     socket.write(JSON.stringify(resp) + '\n');
                     socket.Contacts = resp;
                 }).catch(err => {
@@ -216,48 +208,103 @@ module.exports = {
                 return Contact.find({
                     where: {user: user1, contact: user2}
                 }).then(contact => {
-
                     return Contact.find({
                         where: {user: user2, contact: user1}
                     }).then(contact2 => {
-
                         let contactIDs = [];
                         if (contact)
                             contactIDs.push(contact.contactid);
                         if (contact2)
                             contactIDs.push(contact2.contactid);
-
                         return Message.findAll({
                             where: {users: {$in: contactIDs}}
                         }).then(messages => {
-
                             let resp = [];
-                            let nb = 0;
-                            for (let m of messages) {
-                                nb++;
+                            for (let m of messages)
                                 resp.push(m.responsify());
-                            }
                             socket.write(JSON.stringify(resp) + '\n');
                             socket.Messages = resp;
                         }).catch(err => {
                             console.log(err);
-                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_E'}) + '\n');
                         });
                     }).catch(err => {
                         console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
                     });
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+        });
+    },
+    sockAcceptContactRequest: function (socket, json) {
+        User.find({
+            where: {userid: json.u1userid}
+        }).then(u1 => {
+            return User.find({
+                where: {userid: json.u2userid}
+            }).then(u2 => {
+                return Contact.find({
+                    where: {user: u2.userid, contact: u1.userid, status: 'PENDING'}
+                }).then(contact => {
+                    return contact.update({
+                        status: 'ACCEPTED'
+                    }, {
+                        fields: ['status']
+                    }).then(() => {
+                        socket.write(JSON.stringify({request: 'OK'}));
+                    }).catch(err => {
+                        console.log(err);
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                });
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+        });
+    },
+    sockRejectContactRequest: function (socket, json) {
+        console.log('A');
+        User.find({
+            where: {userid: json.u1userid}
+        }).then(u1 => {
+            console.log('B');
+            return User.find({
+                where: {userid: json.u2userid}
+            }).then(u2 => {
+                console.log('C');
+                return Contact.find({
+                    where: {user: u1.userid, contact: u2.userid, status: 'PENDING'}
+                }).then(contact => {
+                    console.log('D');
+                    socket.write(JSON.stringify({request: 'OK'}));
+                    return contact.destroy();
+                }).catch(err => {
+                    console.log(err);
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                });
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
         });
     }
 };
