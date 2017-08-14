@@ -2,19 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Communication by socket almost OK, need to test a real connection">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Server/public/images/image_app.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Server/public/images/image_connection.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Server/routes/profile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Server/views/profile.pug" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/slyx/controllers/SlyxController.class" afterPath="$PROJECT_DIR$/out/production/Client/slyx/controllers/SlyxController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/out/production/Client/slyx/scenes/slyx.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/src/slyx/communication/SlyxSocket.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/controllers/AddContactController.java" afterPath="$PROJECT_DIR$/src/slyx/controllers/AddContactController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/controllers/ContactController.java" afterPath="$PROJECT_DIR$/src/slyx/controllers/ContactController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" afterPath="$PROJECT_DIR$/src/slyx/controllers/SlyxController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/scenes/contactProfile.fxml" afterPath="$PROJECT_DIR$/src/slyx/scenes/contactProfile.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/scenes/slyx.fxml" afterPath="$PROJECT_DIR$/src/slyx/scenes/slyx.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" afterPath="$PROJECT_DIR$/src/slyx/utils/RequestTypes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/slyx/utils/User.java" afterPath="$PROJECT_DIR$/src/slyx/utils/User.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/app.js" afterPath="$PROJECT_DIR$/../Server/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/models/User.js" afterPath="$PROJECT_DIR$/../Server/models/User.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/routes/api_auth.js" afterPath="$PROJECT_DIR$/../Server/routes/api_auth.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/routes/index.js" afterPath="$PROJECT_DIR$/../Server/routes/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/routes/stats.js" afterPath="$PROJECT_DIR$/../Server/routes/stats.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/tools/socket_management.js" afterPath="$PROJECT_DIR$/../Server/tools/socket_management.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/views/header.pug" afterPath="$PROJECT_DIR$/../Server/views/header.pug" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/views/index.pug" afterPath="$PROJECT_DIR$/../Server/views/index.pug" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -119,8 +122,8 @@
       <file leaf-file-name="SlyxController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SlyxController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="131" column="63" lean-forward="true" selection-start-line="131" selection-start-column="63" selection-end-line="131" selection-end-column="63" />
+            <state relative-caret-position="-493">
+              <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -207,6 +210,7 @@
       <find>Request</find>
       <find>jsonParser.parse</find>
       <find>label_my_id</find>
+      <find>imageView</find>
     </findStrings>
     <replaceStrings>
       <replace>public</replace>
@@ -613,7 +617,7 @@
       <workItem from="1502027878809" duration="14813000" />
       <workItem from="1502283288239" duration="609000" />
       <workItem from="1502366115468" duration="8112000" />
-      <workItem from="1502454478908" duration="20164000" />
+      <workItem from="1502454478908" duration="22198000" />
     </task>
     <task id="LOCAL-00001" summary="Add errors handler, User class, validators and templates">
       <created>1501502101973</created>
@@ -633,7 +637,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="116708000" />
+    <option name="totallyTimeSpent" value="118742000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1144,8 +1148,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/slyx/controllers/SlyxController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="131" column="63" lean-forward="true" selection-start-line="131" selection-start-column="63" selection-end-line="131" selection-end-column="63" />
+        <state relative-caret-position="-493">
+          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

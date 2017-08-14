@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             first_name: {type: DataTypes.STRING},
             last_name: {type: DataTypes.STRING},
+            picture: {type: DataTypes.STRING},
             age: {type: DataTypes.BIGINT},
             email: {type: DataTypes.STRING},
             pwd: {type: DataTypes.STRING},
@@ -26,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
             firstname: this.first_name,
             lastname: this.last_name,
             age: this.age,
-            email: this.email
+            email: this.email,
+            picture: this.picture
         };
     };
     return User;

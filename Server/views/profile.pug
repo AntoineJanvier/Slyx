@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    include header
+    section
+        h1= title
+        p Here you can manage your profile for the Slyx app !
+        div.container
+            div.row
+                div.col-xs-12
+                    div.panel.panel-primary
+                        div.panel-heading <b>Profile</b>
+                        div.panel-body
+                            form(action='/profile/change_password' method='post')
+                                div.form-group
+                                    label Password
+                                    input.form-control(type='password', placeholder='Password', name='password1')
+                                div.form-group
+                                    label Retype Password
+                                    input.form-control(type='password2', placeholder='Password', name='password2')
+                                button.btn.btn-primary(type='submit') Change Password
+                            hr
+                            img.img-rounded(src=User.picture style='width: 24%; left: 38%;')
+                            form(action='/profile/change_icon' method='post')
+                                div.form-group
+                                    label URL
+                                    input.form-control(placeholder='Type the URL of your new icon', name='icon')
+                                button.btn.btn-primary(type='submit') Change Icon

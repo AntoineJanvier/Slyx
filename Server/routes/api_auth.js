@@ -21,11 +21,13 @@ router.post('/sign_up', (req, res) => {
             if (user)
                 res.json({err: 'ERR_USER_ALREADY_CREATED', content: {}});
             else {
-                User.create({
-                    first_name: u.firstname, last_name: u.lastname, age: u.age, email: u.email, pwd: u.pwd
+                return User.create({
+                    first_name: u.firstname, last_name: u.lastname, age: u.age, email: u.email, pwd: u.pwd,
+                    picture: 'http://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png'
                 }).then(user => {
                     if (user) {
-                        res.json({User: user.responsify()});
+                        // res.json({User: user.responsify()});
+                        res.redirect('/');
                     } else
                         res.json({err: 'ERR_USER_FIND', content: {}});
                 }).catch(err => {
@@ -37,6 +39,10 @@ router.post('/sign_up', (req, res) => {
         });
     } else
         res.json({err: 'ERR_POST_INFORMATION_INCORRECT', content: {}});
+});
+
+router.post('/change_icon', (req, res) => {
+
 });
 
 router.post('/sign_in', (req, res) => {
@@ -60,7 +66,8 @@ router.post('/sign_in', (req, res) => {
                         sess.last_name = user.last_name;
                         sess.age = user.age;
                         sess.email = user.email;
-                        res.json(user.responsify());
+                        // res.json(user.responsify());
+                        res.redirect('/');
                     } else
                         res.json({err: 'ERR_BAD_LOGIN_INPUT', content: {}});
                 } else
@@ -74,7 +81,6 @@ router.post('/sign_in', (req, res) => {
 });
 
 router.get('/sign_out', (req, res) => {
-    res.type('json');
     let sess = req.session;
     if (!sess.email)
         res.json({err: 'ERR_NOT_CONNECTED', content: {}});
@@ -83,7 +89,7 @@ router.get('/sign_out', (req, res) => {
             if (err)
                 res.json({err: 'ERR_ON_DISCONNECTION', content: err});
             else
-                res.json({msg: 'Disconnection OK',});
+                res.render('sign', {title: 'Home'});
         });
 });
 

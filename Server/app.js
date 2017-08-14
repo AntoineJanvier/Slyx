@@ -16,7 +16,8 @@ const server_routes = {
     api: require('./routes/api'),
     api_auth: require('./routes/api_auth'),
     api_contacts: require('./routes/api_contacts'),
-    fill: require('./routes/fill')
+    fill: require('./routes/fill'),
+    profile: require('./routes/profile')
 };
 
 let app = express();
@@ -40,6 +41,7 @@ app.use(express_session({
 app.use('/', server_routes.index);
 app.use('/users', server_routes.users);
 app.use('/stats', server_routes.stats);
+app.use('/profile', server_routes.profile);
 app.use('/api', server_routes.api);
 app.use('/api/auth', server_routes.api_auth);
 app.use('/api/contact', server_routes.api_contacts);

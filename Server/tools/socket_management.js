@@ -260,7 +260,7 @@ module.exports = {
                     }).then(n_contact => {
                         return contact.update({status: 'ACCEPTED'}, {fields: ['status']
                         }).then(c => {
-                            socket.write(JSON.stringify({request: 'OK'}));
+                            socket.write(JSON.stringify({request: 'OK'}) + '\n');
                         });
                     }).catch(err => {
                         console.log(err);

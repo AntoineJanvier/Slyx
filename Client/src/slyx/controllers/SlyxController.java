@@ -51,8 +51,6 @@ public class SlyxController {
     @FXML
     VBox vBox_request;
 
-
-
 //    public void getMessagesOfContactSelected() throws IOException {
 //        SlyxSocket slyxSocket = SlyxSocket.getInstance();
 //        Message[] messages = slyxSocket.sendGetMessagesOfContactRequest(SlyxSocket.getMe(), new User());
@@ -126,9 +124,11 @@ public class SlyxController {
                         Label l_firstname = (Label) p.lookup("#label_firstname");
                         Label l_lastname = (Label) p.lookup("#label_lastname");
                         Label l_email = (Label) p.lookup("#label_email");
+                        ImageView imageView = (ImageView) p.lookup("#imageView_contact_icon");
                         l_firstname.setText(u.getFirstname());
                         l_lastname.setText(u.getLastname());
                         l_email.setText(u.getEmail());
+                        imageView.setImage(new Image(u.getPicture()));
                         anchorPane_right.getChildren().clear();
                         anchorPane_right.getChildren().add(p);
                     } catch (IOException e) {
@@ -136,7 +136,6 @@ public class SlyxController {
                     }
                 }
             });
-
             vBox_left.getChildren().add(p);
         }
 
@@ -145,21 +144,18 @@ public class SlyxController {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
             Label l_name = (Label) p.lookup("#label_name");
             l_name.setText(u.getFirstname() + " " + u.getLastname());
-
             Button button_Reject = (Button) p.lookup("#button_reject_request");
             button_Reject.setOnAction(event -> {
                 slyxSocket.sendRejectContactRequest(u.getId());
                 p.setDisable(true);
                 button_Reject.setDisable(true);
             });
-
             Button button_Accept = (Button) p.lookup("#button_add_accept_request");
             button_Accept.setOnAction(event -> {
                 slyxSocket.sendAcceptContactRequest(u.getId());
                 p.setDisable(true);
                 button_Accept.setDisable(true);
             });
-
             vBox_request.getChildren().add(p);
         }
     }

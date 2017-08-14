@@ -6,7 +6,11 @@ const User = models.User;
 const Contact = models.Contact;
 
 router.get('/', function (req, res) {
-    res.render('index', {title: 'Slyx'});
+    let sess = req.session;
+    let isConnected = false;
+    if (sess.email)
+        isConnected = true;
+    res.render('index', {title: 'Slyx', isConnected: isConnected});
 });
 
 router.get('/sign', function (req, res) {
