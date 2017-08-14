@@ -26,14 +26,6 @@
                         <ImageView fx:id="imageView_my_icon" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                         <VBox alignment="CENTER_LEFT" layoutX="123.0" layoutY="3.0" prefHeight="95.0" prefWidth="241.0">
                            <children>
-                              <Label fx:id="label_my_id" text="ID" textFill="#838282">
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin>
-                                 <font>
-                                    <Font name="System Italic" size="10.0" />
-                                 </font>
-                              </Label>
                               <Label fx:id="label_my_firstname" text="Firstname">
                                  <VBox.margin>
                                     <Insets bottom="5.0" />
@@ -44,7 +36,10 @@
                                     <Insets bottom="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="label_my_email" text="Email" />
+                              <Label fx:id="label_my_email" text="Email">
+                                 <font>
+                                    <Font name="System Italic" size="13.0" />
+                                 </font></Label>
                            </children>
                            <padding>
                               <Insets left="5.0" />
@@ -96,6 +91,6 @@
       </TabPane>
    </left>
    <right>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <AnchorPane fx:id="anchorPane_right" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </right>
 </BorderPane>

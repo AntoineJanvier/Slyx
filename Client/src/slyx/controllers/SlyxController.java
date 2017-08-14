@@ -1,5 +1,6 @@
 package slyx.controllers;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,6 +29,8 @@ public class SlyxController {
     @FXML
     BorderPane borderPane_general;
     @FXML
+    AnchorPane anchorPane_right;
+    @FXML
     HBox hBox_top;
     @FXML
     VBox vBox_left;
@@ -38,16 +43,15 @@ public class SlyxController {
     @FXML
     ImageView imageView_my_icon;
     @FXML
-    Label label_my_id;
-    @FXML
     Label label_my_firstname;
     @FXML
     Label label_my_lastname;
     @FXML
     Label label_my_email;
-
     @FXML
     VBox vBox_request;
+
+
 
 //    public void getMessagesOfContactSelected() throws IOException {
 //        SlyxSocket slyxSocket = SlyxSocket.getInstance();
@@ -102,7 +106,6 @@ public class SlyxController {
         // Set my informations
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
         User me = SlyxSocket.getMe();
-        label_my_id.setText(me.getId() + "");
         label_my_firstname.setText(me.getFirstname());
         label_my_lastname.setText(me.getLastname());
         label_my_email.setText(me.getEmail());
@@ -114,6 +117,26 @@ public class SlyxController {
             Label l_lastname = (Label) p.lookup("#label_lastname");
             l_firstname.setText(u.getFirstname());
             l_lastname.setText(u.getLastname());
+
+            p.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
+                        Label l_firstname = (Label) p.lookup("#label_firstname");
+                        Label l_lastname = (Label) p.lookup("#label_lastname");
+                        Label l_email = (Label) p.lookup("#label_email");
+                        l_firstname.setText(u.getFirstname());
+                        l_lastname.setText(u.getLastname());
+                        l_email.setText(u.getEmail());
+                        anchorPane_right.getChildren().clear();
+                        anchorPane_right.getChildren().add(p);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             vBox_left.getChildren().add(p);
         }
 

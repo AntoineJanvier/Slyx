@@ -98,9 +98,21 @@ public class SlyxSocket extends Thread {
 
     public void sendRejectContactRequest(int userID) {
         System.out.println("sendRejectContactRequest");
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.REJECT_CONTACT_REQUEST);
+        j.put("u1userid", me.getId());
+        j.put("u2userid", userID);
+
+        echo(j.toString());
     }
     public void sendAcceptContactRequest(int userID) {
         System.out.println("sendAcceptContactRequest");
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.ACCEPT_CONTACT_REQUEST);
+        j.put("u1userid", me.getId());
+        j.put("u2userid", userID);
+
+        echo(j.toString());
     }
 
     public User[] sendGetUsersNotInContactList(User user) {

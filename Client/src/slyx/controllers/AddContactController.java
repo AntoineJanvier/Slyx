@@ -42,16 +42,17 @@ public class AddContactController {
             Label l_name = (Label) p.lookup("#label_name");
             l_name.setText(u.getFirstname() + " " + u.getLastname());
 
-            Button button_AddOrRemove = (Button) p.lookup("#button_add_or_remove");
-            button_AddOrRemove.setText("+");
-            button_AddOrRemove.setOnAction(event -> {
+            Button button_Remove = (Button) p.lookup("#button_reject_request");
+            button_Remove.setVisible(false);
+
+            Button button_Add = (Button) p.lookup("#button_add_accept_request");
+            button_Add.setOnAction(event -> {
                 slyxSocket.sendAddContactRequest(u.getId());
                 p.setDisable(true);
-                button_AddOrRemove.setDisable(true);
+                button_Add.setDisable(true);
             });
 
             vBox_in_scrollPane.getChildren().add(p);
-            vBox_in_scrollPane.getChildren().add(button_AddOrRemove);
         }
     }
 }

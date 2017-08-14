@@ -255,12 +255,13 @@ module.exports = {
                 return Contact.find({
                     where: {user: u2.userid, contact: u1.userid, status: 'PENDING'}
                 }).then(contact => {
-                    return contact.update({
-                        status: 'ACCEPTED'
-                    }, {
-                        fields: ['status']
-                    }).then(() => {
-                        socket.write(JSON.stringify({request: 'OK'}));
+                    return Contact.create({
+                        user: u1.userid, contact: u2.userid, status: 'ACCEPTED'
+                    }).then(n_contact => {
+                        return contact.update({status: 'ACCEPTED'}, {fields: ['status']
+                        }).then(c => {
+                            socket.write(JSON.stringify({request: 'OK'}));
+                        });
                     }).catch(err => {
                         console.log(err);
                         socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');

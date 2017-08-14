@@ -10,9 +10,9 @@ public class User {
     private String lastname;
     private int age;
     private String email;
-//    private Gender gender;
     private String password;
     private boolean isConnected;
+    private String picture;
 
     public User() {
     }
@@ -31,7 +31,6 @@ public class User {
         this.lastname = lastname;
         this.age = age;
         this.email = email;
-//        this.gender = gender;
         this.password = password;
         this.setConnected(false);
     }
@@ -46,12 +45,12 @@ public class User {
     public void setAge(int age) { this.age = age; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-//    public Gender getGender() { return gender; }
-//    public void setGender(Gender gender) { this.gender = gender; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     public boolean isConnected() { return isConnected; }
     public void setConnected(boolean connected) { isConnected = connected; }
+    public String getPicture() { return picture; }
+    public void setPicture(String picture) { this.picture = picture; }
 
     @Override
     public String toString() {
