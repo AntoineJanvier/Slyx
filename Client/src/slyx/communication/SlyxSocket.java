@@ -190,7 +190,8 @@ public class SlyxSocket extends Thread {
                         jsonMe.get("firstname").toString(),
                         jsonMe.get("lastname").toString(),
                         Math.toIntExact((long) jsonMe.get("age")),
-                        jsonMe.get("email").toString()
+                        jsonMe.get("email").toString(),
+                        jsonMe.get("picture").toString()
                 );
                 me.setConnected(true);
             }

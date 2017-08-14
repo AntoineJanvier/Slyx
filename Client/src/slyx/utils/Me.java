@@ -21,7 +21,7 @@ public class Me extends User {
         instance = null;
     }
 
-    public Me(int id, String firstname, String lastname, int age, String email) {
-        super(id, firstname, lastname, age, email);
+    public Me(int id, String firstname, String lastname, int age, String email, String picture) {
+        super(id, firstname, lastname, age, email, picture);
     }
 }

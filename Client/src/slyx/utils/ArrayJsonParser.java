@@ -85,7 +85,8 @@ public class ArrayJsonParser {
                                 jsonMe.get("firstname").toString(),
                                 jsonMe.get("lastname").toString(),
                                 Math.toIntExact((long) jsonMe.get("age")),
-                                jsonMe.get("email").toString()
+                                jsonMe.get("email").toString(),
+                                jsonMe.get("picture").toString()
                         );
                         userHashMap.put(++key, u);
                     }
@@ -123,7 +124,8 @@ public class ArrayJsonParser {
                                     jsonMe.get("firstname").toString(),
                                     jsonMe.get("lastname").toString(),
                                     Math.toIntExact((long) jsonMe.get("age")),
-                                    jsonMe.get("email").toString()
+                                    jsonMe.get("email").toString(),
+                                    jsonMe.get("picture").toString()
                             ),
                             dateSent,
                             jsonMe.get("content").toString()

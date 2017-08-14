@@ -16,24 +16,24 @@ public class User {
 
     public User() {
     }
-    public User(int id, String firstname, String lastname, int age, String email) {
+    public User(int id, String firstname, String lastname, int age, String email, String picture) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;
         this.email = email;
-//        this.gender = gender;
         this.setConnected(false);
+        this.picture = picture;
     }
-    public User(int id, String firstname, String lastname, int age, String email, String password) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.age = age;
-        this.email = email;
-        this.password = password;
-        this.setConnected(false);
-    }
+//    public User(int id, String firstname, String lastname, int age, String email, String password) {
+//        this.id = id;
+//        this.firstname = firstname;
+//        this.lastname = lastname;
+//        this.age = age;
+//        this.email = email;
+//        this.password = password;
+//        this.setConnected(false);
+//    }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
