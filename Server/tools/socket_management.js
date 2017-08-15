@@ -5,6 +5,8 @@ const User = models.User;
 const Contact = models.Contact;
 const Message = models.Message;
 
+const send = require('./answerToSockets');
+
 let jsonToReturn = {};
 
 /*
@@ -47,30 +49,23 @@ module.exports = {
             where: { userid: json.userid }
         }).then(user => {
             return Contact.findAll({
-                where : {
-                    user: user.userid,
-                    status: 'ACCEPTED'
-                }
+                where : {user: user.userid, status: 'ACCEPTED'}
             }).then(contacts1 => {
-
                 return Contact.findAll({
-                    where : {
-                        user: user.userid,
-                        status: 'ACCEPTED'
-                    }
+                    where : {user: user.userid, status: 'ACCEPTED'}
                 }).then(contacts2 => {
                     let userIDs = [];
                     for (let c of contacts1)
                         userIDs.push(c.contact);
                     for (let c of contacts2)
                         userIDs.push(c.contact);
-
                     return User.findAll({
                         where: {userid: {$in: userIDs}}
                     }).then(userContacts => {
                         let resp = [];
                         for (let uc of userContacts)
                             resp.push(uc.responsify());
+                        resp.request = "GET_CONTACTS";
                         socket.write(JSON.stringify(resp) + '\n');
                         socket.Contacts = resp;
                     }).catch(err => {
@@ -90,7 +85,7 @@ module.exports = {
             socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
         });
     },
-    sockAddNewContact: function (socket, json) {
+    sockAddNewContact: function (socket, json, clients) {
         User.find({
             where: {userid: json.me}
         }).then(user => {
@@ -110,7 +105,9 @@ module.exports = {
                                     contact: user_requested.userid,
                                     status: 'PENDING'
                                 }).then(contact => {
-                                    socket.write(JSON.stringify({request: 'OK'}) + '\n');
+                                    let j = user_requested.responsify();
+                                    j.request = "CONTACT_REQUEST";
+                                    send.toClient(clients, user_requested.userid, JSON.stringify(j));
                                 }).catch(err => {
                                     console.log(err);
                                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_F'}) + '\n');});
@@ -180,7 +177,8 @@ module.exports = {
                     let resp = [];
                     for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    socket.write(JSON.stringify(resp) + '\n');
+                    // socket.write(JSON.stringify(resp) + '\n');
+
                     socket.Contacts = resp;
                 }).catch(err => {
                     console.log(err);
@@ -321,15 +319,11 @@ module.exports = {
                     return Message.create({
                         sent: json.sent, content: json.content, contact: contact.contactid
                     }).then(message => {
-                        for (let c of clients) {
-                            if (c.User.userid === u2.userid) {
-                                c.write(JSON.stringify({
-                                    ACTION: 'MESSAGE_INCOMING',
-                                    FROM: u1.userid,
-                                    CONTENT: message.content
-                                }) + '\n');
-                            }
-                        }
+                        send.toClient(clients, u2.userid, JSON.stringify({
+                            ACTION: 'MESSAGE_INCOMING',
+                            FROM: u1.userid,
+                            CONTENT: message.content
+                        }));
                     }).catch(err => {
                         console.log(err);
                         socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
