@@ -9,18 +9,22 @@ import java.util.Date;
  * on 01/08/17.
  */
 public class Message {
+    private int id;
     private User from;
     private User to;
     private Date sent;
     private String content;
 
-    public Message(User from, User to, Date sent, String content) {
+    public Message(int id, User from, User to, Date sent, String content) {
+        this.id = id;
         this.from = from;
         this.to = to;
         this.sent = sent;
         this.content = content;
     }
 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public User getFrom() { return from; }
     public void setFrom(User from) { this.from = from; }
     public User getTo() { return to; }

@@ -1,8 +1,4 @@
-const models = require('../models');
-const User = models.User,
-    Contact = models.Contact,
-    Message = models.Message;
-
+'use strict';
 module.exports = {
     toClient: function (clients, clientID, toSend) {
         console.log('SEND TO CLIENT');

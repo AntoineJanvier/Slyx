@@ -8,8 +8,6 @@ let debug = require('debug')('server:server');
 let http = require('http');
 let nodenet = require('net');
 const socketManagement = require('../tools/socket_management');
-const clientHandler = require('../tools/clientRequestManager');
-const objParser = require('../tools/objectParser');
 const passwordHash = require('password-hash');
 
 const models = require('../models');
@@ -67,24 +65,24 @@ nodenet.createServer(function (socket) {
             case 'GET_CONTACTS':
                 socketManagement.sockGetContacts(socket, json);
                 break;
+            // Client want to add a new contact
+            case 'ADD_CONTACT':
+                socketManagement.sockAddNewContact(socket, json, clients);
+                break;
             // Client loading new possible contacts
             case 'GET_USERS_NOT_IN_CONTACT_LIST':
                 socketManagement.sockGetUsersNotInContactList(socket, json);
                 break;
-            // Client want to add a new contact
-            case 'ADD_CONTACT':
-                socketManagement.sockAddNewContact(socket, json);
-                break;
             // Client want to print all contact requests
             case 'GET_PENDING_CONTACT_REQUESTS':
-                socketManagement.sockGetPendingContactRequests(socket, json);
+                socketManagement.sockGetPendingContactRequests(socket, json, clients);
                 break;
             // Get messages of a specific contact
             case 'GET_MESSAGES_OF_CONTACT':
                 socketManagement.sockGetMessagesOfContact(socket, json);
                 break;
             case 'ACCEPT_CONTACT':
-                socketManagement.sockAcceptContactRequest(socket, json);
+                socketManagement.sockAcceptContactRequest(socket, json, clients);
                 break;
             case 'REJECT_CONTACT':
                 socketManagement.sockRejectContactRequest(socket, json);

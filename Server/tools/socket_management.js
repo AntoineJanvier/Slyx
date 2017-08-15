@@ -13,6 +13,11 @@ let jsonToReturn = {};
 TODO : Make errors to return (in catch or else) to print it in the app
  */
 
+/*
+TODO : Java-side : GET_VERSION / ACCEPT_CONNECTION / GET_CONTACTS / CONTACT_REQUEST / GET_USERS_NOT_IN_CONTACT_LIST
+TODO : Java-side : GET_PENDING_CONTACT_REQUEST / GET_MESSAGES_OF_CONTACT / CONTACT_REQUEST_ACCEPTED /
+ */
+
 module.exports = {
     sockGetUpdate: function (socket) {
         jsonToReturn.request = "GET_VERSION";
@@ -24,13 +29,10 @@ module.exports = {
         }).then(function (user) {
             if (user) {
                 if (passwordHash.verify(json.password, user.pwd)) {
-
                     jsonToReturn = user.responsify();
-                    jsonToReturn.request = "ACCEPT_CONNECTION";
-
+                    jsonToReturn.ACTION = "ACCEPT_CONNECTION";
                     socket.write(JSON.stringify(jsonToReturn) + '\n');
                     socket.User = user.responsify();
-
                 } else {
                     console.log('Bad login input');
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
@@ -65,7 +67,7 @@ module.exports = {
                         let resp = [];
                         for (let uc of userContacts)
                             resp.push(uc.responsify());
-                        resp.request = "GET_CONTACTS";
+                        resp.ACTION = "GET_CONTACTS";
                         socket.write(JSON.stringify(resp) + '\n');
                         socket.Contacts = resp;
                     }).catch(err => {
@@ -106,7 +108,7 @@ module.exports = {
                                     status: 'PENDING'
                                 }).then(contact => {
                                     let j = user_requested.responsify();
-                                    j.request = "CONTACT_REQUEST";
+                                    j.ACTION = "CONTACT_REQUEST";
                                     send.toClient(clients, user_requested.userid, JSON.stringify(j));
                                 }).catch(err => {
                                     console.log(err);
@@ -146,6 +148,7 @@ module.exports = {
                     let resp = [];
                     for (let uc of userContacts)
                         resp.push(uc.responsify());
+                    resp.ACTION = 'GET_USERS_NOT_IN_CONTACT_LIST';
                     socket.write(JSON.stringify(resp) + '\n');
                     socket.Contacts = resp;
                 }).catch(err => {
@@ -161,7 +164,7 @@ module.exports = {
             socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
         });
     },
-    sockGetPendingContactRequests: function (socket, json) {
+    sockGetPendingContactRequests: function (socket, json, clients) {
         User.find({
             where: { userid: json.userid }
         }).then(user => {
@@ -177,9 +180,9 @@ module.exports = {
                     let resp = [];
                     for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    // socket.write(JSON.stringify(resp) + '\n');
-
                     socket.Contacts = resp;
+                    resp.ACTION = 'GET_PENDING_CONTACT_REQUEST';
+                    send.toClient(clients, user.userid, JSON.stringify(resp));
                 }).catch(err => {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
@@ -220,6 +223,7 @@ module.exports = {
                             let resp = [];
                             for (let m of messages)
                                 resp.push(m.responsify());
+                            resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
                             socket.write(JSON.stringify(resp) + '\n');
                             socket.Messages = resp;
                         }).catch(err => {
@@ -243,7 +247,7 @@ module.exports = {
             socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
         });
     },
-    sockAcceptContactRequest: function (socket, json) {
+    sockAcceptContactRequest: function (socket, json, clients) {
         User.find({
             where: {userid: json.u1userid}
         }).then(u1 => {
@@ -258,7 +262,9 @@ module.exports = {
                     }).then(n_contact => {
                         return contact.update({status: 'ACCEPTED'}, {fields: ['status']
                         }).then(c => {
-                            socket.write(JSON.stringify({request: 'OK'}) + '\n');
+                            let resp = u2.responsify();
+                            resp.ACTION = 'CONTACT_REQUEST_ACCEPTED';
+                            send.toClient(clients, u2.userid, JSON.stringify(resp));
                         });
                     }).catch(err => {
                         console.log(err);
@@ -290,8 +296,7 @@ module.exports = {
                 return Contact.find({
                     where: {user: u1.userid, contact: u2.userid, status: 'PENDING'}
                 }).then(contact => {
-                    console.log('D');
-                    socket.write(JSON.stringify({request: 'OK'}));
+                    // socket.write(JSON.stringify({request: 'OK'}));
                     return contact.destroy();
                 }).catch(err => {
                     console.log(err);

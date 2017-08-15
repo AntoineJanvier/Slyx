@@ -25,8 +25,9 @@ public class SlyxSocket extends Thread {
     public JSONObject jsonObject;
 
     private static User me;
-    private static HashMap<Integer, User> contacts;
-    private static HashMap<Integer, User> otherUsers;
+    private static HashMap<Integer, User> contacts = new HashMap<>();
+    private static HashMap<Integer, User> otherUsers = new HashMap<>();
+    private static HashMap<Integer, User> userRequests = new HashMap<>();
     private static String version = null;
 
     private static SlyxSocket instance = null;
@@ -35,7 +36,6 @@ public class SlyxSocket extends Thread {
         this.socket = new Socket(getIpAddress(), getPort());
         this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.printWriter = new PrintWriter(socket.getOutputStream(), true);
-        contacts = null;
         this.start();
     }
 
@@ -59,10 +59,10 @@ public class SlyxSocket extends Thread {
                     }
                     try {
                         JSONObject j = (JSONObject) o;
+                        ArrayJsonParser arrayJsonParser;
                         if (j != null && j.containsKey("ACTION")) {
                             switch (j.get("ACTION").toString()) {
                                 case "GET_VERSION_OF_SLYX":
-                                    System.out.println("GET_VERSION_OF_SLYX");
                                     version = j.get("version").toString();
                                     break;
                                 case "MESSAGE_INCOMING":
@@ -96,13 +96,60 @@ public class SlyxSocket extends Thread {
                                             j.get("picture").toString()
                                     );
                                     me.setConnected(true);
+                                    break;
                                 case "GET_CONTACTS":
-                                    ArrayJsonParser arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
                                     arrayJsonParser.processUser();
                                     User[] users = arrayJsonParser.getUsers();
                                     for (User u : users) {
                                         contacts.put(u.getId(), u);
                                     }
+                                    break;
+                                case "CONTACT_REQUEST":
+                                    userRequests.put(Math.toIntExact((long) j.get("id")), new User(
+                                            Math.toIntExact((long) j.get("id")),
+                                            j.get("firstname").toString(),
+                                            j.get("lastname").toString(),
+                                            Math.toIntExact((long) j.get("age")),
+                                            j.get("email").toString(),
+                                            j.get("picture").toString()
+                                    ));
+                                    break;
+                                case "GET_USERS_NOT_IN_CONTACT_LIST":
+                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                    arrayJsonParser.processUser();
+                                    User[] usersNotInContactList = arrayJsonParser.getUsers();
+                                    for (User u : usersNotInContactList) {
+                                        otherUsers.put(u.getId(), u);
+                                    }
+                                    break;
+                                case "GET_PENDING_CONTACT_REQUEST":
+                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                    arrayJsonParser.processUser();
+                                    User[] pendingRequests = arrayJsonParser.getUsers();
+                                    for (User u : pendingRequests) {
+                                        userRequests.put(u.getId(), u);
+                                    }
+                                    break;
+                                case "GET_MESSAGES_OF_CONTACT":
+                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                    arrayJsonParser.processUser();
+                                    Message[] messages = arrayJsonParser.getMessages();
+                                    User from = contacts.get(Integer.parseInt(j.get("id").toString()));
+                                    for (Message m : messages) {
+                                        from.addMessage(m.getId(), m.getFrom(), m.getTo(), m.getContent(), new Date());
+                                    }
+                                    break;
+                                case "CONTACT_REQUEST_ACCEPTED":
+                                    contacts.put(Math.toIntExact((long) j.get("id")), new User(
+                                            Math.toIntExact((long) j.get("id")),
+                                            j.get("firstname").toString(),
+                                            j.get("lastname").toString(),
+                                            Math.toIntExact((long) j.get("age")),
+                                            j.get("email").toString(),
+                                            j.get("picture").toString()
+                                    ));
+                                    break;
                                 default:
                                     System.out.println("Unknown ACTION...");
                             }
@@ -125,7 +172,7 @@ public class SlyxSocket extends Thread {
     // OK
     public void sendMessage(String content, User to) {
         Date d = new Date();
-        Message m = new Message(me, to, d, content);
+        Message m = new Message(0, me, to, d, content);
         printWriter.println(m.toObject().put("request", "SEND_MESSAGE").toString());
     }
 
@@ -194,7 +241,7 @@ public class SlyxSocket extends Thread {
     }
 
     // OK
-    public User[] sendGetUsersNotInContactList(User user) {
+    public void sendGetUsersNotInContactList(User user) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_USERS_NOT_IN_CONTACT_LIST_REQUEST);
         j.put("userid", user.getId());
@@ -209,18 +256,19 @@ public class SlyxSocket extends Thread {
         return arrayJsonParser.getUsers();*/
     }
 
-    public User[] sendGetPendingContactRequests(User user) {
+    public void sendGetPendingContactRequests(User user) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_PENDING_CONTACT_REQUESTS_REQUEST);
         j.put("userid", user.getId());
 
-        String returned = echo(j.toString());
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
-
-        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-        arrayJsonParser.processUser();
-        return arrayJsonParser.getUsers();
+        writeInSocket(j.toString());
+//        String returned = echo(j.toString());
+//        JSONParser jsonParser = new JSONParser();
+//        Object o = null;
+//
+//        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
+//        arrayJsonParser.processUser();
+//        return arrayJsonParser.getUsers();
     }
 
     public Message[] sendGetMessagesOfContactRequest(User user, User to) {
@@ -305,14 +353,22 @@ public class SlyxSocket extends Thread {
         return "0.0.0";
     }
 
+    /*
+    NEW FUNCTIONS
+     */
     public void sendAskVersion() {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_UPDATE_REQUEST);
         writeInSocket(j.toString());
     }
+    public void sendAskConnection(String email, String password) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.CONNECTION_REQUEST);
+        j.put("email", email);
+        j.put("password", password);
 
-
-
+        writeInSocket(j.toString());
+    }
 
     /**
      * Send a message to the socket and receive the answer from it
