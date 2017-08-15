@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
         underscored: true,
         freezeTableName: true,
     });
-    // Message.associate = function (models) {
-    //     Message.hasOne(models.Contact, {
-    //         foreignKey: 'contact'
-    //     });
-    // };
+    Message.associate = function (models) {
+        Message.hasOne(models.Contact, {
+            foreignKey: 'contact'
+        });
+    };
     Message.prototype.responsify = function () {
         return {
             type: 'MESSAGE',

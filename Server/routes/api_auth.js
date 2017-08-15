@@ -26,7 +26,6 @@ router.post('/sign_up', (req, res) => {
                     picture: 'http://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png'
                 }).then(user => {
                     if (user) {
-                        // res.json({User: user.responsify()});
                         res.redirect('/');
                     } else
                         res.json({err: 'ERR_USER_FIND', content: {}});

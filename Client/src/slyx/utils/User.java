@@ -1,5 +1,8 @@
 package slyx.utils;
 
+import java.util.Date;
+import java.util.HashMap;
+
 /**
  * Created by Antoine Janvier
  * on 31/07/17.
@@ -13,6 +16,9 @@ public class User {
     private String password;
     private boolean isConnected;
     private String picture;
+
+    private HashMap<Integer, Message> messages = new HashMap<>();
+    private HashMap<Integer, Call> calls = new HashMap<>();
 
     public User() {
     }
@@ -51,6 +57,18 @@ public class User {
     public void setConnected(boolean connected) { isConnected = connected; }
     public String getPicture() { return picture; }
     public void setPicture(String picture) { this.picture = picture; }
+
+    public HashMap<Integer, Message> getMessages() {
+        return messages;
+    }
+    public void addMessage(int messageID, User from, User to, String content, Date sent) {
+        Message m = new Message(from, to, sent, content);
+        messages.put(messageID, m);
+    }
+    public void addCall(int callID, User from, User to) {
+        Call c = new Call(from, to);
+        calls.put(callID, c);
+    }
 
     @Override
     public String toString() {

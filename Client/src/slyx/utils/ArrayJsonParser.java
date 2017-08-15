@@ -1,5 +1,6 @@
 package slyx.utils;
 
+import slyx.communication.SlyxSocket;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
 import slyx.jsonsimple.parser.ParseException;
@@ -119,6 +120,7 @@ public class ArrayJsonParser {
                     Date dateSent = new Date();
                     dateSent.setTime((long) jsonMe.get("sent"));
                     Message u = new Message(
+                            SlyxSocket.getMe(),
                             new User(
                                     Math.toIntExact((long) jsonMe.get("id")),
                                     jsonMe.get("firstname").toString(),

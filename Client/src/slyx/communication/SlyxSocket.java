@@ -26,6 +26,7 @@ public class SlyxSocket extends Thread {
 
     private static User me;
     private static HashMap<Integer, User> contacts;
+    private static String version = null;
 
     private static SlyxSocket instance = null;
 
@@ -43,6 +44,68 @@ public class SlyxSocket extends Thread {
         return instance;
     }
 
+    public void run() {
+        // super.run();
+        while (!this.isInterrupted()) {
+            try {
+                while (true) {
+                    String serverResponse = listenInSocket();
+                    JSONParser jsonParser = new JSONParser();
+                    Object o = null;
+
+                    try {
+                        o = jsonParser.parse(serverResponse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        JSONObject j = (JSONObject) o;
+                        if (j != null && j.containsKey("ACTION")) {
+                            switch (j.get("ACTION").toString()) {
+                                case "GET_VERSION_OF_SLYX":
+                                    System.out.println("GET_VERSION_OF_SLYX");
+                                    version = j.get("version").toString();
+                                    break;
+                                case "MESSAGE_INCOMING":
+                                    System.out.println("MESSAGE_INCOMING");
+                                    User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
+                                    Date d = new Date(); // j.get("SENT").toString();
+                                    contacts.get(uFrom.getId()).addMessage(
+                                            Integer.parseInt(j.get("MESSAGE_ID").toString()),
+                                            uFrom,
+                                            me,
+                                            j.get("CONTENT").toString(),
+                                            d
+                                    );
+                                    break;
+                                case "CALL_INCOMING":
+                                    System.out.println("CALL_INCOMING");
+                                    User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
+                                    contacts.get(caller.getId()).addCall(
+                                            Integer.parseInt(j.get("CALL_ID").toString()),
+                                            caller,
+                                            me
+                                    );
+                                    break;
+                                default:
+                                    System.out.println("Unknown ACTION...");
+                            }
+                        } else if (j != null && j.containsKey("ERROR")) {
+                            System.out.println(j.get("ERROR").toString());
+                            socket.close();
+                            System.exit(0);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Send a message from a User to another User
      * @param content: Message to send
@@ -50,8 +113,8 @@ public class SlyxSocket extends Thread {
      */
     public void sendMessage(String content, User to) {
         Date d = new Date();
-        Message m = new Message(to, new Date(), content);
-        printWriter.write(m.toObject().toString());
+        Message m = new Message(me, to, d, content);
+        printWriter.println(m.toObject().put("request", "SEND_MESSAGE").toString());
     }
 
     /**
@@ -225,6 +288,15 @@ public class SlyxSocket extends Thread {
         return "0.0.0";
     }
 
+    public void sendAskVersion() {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.GET_UPDATE_REQUEST);
+        writeInSocket(j.toString());
+    }
+
+
+
+
     /**
      * Send a message to the socket and receive the answer from it
      * @param message: Message to send to the server
@@ -243,59 +315,22 @@ public class SlyxSocket extends Thread {
         return null;
     }
 
-    @Override
-    public void run() {
-        super.run();
-
-//        while (!this.isInterrupted()) {
-//            try {
-//                String s = read();
-//                if (s != null)
-//                    System.out.println(s);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                jsonObject = new JSONObject(bufferedReader.readLine());
-//                if (jsonObject.has("type")) {
-//                    switch (jsonObject.get("type").toString()) {
-//                        case "USER":
-//                            User new_user = new User(
-//                                    jsonObject.getInt("id"),
-//                                    jsonObject.getString("firstname"),
-//                                    jsonObject.getString("lastname"),
-//                                    jsonObject.getInt("age"),
-//                                    jsonObject.getString("email"),
-//                                    Gender.MALE
-//                            );
-//                            contacts.put(contacts.size() + 1, new_user);
-//                            break;
-//                        case "CALL":
-//                            Call new_call = new Call(
-//                                    new User(
-//                                            jsonObject.getInt("id"),
-//                                            jsonObject.getString("firstname"),
-//                                            jsonObject.getString("lastname"),
-//                                            jsonObject.getInt("age"),
-//                                            jsonObject.getString("email"),
-//                                            Gender.MALE
-//                                    ),
-//                                    new User(
-//                                            jsonObject.getInt("id"),
-//                                            jsonObject.getString("firstname"),
-//                                            jsonObject.getString("lastname"),
-//                                            jsonObject.getInt("age"),
-//                                            jsonObject.getString("email"),
-//                                            Gender.MALE
-//                                    )
-//                            );
-//                    }
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+    private void writeInSocket(String message) {
+        System.out.println("\nSending to server : " + message);
+        printWriter.println(message);
     }
+
+    private String listenInSocket() {
+        try {
+            String s = bufferedReader.readLine();
+            System.out.println("Server emits : " + s);
+            return s;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void close() throws IOException {
         socket.close();
         instance = null;
@@ -309,4 +344,7 @@ public class SlyxSocket extends Thread {
 
     public static User getMe() { return me; }
     public static void setMe(User me) { SlyxSocket.me = me; }
+    public static HashMap<Integer, User> getContacts() { return contacts; }
+    public static void setContacts(HashMap<Integer, User> contacts) { SlyxSocket.contacts = contacts; }
+    public static String getVersion() { return version != null ? version : "0.0.0"; }
 }

@@ -89,6 +89,9 @@ nodenet.createServer(function (socket) {
             case 'REJECT_CONTACT':
                 socketManagement.sockRejectContactRequest(socket, json);
                 break;
+            case 'SEND_MESSAGE':
+                socketManagement.sockSendMessageToUser(socket, json, clients);
+                break;
             default:
                 socket.write({} + '\n');
         }

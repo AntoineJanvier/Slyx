@@ -14,7 +14,7 @@ TODO : Make errors to return (in catch or else) to print it in the app
 module.exports = {
     sockGetUpdate: function (socket) {
         jsonToReturn.request = "GET_VERSION";
-        socket.write(JSON.stringify({version: "1.0.0"}) + '\n');
+        socket.write(JSON.stringify({ACTION: 'GET_VERSION_OF_SLYX', version: "1.0.0"}) + '\n');
     },
     sockConnect: function (socket, json) {
         User.find({
@@ -295,6 +295,45 @@ module.exports = {
                     console.log('D');
                     socket.write(JSON.stringify({request: 'OK'}));
                     return contact.destroy();
+                }).catch(err => {
+                    console.log(err);
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                });
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+        });
+    },
+    sockSendMessageToUser: function (socket, json, clients) {
+        User.find({
+            where: {userid: json.from}
+        }).then(u1 => {
+            return User.find({
+                where: {userid: json.to}
+            }).then(u2 => {
+                return Contact.find({
+                    where: {user: u1.userid, contact: u2.userid}
+                }).then(contact => {
+                    return Message.create({
+                        sent: json.sent, content: json.content, contact: contact.contactid
+                    }).then(message => {
+                        for (let c of clients) {
+                            if (c.User.userid === u2.userid) {
+                                c.write(JSON.stringify({
+                                    ACTION: 'MESSAGE_INCOMING',
+                                    FROM: u1.userid,
+                                    CONTENT: message.content
+                                }) + '\n');
+                            }
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                    });
                 }).catch(err => {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');

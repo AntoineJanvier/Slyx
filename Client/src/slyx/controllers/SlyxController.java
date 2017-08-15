@@ -21,6 +21,9 @@ import slyx.utils.User;
 
 import java.io.IOException;
 
+import static slyx.communication.SlyxSocket.getContacts;
+import static slyx.communication.SlyxSocket.getMe;
+
 /**
  * Created by Antoine Janvier
  * on 30/07/17.
@@ -96,41 +99,49 @@ public class SlyxController {
     }
 
     public void initialize() throws IOException {
-        // Set default icon for my profile
-        String imagePath = "http://localhost:3000/images/my_icon_profile.png";
-        Image image = new Image(imagePath);
-        imageView_my_icon.setImage(image);
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
         // Set my informations
-        SlyxSocket slyxSocket = SlyxSocket.getInstance();
-        User me = SlyxSocket.getMe();
+        User me = getMe();
         label_my_firstname.setText(me.getFirstname());
         label_my_lastname.setText(me.getLastname());
         label_my_email.setText(me.getEmail());
+        imageView_my_icon.setImage(new Image(me.getPicture()));
 
-        User[] contacts = slyxSocket.sendGetContactsRequest(SlyxSocket.getMe());
+        // Set all contacts in the contact area
+        User[] contacts = slyxSocket.sendGetContactsRequest(getMe());
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
             Label l_firstname = (Label) p.lookup("#label_firstname");
             Label l_lastname = (Label) p.lookup("#label_lastname");
+            ImageView imageView = (ImageView) p.lookup("#imageView_contact_icon");
             l_firstname.setText(u.getFirstname());
             l_lastname.setText(u.getLastname());
+            imageView.setImage(new Image(u.getPicture()));
 
             p.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     try {
                         Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
+
+                        // Get elements
                         Label l_firstname = (Label) p.lookup("#label_firstname");
                         Label l_lastname = (Label) p.lookup("#label_lastname");
                         Label l_email = (Label) p.lookup("#label_email");
                         ImageView imageView = (ImageView) p.lookup("#imageView_contact_icon");
+
+                        // Set elements
                         l_firstname.setText(u.getFirstname());
                         l_lastname.setText(u.getLastname());
                         l_email.setText(u.getEmail());
                         imageView.setImage(new Image(u.getPicture()));
+
+                        // Add in scene
                         anchorPane_right.getChildren().clear();
                         anchorPane_right.getChildren().add(p);
+
+                        btn_send_message.setOnMouseClicked(event1 -> slyxSocket.sendMessage(tf_message_to_send.getText(), getContacts().get(u.getId())));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -139,7 +150,8 @@ public class SlyxController {
             vBox_left.getChildren().add(p);
         }
 
-        User[] requests = slyxSocket.sendGetPendingContactRequests(SlyxSocket.getMe());
+        // Set the contact request in PENDING state in the request area
+        User[] requests = slyxSocket.sendGetPendingContactRequests(getMe());
         for (User u : requests) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
             Label l_name = (Label) p.lookup("#label_name");

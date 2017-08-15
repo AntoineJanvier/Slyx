@@ -83,8 +83,9 @@ public class LoginController {
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             label_get_update.setText("Checking updates...");
-            String version = slyxSocket.sendGetUpdateRequest();
-            initSetUpdateLabel(version.split("\\."));
+            // String version = slyxSocket.sendGetUpdateRequest();
+            slyxSocket.sendAskVersion();
+            initSetUpdateLabel(SlyxSocket.getVersion().split("\\."));
 
         } catch (IOException e) {
             System.out.println("TOO BAD");

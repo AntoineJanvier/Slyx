@@ -11,7 +11,7 @@
 <AnchorPane fx:id="anchorPane_general" prefHeight="275.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.LoginController">
     <children>
         <Label fx:id="label_connection" layoutX="239.0" layoutY="24.0" text="Connection to Slyx" />
-        <TextField fx:id="tf_email" layoutX="150.0" layoutY="54.0" prefHeight="26.0" prefWidth="300.0" promptText="Email" text="antoine@janvier.com" />
+        <TextField fx:id="tf_email" layoutX="150.0" layoutY="54.0" prefHeight="26.0" prefWidth="300.0" promptText="Email" text="antoine.jan95@gmail.com" />
       <PasswordField fx:id="tf_password" layoutX="150.0" layoutY="92.0" prefHeight="26.0" prefWidth="300.0" promptText="password" text="tototiti" />
         <Button fx:id="btn_sign_in" layoutX="269.0" layoutY="138.0" mnemonicParsing="false" onAction="#launch_next_screen" text="Sign In" />
         <Line endX="300.0" layoutX="200.0" layoutY="200.0" startX="-100.0" />
