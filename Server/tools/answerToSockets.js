@@ -1,7 +1,6 @@
 'use strict';
 module.exports = {
     toClient: function (clients, clientID, toSend) {
-        console.log('SEND TO CLIENT');
         for (let c of clients) {
             if (c.User.userid === clientID) {
                 c.write(toSend + '\n');

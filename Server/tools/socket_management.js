@@ -322,8 +322,9 @@ module.exports = {
                     where: {user: u1.userid, contact: u2.userid}
                 }).then(contact => {
                     return Message.create({
-                        sent: json.sent, content: json.content, contact: contact.contactid
+                        sent: new Date(json.sent), content: json.content, contact: contact.contactid
                     }).then(message => {
+                        console.log('DATE => ' + json.sent);
                         send.toClient(clients, u2.userid, JSON.stringify({
                             ACTION: 'MESSAGE_INCOMING',
                             FROM: u1.userid,

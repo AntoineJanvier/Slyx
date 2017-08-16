@@ -48,9 +48,8 @@ public class Message {
         JSONObject o = new JSONObject();
         o.put("from", this.from.getId());
         o.put("to", this.to.getId());
-        o.put("sent", this.sent);
+        o.put("sent", this.sent.getTime());
         o.put("content", this.content);
-        System.out.println(o);
         return o;
     }
 }
