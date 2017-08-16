@@ -5,6 +5,7 @@ import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
 import slyx.jsonsimple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +15,10 @@ import java.util.Map;
  * on 08/08/17.
  */
 public class ArrayJsonParser {
-    String base;
-    int nbKeys;
-    HashMap<Integer, User> userHashMap = new HashMap<>();
-    HashMap<Integer, Message> messageHashMap = new HashMap<>();
+    private String base;
+    private int nbKeys;
+    private HashMap<Integer, User> userHashMap = new HashMap<>();
+    private HashMap<Integer, Message> messageHashMap = new HashMap<>();
 
     public ArrayJsonParser(String base) {
         this.base = base;
@@ -42,7 +43,8 @@ public class ArrayJsonParser {
         return values;
     }
 
-    private Object tryParse(int i, JSONParser jsonParser, Object o, String[] toParse) {
+    private Object tryParse(int i, JSONParser jsonParser, String[] toParse) {
+        Object o = null;
         if (i == 0) {
             try {
                 o = jsonParser.parse(toParse[i] + "}");
@@ -61,6 +63,8 @@ public class ArrayJsonParser {
     }
 
     public void processUser() {
+        base = '[' + base.split("\\[")[1];
+        base = base.split("]")[0] + ']';
         int key = 0;
         if (base.charAt(0) == '[' && base.charAt(base.length() - 1) == ']') {
             // Remove '[' and ']'
@@ -74,9 +78,9 @@ public class ArrayJsonParser {
 
                 for (int i = 0; i < toParse.length; i++) {
                     JSONParser jsonParser = new JSONParser();
-                    Object o = null;
+                    Object o;
 
-                    o = tryParse(i, jsonParser, o, toParse);
+                    o = tryParse(i, jsonParser, toParse);
 
                     // Create a User and add it to HashMap
                     JSONObject jsonMe = (JSONObject) o;
@@ -89,6 +93,7 @@ public class ArrayJsonParser {
                                 jsonMe.get("email").toString(),
                                 jsonMe.get("picture").toString()
                         );
+                        System.out.println(u.toString());
                         userHashMap.put(++key, u);
                     }
                     nbKeys = key;
@@ -110,29 +115,35 @@ public class ArrayJsonParser {
 
             for (int i = 0; i < toParse.length; i++) {
                 JSONParser jsonParser = new JSONParser();
-                Object o = null;
+                Object o;
 
-                o = tryParse(i, jsonParser, o, toParse);
+                o = tryParse(i, jsonParser, toParse);
 
                 // Create a User and add it to HashMap
                 JSONObject jsonMe = (JSONObject) o;
                 if (jsonMe != null) {
                     Date dateSent = new Date();
                     dateSent.setTime((long) jsonMe.get("sent"));
-                    Message u = new Message(
-                            SlyxSocket.getMe(),
-                            new User(
-                                    Math.toIntExact((long) jsonMe.get("id")),
-                                    jsonMe.get("firstname").toString(),
-                                    jsonMe.get("lastname").toString(),
-                                    Math.toIntExact((long) jsonMe.get("age")),
-                                    jsonMe.get("email").toString(),
-                                    jsonMe.get("picture").toString()
-                            ),
-                            dateSent,
-                            jsonMe.get("content").toString()
-                    );
-                    messageHashMap.put(++key, u);
+                    try {
+                        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+                        Message u = new Message(
+                                Math.toIntExact((long) jsonMe.get("messageid")),
+                                slyxSocket.getMe(),
+                                new User(
+                                        Math.toIntExact((long) jsonMe.get("id")),
+                                        jsonMe.get("firstname").toString(),
+                                        jsonMe.get("lastname").toString(),
+                                        Math.toIntExact((long) jsonMe.get("age")),
+                                        jsonMe.get("email").toString(),
+                                        jsonMe.get("picture").toString()
+                                ),
+                                dateSent,
+                                jsonMe.get("content").toString()
+                        );
+                        messageHashMap.put(++key, u);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 nbKeys = key;
             }

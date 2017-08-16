@@ -75,7 +75,7 @@
       </ScrollPane>
    </center>
    <left>
-      <TabPane fx:id="tabPane_left" prefHeight="200.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="tabPane_left" onMouseMoved="#initialize" prefHeight="200.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="tabPaneTab_contacts" text="Contacts">
                <content>

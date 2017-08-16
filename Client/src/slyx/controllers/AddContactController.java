@@ -36,7 +36,8 @@ public class AddContactController {
     public void initialize() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
-        User[] contacts = slyxSocket.sendGetUsersNotInContactList(SlyxSocket.getMe());
+        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
+        User[] contacts = slyxSocket.getOtherUsers();
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
             Label l_name = (Label) p.lookup("#label_name");

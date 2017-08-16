@@ -42,7 +42,7 @@ public class LoginController {
 
     @FXML
     public void launch_next_screen() throws Exception {
-        SlyxSocket socket =  SlyxSocket.getInstance();
+        SlyxSocket slyxSocket =  SlyxSocket.getInstance();
 
         // Get connection information
         String u_email = tf_email.getText();
@@ -54,28 +54,28 @@ public class LoginController {
         else if (!Validator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
-            SlyxSocket.setMe(null);
+            slyxSocket.setMe(null);
             // If all seems ok, request the server a connection
-            socket.sendConnectionRequest(u_email, u_pwd);
+            slyxSocket.sendAskConnection(u_email, u_pwd);
 
             // Test singleton of Me object to know if we can launch the app just if he is connected
+            while (slyxSocket.getMe() == null) {
+                Thread.sleep(100);
+            }
+            if (slyxSocket.getMe().isConnected()) {
 
-            if (SlyxSocket.getMe() != null) {
-                if (SlyxSocket.getMe().isConnected()) {
+                // Close login window
+                Stage stage = (Stage) btn_sign_in.getScene().getWindow();
+                stage.close();
 
-                    // Close login window
-                    Stage stage = (Stage) btn_sign_in.getScene().getWindow();
-                    stage.close();
-
-                    // Launch app window
-                    Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
-                    Stage next_stage = new Stage();
-                    next_stage.setTitle("Slyx");
-                    next_stage.setScene(new Scene(next_root));
-                    next_stage.show();
-                } else {
-                    label_error_hint.setText(getError(ERR_CONNECTION));
-                }
+                // Launch app window
+                Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
+                Stage next_stage = new Stage();
+                next_stage.setTitle("Slyx");
+                next_stage.setScene(new Scene(next_root));
+                next_stage.show();
+            } else {
+                label_error_hint.setText(getError(ERR_CONNECTION));
             }
         }
     }

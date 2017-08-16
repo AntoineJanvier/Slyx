@@ -22,9 +22,7 @@ public class SlyxSocket extends Thread {
     private BufferedReader bufferedReader;
     private PrintWriter printWriter;
 
-    public JSONObject jsonObject;
-
-    private static User me;
+    private User me;
     private static HashMap<Integer, User> contacts = new HashMap<>();
     private static HashMap<Integer, User> otherUsers = new HashMap<>();
     private static HashMap<Integer, User> userRequests = new HashMap<>();
@@ -47,230 +45,178 @@ public class SlyxSocket extends Thread {
 
     public void run() {
         while (!this.isInterrupted()) {
+            String serverResponse = null;
             try {
-                while (true) {
-                    String serverResponse = listenInSocket();
-                    JSONParser jsonParser = new JSONParser();
-                    Object o = null;
-                    try {
-                        o = jsonParser.parse(serverResponse);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        JSONObject j = (JSONObject) o;
-                        ArrayJsonParser arrayJsonParser;
-                        if (j != null && j.containsKey("ACTION")) {
-                            switch (j.get("ACTION").toString()) {
-                                case "GET_VERSION_OF_SLYX":
-                                    version = j.get("version").toString();
-                                    break;
-                                case "MESSAGE_INCOMING":
-                                    System.out.println("MESSAGE_INCOMING");
-                                    User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
-                                    Date d = new Date();
-                                    contacts.get(uFrom.getId()).addMessage(
-                                            Integer.parseInt(j.get("MESSAGE_ID").toString()),
-                                            uFrom,
-                                            me,
-                                            j.get("CONTENT").toString(),
-                                            d
-                                    );
-                                    break;
-                                case "CALL_INCOMING":
-                                    System.out.println("CALL_INCOMING");
-                                    User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
-                                    contacts.get(caller.getId()).addCall(
-                                            Integer.parseInt(j.get("CALL_ID").toString()),
-                                            caller,
-                                            me
-                                    );
-                                    break;
-                                case "ACCEPT_CONNECTION":
-                                    me = new User(
-                                            Math.toIntExact((long) j.get("id")),
-                                            j.get("firstname").toString(),
-                                            j.get("lastname").toString(),
-                                            Math.toIntExact((long) j.get("age")),
-                                            j.get("email").toString(),
-                                            j.get("picture").toString()
-                                    );
-                                    me.setConnected(true);
-                                    break;
-                                case "GET_CONTACTS":
-                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
-                                    arrayJsonParser.processUser();
-                                    User[] users = arrayJsonParser.getUsers();
-                                    for (User u : users) {
-                                        contacts.put(u.getId(), u);
-                                    }
-                                    break;
-                                case "CONTACT_REQUEST":
-                                    userRequests.put(Math.toIntExact((long) j.get("id")), new User(
-                                            Math.toIntExact((long) j.get("id")),
-                                            j.get("firstname").toString(),
-                                            j.get("lastname").toString(),
-                                            Math.toIntExact((long) j.get("age")),
-                                            j.get("email").toString(),
-                                            j.get("picture").toString()
-                                    ));
-                                    break;
-                                case "GET_USERS_NOT_IN_CONTACT_LIST":
-                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
-                                    arrayJsonParser.processUser();
-                                    User[] usersNotInContactList = arrayJsonParser.getUsers();
-                                    for (User u : usersNotInContactList) {
-                                        otherUsers.put(u.getId(), u);
-                                    }
-                                    break;
-                                case "GET_PENDING_CONTACT_REQUEST":
-                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
-                                    arrayJsonParser.processUser();
-                                    User[] pendingRequests = arrayJsonParser.getUsers();
-                                    for (User u : pendingRequests) {
-                                        userRequests.put(u.getId(), u);
-                                    }
-                                    break;
-                                case "GET_MESSAGES_OF_CONTACT":
-                                    arrayJsonParser = new ArrayJsonParser(serverResponse);
-                                    arrayJsonParser.processUser();
-                                    Message[] messages = arrayJsonParser.getMessages();
-                                    User from = contacts.get(Integer.parseInt(j.get("id").toString()));
-                                    for (Message m : messages) {
-                                        from.addMessage(m.getId(), m.getFrom(), m.getTo(), m.getContent(), new Date());
-                                    }
-                                    break;
-                                case "CONTACT_REQUEST_ACCEPTED":
-                                    contacts.put(Math.toIntExact((long) j.get("id")), new User(
-                                            Math.toIntExact((long) j.get("id")),
-                                            j.get("firstname").toString(),
-                                            j.get("lastname").toString(),
-                                            Math.toIntExact((long) j.get("age")),
-                                            j.get("email").toString(),
-                                            j.get("picture").toString()
-                                    ));
-                                    break;
-                                default:
-                                    System.out.println("Unknown ACTION...");
-                            }
-                        } else if (j != null && j.containsKey("ERROR")) {
-                            System.out.println(j.get("ERROR").toString());
-                            socket.close();
-                            System.exit(0);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
+                serverResponse = listenInSocket();
+            } catch (IOException e) {
                 e.printStackTrace();
+            }
+            JSONParser jsonParser = new JSONParser();
+            Object o = null;
+            try {
+                o = jsonParser.parse(serverResponse);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            boolean isArray = false;
+            if (serverResponse != null)
+                if (serverResponse.charAt(0) == '[')
+                    isArray = true;
+            if (!isArray) {
+                try {
+                    JSONObject j = (JSONObject) o;
+                    ArrayJsonParser arrayJsonParser;
+                    if (j != null && j.containsKey("ACTION")) {
+                        switch (j.get("ACTION").toString()) {
+                            case "GET_VERSION_OF_SLYX":
+                                version = j.get("version").toString();
+                                break;
+                            case "MESSAGE_INCOMING":
+                                System.out.println("MESSAGE_INCOMING");
+                                User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
+                                Date d = new Date();
+                                contacts.get(uFrom.getId()).addMessage(
+                                        Integer.parseInt(j.get("MESSAGE_ID").toString()),
+                                        uFrom,
+                                        this.me,
+                                        j.get("CONTENT").toString(),
+                                        d
+                                );
+                                break;
+                            case "CALL_INCOMING":
+                                System.out.println("CALL_INCOMING");
+                                User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
+                                contacts.get(caller.getId()).addCall(
+                                        Integer.parseInt(j.get("CALL_ID").toString()),
+                                        caller,
+                                        this.me
+                                );
+                                break;
+                            case "ACCEPT_CONNECTION":
+                                this.me = new User(
+                                        Math.toIntExact((long) j.get("id")),
+                                        j.get("firstname").toString(),
+                                        j.get("lastname").toString(),
+                                        Math.toIntExact((long) j.get("age")),
+                                        j.get("email").toString(),
+                                        j.get("picture").toString()
+                                );
+                                this.me.setConnected(true);
+                                break;
+                            case "GET_CONTACTS":
+                                arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                arrayJsonParser.processUser();
+                                User[] users = arrayJsonParser.getUsers();
+                                for (User u : users) {
+                                    contacts.put(u.getId(), u);
+                                }
+                                break;
+                            case "CONTACT_REQUEST":
+                                userRequests.put(Math.toIntExact((long) j.get("id")), new User(
+                                        Math.toIntExact((long) j.get("id")),
+                                        j.get("firstname").toString(),
+                                        j.get("lastname").toString(),
+                                        Math.toIntExact((long) j.get("age")),
+                                        j.get("email").toString(),
+                                        j.get("picture").toString()
+                                ));
+                                break;
+                            case "GET_USERS_NOT_IN_CONTACT_LIST":
+                                arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                arrayJsonParser.processUser();
+                                User[] usersNotInContactList = arrayJsonParser.getUsers();
+                                for (User u : usersNotInContactList) {
+                                    otherUsers.put(u.getId(), u);
+                                }
+                                break;
+                            case "GET_PENDING_CONTACT_REQUEST":
+                                arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                arrayJsonParser.processUser();
+                                User[] pendingRequests = arrayJsonParser.getUsers();
+                                for (User u : pendingRequests) {
+                                    userRequests.put(u.getId(), u);
+                                }
+                                break;
+                            case "GET_MESSAGES_OF_CONTACT":
+                                arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                arrayJsonParser.processUser();
+                                Message[] messages = arrayJsonParser.getMessages();
+                                User from = contacts.get(Integer.parseInt(j.get("id").toString()));
+                                for (Message m : messages) {
+                                    from.addMessage(m.getId(), m.getFrom(), m.getTo(), m.getContent(), new Date());
+                                }
+                                break;
+                            case "CONTACT_REQUEST_ACCEPTED":
+                                contacts.put(Math.toIntExact((long) j.get("id")), new User(
+                                        Math.toIntExact((long) j.get("id")),
+                                        j.get("firstname").toString(),
+                                        j.get("lastname").toString(),
+                                        Math.toIntExact((long) j.get("age")),
+                                        j.get("email").toString(),
+                                        j.get("picture").toString()
+                                ));
+                                break;
+                            default:
+                                System.out.println("Unknown ACTION...");
+                        }
+                    } else if (j != null && j.containsKey("ERROR")) {
+                        System.out.println(j.get("ERROR").toString());
+                        close();
+                        System.exit(0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
-
-    // OK
     public void sendMessage(String content, User to) {
         Date d = new Date();
-        Message m = new Message(0, me, to, d, content);
+        Message m = new Message(0, this.me, to, d, content);
         printWriter.println(m.toObject().put("request", "SEND_MESSAGE").toString());
     }
-
-    // OK
-    public User[] sendGetContactsRequest(User user) {
+    public void sendGetContactsRequest(User user) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_CONTACTS_REQUEST);
         j.put("userid", user.getId());
-
-        String returned = echo(j.toString());
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
-
-        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-        arrayJsonParser.processUser();
-        return arrayJsonParser.getUsers();
+        writeInSocket(j.toString());
     }
-
-    // OK
     public void sendAddContactRequest(int userID) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.ADD_CONTACT_REQUEST);
-        j.put("me", SlyxSocket.getMe().getId());
+        j.put("me", this.me.getId());
         j.put("userid", userID);
-
         writeInSocket(j.toString());
-        /*String returned = echo(j.toString());
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
-
-        try {
-            o = jsonParser.parse(returned);
-            JSONObject jsonMe = (JSONObject) o;
-            if (!"OK".equals(jsonMe.get("request"))) {
-                System.out.println("CONTACT NOT ADDED !");
-            } else {
-                System.out.println("CONTACT ADDED");
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
     }
-
-    // OK
     public void sendRejectContactRequest(int userID) {
         System.out.println("sendRejectContactRequest");
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.REJECT_CONTACT_REQUEST);
-        j.put("u1userid", me.getId());
+        j.put("u1userid", this.me.getId());
         j.put("u2userid", userID);
-
-        // echo(j.toString());
         writeInSocket(j.toString());
     }
-
-    // OK
     public void sendAcceptContactRequest(int userID) {
         System.out.println("sendAcceptContactRequest");
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.ACCEPT_CONTACT_REQUEST);
-        j.put("u1userid", me.getId());
+        j.put("u1userid", this.me.getId());
         j.put("u2userid", userID);
-
-        // echo(j.toString());
         writeInSocket(j.toString());
     }
-
-    // OK
     public void sendGetUsersNotInContactList(User user) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_USERS_NOT_IN_CONTACT_LIST_REQUEST);
         j.put("userid", user.getId());
-
         writeInSocket(j.toString());
-        /*String returned = echo(j.toString());
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
-
-        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-        arrayJsonParser.processUser();
-        return arrayJsonParser.getUsers();*/
     }
-
     public void sendGetPendingContactRequests(User user) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_PENDING_CONTACT_REQUESTS_REQUEST);
         j.put("userid", user.getId());
-
         writeInSocket(j.toString());
-//        String returned = echo(j.toString());
-//        JSONParser jsonParser = new JSONParser();
-//        Object o = null;
-//
-//        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-//        arrayJsonParser.processUser();
-//        return arrayJsonParser.getUsers();
     }
-
+    // TODO : Modify sendGetMessagesOfContactRequest(User user, User to)
     public Message[] sendGetMessagesOfContactRequest(User user, User to) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_MESSAGES_OF_CONTACT_REQUEST);
@@ -285,77 +231,6 @@ public class SlyxSocket extends Thread {
         arrayJsonParser.processMessage();
         return arrayJsonParser.getMessages();
     }
-
-    /**
-     * Request a connection to the server for a User
-     * @param email: Email
-     * @param password: Password
-     * @return User found in database
-     */
-    public void sendConnectionRequest(String email, String password) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.CONNECTION_REQUEST);
-        j.put("email", email);
-        j.put("password", password);
-
-        String returned = echo(j.toString());
-
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
-
-        try {
-            o = jsonParser.parse(returned);
-        } catch (ParseException e) {
-            System.out.println("JSON PARSE EXCEPTION IN SEND CONNECTION REQUEST");
-            e.printStackTrace();
-        }
-        JSONObject jsonMe = (JSONObject) o;
-
-        if (jsonMe != null) {
-            if ("ACCEPT_CONNECTION".equals(jsonMe.get("request").toString())) {
-                me = new User(
-                        Math.toIntExact((long) jsonMe.get("id")),
-                        jsonMe.get("firstname").toString(),
-                        jsonMe.get("lastname").toString(),
-                        Math.toIntExact((long) jsonMe.get("age")),
-                        jsonMe.get("email").toString(),
-                        jsonMe.get("picture").toString()
-                );
-                me.setConnected(true);
-            }
-        }
-    }
-
-    /**
-     * Ask if there is updates available to check the current version of the application
-     * @return Latest version number of the application
-     */
-    public String sendGetUpdateRequest() {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_UPDATE_REQUEST);
-
-        String returned = echo(j.toString());
-
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
-
-        try {
-            o = jsonParser.parse(returned);
-        } catch (ParseException e) {
-            System.out.println("JSON PARSE EXCEPTION IN SEND GET UPDATE REQUEST");
-            e.printStackTrace();
-        }
-        JSONObject jsonUpdate = (JSONObject) o;
-
-        if (jsonUpdate != null) {
-            return jsonUpdate.get("version").toString();
-        }
-        return "0.0.0";
-    }
-
-    /*
-    NEW FUNCTIONS
-     */
     public void sendAskVersion() {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_UPDATE_REQUEST);
@@ -366,7 +241,6 @@ public class SlyxSocket extends Thread {
         j.put("request", RequestTypes.CONNECTION_REQUEST);
         j.put("email", email);
         j.put("password", password);
-
         writeInSocket(j.toString());
     }
 
@@ -387,26 +261,28 @@ public class SlyxSocket extends Thread {
         }
         return null;
     }
-
     private void writeInSocket(String message) {
         System.out.println("\nSending to server : " + message);
         printWriter.println(message);
     }
-
-    private String listenInSocket() {
+    private String listenInSocket() throws IOException {
         try {
             String s = bufferedReader.readLine();
             System.out.println("Server emits : " + s);
             return s;
         } catch (IOException e) {
             e.printStackTrace();
+            this.socket = new Socket(getIpAddress(), getPort());
         }
         return null;
     }
 
     public void close() throws IOException {
+        this.interrupt();
         socket.close();
-        instance = null;
+        bufferedReader.close();
+        printWriter.close();
+        instance = new SlyxSocket();
     }
     private String getIpAddress() {
         return "127.0.0.1";
@@ -415,9 +291,36 @@ public class SlyxSocket extends Thread {
         return 3895;
     }
 
-    public static User getMe() { return me; }
-    public static void setMe(User me) { SlyxSocket.me = me; }
-    public static HashMap<Integer, User> getContacts() { return contacts; }
+    public User getMe() { return this.me; }
+    public void setMe(User me) { this.me = me; }
     public static void setContacts(HashMap<Integer, User> contacts) { SlyxSocket.contacts = contacts; }
     public static String getVersion() { return version != null ? version : "0.0.0"; }
+    public HashMap<Integer, User> getHashmapContacts() { return contacts; }
+    public User[] getContacts() {
+        User[] users = new User[otherUsers.size()];
+        int count = 0;
+        for (User u : otherUsers.values()) {
+            users[count] = u;
+            count++;
+        }
+        return users;
+    }
+    public User[] getOtherUsers() {
+        User[] users = new User[otherUsers.size()];
+        int count = 0;
+        for (User u : otherUsers.values()) {
+            users[count] = u;
+            count++;
+        }
+        return users;
+    }
+    public User[] getUserRequests() {
+        User[] users = new User[userRequests.size()];
+        int count = 0;
+        for (User u : userRequests.values()) {
+            users[count] = u;
+            count++;
+        }
+        return users;
+    }
 }

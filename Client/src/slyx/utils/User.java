@@ -62,7 +62,7 @@ public class User {
         return messages;
     }
     public void addMessage(int messageID, User from, User to, String content, Date sent) {
-        Message m = new Message(from, to, sent, content);
+        Message m = new Message(messageID, from, to, sent, content);
         messages.put(messageID, m);
     }
     public void addCall(int callID, User from, User to) {
@@ -80,6 +80,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", isConnected=" + isConnected +
+                ", picture=" + picture +
                 '}';
     }
 }

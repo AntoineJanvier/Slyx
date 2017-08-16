@@ -21,9 +21,6 @@ import slyx.utils.User;
 
 import java.io.IOException;
 
-import static slyx.communication.SlyxSocket.getContacts;
-import static slyx.communication.SlyxSocket.getMe;
-
 /**
  * Created by Antoine Janvier
  * on 30/07/17.
@@ -102,14 +99,15 @@ public class SlyxController {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
         // Set my informations
-        User me = getMe();
+        User me = slyxSocket.getMe();
         label_my_firstname.setText(me.getFirstname());
         label_my_lastname.setText(me.getLastname());
         label_my_email.setText(me.getEmail());
         imageView_my_icon.setImage(new Image(me.getPicture()));
 
         // Set all contacts in the contact area
-        User[] contacts = slyxSocket.sendGetContactsRequest(getMe());
+        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
+        User[] contacts = slyxSocket.getContacts();
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
             Label l_firstname = (Label) p.lookup("#label_firstname");
@@ -141,7 +139,10 @@ public class SlyxController {
                         anchorPane_right.getChildren().clear();
                         anchorPane_right.getChildren().add(p);
 
-                        btn_send_message.setOnMouseClicked(event1 -> slyxSocket.sendMessage(tf_message_to_send.getText(), getContacts().get(u.getId())));
+                        btn_send_message.setOnMouseClicked(event1 -> slyxSocket.sendMessage(
+                                tf_message_to_send.getText(),
+                                slyxSocket.getHashmapContacts().get(u.getId())
+                        ));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -151,7 +152,8 @@ public class SlyxController {
         }
 
         // Set the contact request in PENDING state in the request area
-        User[] requests = slyxSocket.sendGetPendingContactRequests(getMe());
+        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
+        User[] requests = slyxSocket.getUserRequests();
         for (User u : requests) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
             Label l_name = (Label) p.lookup("#label_name");

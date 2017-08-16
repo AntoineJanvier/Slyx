@@ -13,14 +13,8 @@ let jsonToReturn = {};
 TODO : Make errors to return (in catch or else) to print it in the app
  */
 
-/*
-TODO : Java-side : GET_VERSION / ACCEPT_CONNECTION / GET_CONTACTS / CONTACT_REQUEST / GET_USERS_NOT_IN_CONTACT_LIST
-TODO : Java-side : GET_PENDING_CONTACT_REQUEST / GET_MESSAGES_OF_CONTACT / CONTACT_REQUEST_ACCEPTED /
- */
-
 module.exports = {
     sockGetUpdate: function (socket) {
-        jsonToReturn.request = "GET_VERSION";
         socket.write(JSON.stringify({ACTION: 'GET_VERSION_OF_SLYX', version: "1.0.0"}) + '\n');
     },
     sockConnect: function (socket, json) {
@@ -68,7 +62,10 @@ module.exports = {
                         for (let uc of userContacts)
                             resp.push(uc.responsify());
                         resp.ACTION = "GET_CONTACTS";
-                        socket.write(JSON.stringify(resp) + '\n');
+                        socket.write(JSON.stringify({
+                            ACTION: 'GET_CONTACTS',
+                            CONTACTS: resp
+                        }) + '\n');
                         socket.Contacts = resp;
                     }).catch(err => {
                         console.log(err);
