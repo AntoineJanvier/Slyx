@@ -66,7 +66,7 @@ module.exports = {
                             ACTION: 'GET_CONTACTS',
                             CONTACTS: resp
                         }) + '\n');
-                        socket.Contacts = resp;
+                        // socket.Contacts = resp;
                     }).catch(err => {
                         console.log(err);
                         socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
@@ -145,9 +145,12 @@ module.exports = {
                     let resp = [];
                     for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    resp.ACTION = 'GET_USERS_NOT_IN_CONTACT_LIST';
-                    socket.write(JSON.stringify(resp) + '\n');
-                    socket.Contacts = resp;
+                    // resp.ACTION = 'GET_USERS_NOT_IN_CONTACT_LIST';
+                    socket.write(JSON.stringify({
+                        ACTION: 'GET_USERS_NOT_IN_CONTACT_LIST',
+                        CONTACTS: resp
+                    }) + '\n');
+                    // socket.write(JSON.stringify(resp) + '\n');
                 }).catch(err => {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');

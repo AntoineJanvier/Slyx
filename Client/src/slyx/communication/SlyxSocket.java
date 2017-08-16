@@ -1,5 +1,6 @@
 package slyx.communication;
 
+import slyx.controllers.SlyxController;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
 import slyx.jsonsimple.parser.ParseException;
@@ -62,7 +63,7 @@ public class SlyxSocket extends Thread {
             if (serverResponse != null)
                 if (serverResponse.charAt(0) == '[')
                     isArray = true;
-            if (!isArray) {
+            if (!isArray && serverResponse != null) {
                 try {
                     JSONObject j = (JSONObject) o;
                     ArrayJsonParser arrayJsonParser;
@@ -104,7 +105,7 @@ public class SlyxSocket extends Thread {
                                 this.me.setConnected(true);
                                 break;
                             case "GET_CONTACTS":
-                                arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                arrayJsonParser = new ArrayJsonParser(j.get("CONTACTS").toString());
                                 arrayJsonParser.processUser();
                                 User[] users = arrayJsonParser.getUsers();
                                 for (User u : users) {
@@ -173,7 +174,8 @@ public class SlyxSocket extends Thread {
     public void sendMessage(String content, User to) {
         Date d = new Date();
         Message m = new Message(0, this.me, to, d, content);
-        printWriter.println(m.toObject().put("request", "SEND_MESSAGE").toString());
+        writeInSocket(m.toObject().put("request", "SEND_MESSAGE").toString());
+//        printWriter.println(m.toObject().put("request", "SEND_MESSAGE").toString());
     }
     public void sendGetContactsRequest(User user) {
         JSONObject j = new JSONObject();
@@ -297,9 +299,9 @@ public class SlyxSocket extends Thread {
     public static String getVersion() { return version != null ? version : "0.0.0"; }
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
     public User[] getContacts() {
-        User[] users = new User[otherUsers.size()];
+        User[] users = new User[contacts.size()];
         int count = 0;
-        for (User u : otherUsers.values()) {
+        for (User u : contacts.values()) {
             users[count] = u;
             count++;
         }

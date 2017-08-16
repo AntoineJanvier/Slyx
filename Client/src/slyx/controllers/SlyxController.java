@@ -96,7 +96,11 @@ public class SlyxController {
     }
 
     public void initialize() throws IOException {
+
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
+        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
+        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
+
 
         // Set my informations
         User me = slyxSocket.getMe();
@@ -106,7 +110,6 @@ public class SlyxController {
         imageView_my_icon.setImage(new Image(me.getPicture()));
 
         // Set all contacts in the contact area
-        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
         User[] contacts = slyxSocket.getContacts();
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
@@ -139,10 +142,16 @@ public class SlyxController {
                         anchorPane_right.getChildren().clear();
                         anchorPane_right.getChildren().add(p);
 
-                        btn_send_message.setOnMouseClicked(event1 -> slyxSocket.sendMessage(
-                                tf_message_to_send.getText(),
-                                slyxSocket.getHashmapContacts().get(u.getId())
-                        ));
+                        btn_send_message.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent event1) {
+                                slyxSocket.sendMessage(
+                                        tf_message_to_send.getText(),
+                                        slyxSocket.getHashmapContacts().get(u.getId())
+                                );
+                                tf_message_to_send.setText("");
+                            }
+                        });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -152,7 +161,6 @@ public class SlyxController {
         }
 
         // Set the contact request in PENDING state in the request area
-        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
         User[] requests = slyxSocket.getUserRequests();
         for (User u : requests) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
@@ -172,5 +180,7 @@ public class SlyxController {
             });
             vBox_request.getChildren().add(p);
         }
+
+        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
     }
 }

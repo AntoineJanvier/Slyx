@@ -37,6 +37,7 @@ server.listen(port);
 server.on('error', onError);
 
 nodenet.createServer(function (socket) {
+    socket.setEncoding("utf8");
     console.log('SOCKET_CONNECTED');
 
     clients.push(socket);
@@ -47,51 +48,56 @@ nodenet.createServer(function (socket) {
     console.log(clients.length + ' clients connected');
 
     socket.on('data', function (data) {
+        data = data.split('\n');
 
         // Parse input
-        let json = JSON.parse(data);
+        for (let s of data) {
+            if (s && s.length > 3) {
+                let json = JSON.parse(s);
 
-        // Switch JSON input
-        switch (json.request) {
-            // Know if the client is up to date
-            case 'GET_UPDATE':
-                socketManagement.sockGetUpdate(socket);
-                break;
-            // Client connection
-            case 'CONNECTION':
-                socketManagement.sockConnect(socket, json);
-                break;
-            // Client loading its contacts
-            case 'GET_CONTACTS':
-                socketManagement.sockGetContacts(socket, json);
-                break;
-            // Client want to add a new contact
-            case 'ADD_CONTACT':
-                socketManagement.sockAddNewContact(socket, json, clients);
-                break;
-            // Client loading new possible contacts
-            case 'GET_USERS_NOT_IN_CONTACT_LIST':
-                socketManagement.sockGetUsersNotInContactList(socket, json);
-                break;
-            // Client want to print all contact requests
-            case 'GET_PENDING_CONTACT_REQUESTS':
-                socketManagement.sockGetPendingContactRequests(socket, json, clients);
-                break;
-            // Get messages of a specific contact
-            case 'GET_MESSAGES_OF_CONTACT':
-                socketManagement.sockGetMessagesOfContact(socket, json);
-                break;
-            case 'ACCEPT_CONTACT':
-                socketManagement.sockAcceptContactRequest(socket, json, clients);
-                break;
-            case 'REJECT_CONTACT':
-                socketManagement.sockRejectContactRequest(socket, json);
-                break;
-            case 'SEND_MESSAGE':
-                socketManagement.sockSendMessageToUser(socket, json, clients);
-                break;
-            default:
-                socket.write({} + '\n');
+                // Switch JSON input
+                switch (json.request) {
+                    // Know if the client is up to date
+                    case 'GET_UPDATE':
+                        socketManagement.sockGetUpdate(socket);
+                        break;
+                    // Client connection
+                    case 'CONNECTION':
+                        socketManagement.sockConnect(socket, json);
+                        break;
+                    // Client loading its contacts
+                    case 'GET_CONTACTS':
+                        socketManagement.sockGetContacts(socket, json);
+                        break;
+                    // Client want to add a new contact
+                    case 'ADD_CONTACT':
+                        socketManagement.sockAddNewContact(socket, json, clients);
+                        break;
+                    // Client loading new possible contacts
+                    case 'GET_USERS_NOT_IN_CONTACT_LIST':
+                        socketManagement.sockGetUsersNotInContactList(socket, json);
+                        break;
+                    // Client want to print all contact requests
+                    case 'GET_PENDING_CONTACT_REQUESTS':
+                        socketManagement.sockGetPendingContactRequests(socket, json, clients);
+                        break;
+                    // Get messages of a specific contact
+                    case 'GET_MESSAGES_OF_CONTACT':
+                        socketManagement.sockGetMessagesOfContact(socket, json);
+                        break;
+                    case 'ACCEPT_CONTACT':
+                        socketManagement.sockAcceptContactRequest(socket, json, clients);
+                        break;
+                    case 'REJECT_CONTACT':
+                        socketManagement.sockRejectContactRequest(socket, json);
+                        break;
+                    case 'SEND_MESSAGE':
+                        socketManagement.sockSendMessageToUser(socket, json, clients);
+                        break;
+                    default:
+                        socket.write({} + '\n');
+                }
+            }
         }
     });
 

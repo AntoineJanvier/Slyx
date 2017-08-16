@@ -93,7 +93,6 @@ public class ArrayJsonParser {
                                 jsonMe.get("email").toString(),
                                 jsonMe.get("picture").toString()
                         );
-                        System.out.println(u.toString());
                         userHashMap.put(++key, u);
                     }
                     nbKeys = key;
