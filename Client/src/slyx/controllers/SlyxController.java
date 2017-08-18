@@ -124,6 +124,7 @@ public class SlyxController {
                 @Override
                 public void handle(MouseEvent event) {
                     try {
+                        slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), u);
                         Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
 
                         // Get elements
@@ -142,15 +143,12 @@ public class SlyxController {
                         anchorPane_right.getChildren().clear();
                         anchorPane_right.getChildren().add(p);
 
-                        btn_send_message.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event1) {
-                                slyxSocket.sendMessage(
-                                        tf_message_to_send.getText(),
-                                        slyxSocket.getHashmapContacts().get(u.getId())
-                                );
-                                tf_message_to_send.setText("");
-                            }
+                        btn_send_message.setOnMouseClicked(event1 -> {
+                            slyxSocket.sendMessage(
+                                    tf_message_to_send.getText(),
+                                    slyxSocket.getHashmapContacts().get(u.getId())
+                            );
+                            tf_message_to_send.setText("");
                         });
                     } catch (IOException e) {
                         e.printStackTrace();

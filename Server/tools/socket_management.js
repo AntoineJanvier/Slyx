@@ -207,32 +207,35 @@ module.exports = {
                 where: { userid: json.u2userid }
             }).then(user2 => {
                 return Contact.find({
-                    where: {user: user1, contact: user2}
-                }).then(contact => {
-                    return Contact.find({
-                        where: {user: user2, contact: user1}
-                    }).then(contact2 => {
-                        let contactIDs = [];
-                        if (contact)
-                            contactIDs.push(contact.contactid);
-                        if (contact2)
-                            contactIDs.push(contact2.contactid);
-                        return Message.findAll({
-                            where: {users: {$in: contactIDs}}
-                        }).then(messages => {
-                            let resp = [];
-                            for (let m of messages)
-                                resp.push(m.responsify());
-                            resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
-                            socket.write(JSON.stringify(resp) + '\n');
-                            socket.Messages = resp;
-                        }).catch(err => {
-                            console.log(err);
-                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_E'}) + '\n');
-                        });
+                    where: {
+                        user: user1.userid,
+                        contact: user2.userid
+                    },
+                    $and: {
+                        user: user2.userid,
+                        contact: user1.userid
+                    }
+                }).then(contacts => {
+                    let contactIDs = [];
+                    for (let c of contacts)
+                        contactIDs.push(c.contactid);
+                    console.log();
+                    console.log();
+                    console.log(contactIDs);
+                    console.log();
+                    console.log();
+                    return Message.findAll({
+                        where: {users: {$in: contactIDs}}
+                    }).then(messages => {
+                        let resp = [];
+                        for (let m of messages)
+                            resp.push(m.responsify());
+                        resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
+                        socket.write(JSON.stringify(resp) + '\n');
+                        socket.Messages = resp;
                     }).catch(err => {
                         console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_E'}) + '\n');
                     });
                 }).catch(err => {
                     console.log(err);
