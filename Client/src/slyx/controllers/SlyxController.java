@@ -1,8 +1,12 @@
 package slyx.controllers;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,10 +20,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import slyx.communication.SlyxSocket;
 import slyx.utils.User;
 
 import java.io.IOException;
+import java.util.Observable;
 
 /**
  * Created by Antoine Janvier
@@ -50,19 +56,6 @@ public class SlyxController {
     Label label_my_email;
     @FXML
     VBox vBox_request;
-
-//    public void getMessagesOfContactSelected() throws IOException {
-//        SlyxSocket slyxSocket = SlyxSocket.getInstance();
-//        Message[] messages = slyxSocket.sendGetMessagesOfContactRequest(SlyxSocket.getMe(), new User());
-//        for (Message message : messages) {
-//            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
-//            Label l_firstname = (Label) p.lookup("#label_content");
-//            Label l_lastname = (Label) p.lookup("#label_lastname");
-//            l_content.setText(message.getContent());
-//            l_sent.setText(message.getSent());
-//            vBox_left.getChildren().add(p);
-//        }
-//    }
 
     public void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
@@ -98,9 +91,6 @@ public class SlyxController {
     public void initialize() throws IOException {
 
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
-        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
-        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
-
 
         // Set my informations
         User me = slyxSocket.getMe();
@@ -109,16 +99,45 @@ public class SlyxController {
         label_my_email.setText(me.getEmail());
         imageView_my_icon.setImage(new Image(me.getPicture()));
 
+        refresh(slyxSocket);
+    }
+
+    public void refresh(SlyxSocket slyxSocket) throws IOException {
+        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
+        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
+
+        refreshContacts(slyxSocket);
+        refreshContactRequests(slyxSocket);
+
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(2500),
+                ae -> {
+                    try {
+                        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
+                        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
+                        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
+                        refreshContacts(slyxSocket);
+                        refreshContactRequests(slyxSocket);
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+    }
+
+    public void refreshContacts(SlyxSocket slyxSocket) throws IOException {
         // Set all contacts in the contact area
         User[] contacts = slyxSocket.getContacts();
+        vBox_left.getChildren().clear();
+        for (Node observable : vBox_left.getChildren()) {
+            vBox_left.getChildren().remove(observable);
+        }
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
-            Label l_firstname = (Label) p.lookup("#label_firstname");
-            Label l_lastname = (Label) p.lookup("#label_lastname");
-            ImageView imageView = (ImageView) p.lookup("#imageView_contact_icon");
-            l_firstname.setText(u.getFirstname());
-            l_lastname.setText(u.getLastname());
-            imageView.setImage(new Image(u.getPicture()));
+            ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
+            ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
+            ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
 
             p.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -127,17 +146,11 @@ public class SlyxController {
                         slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), u);
                         Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
 
-                        // Get elements
-                        Label l_firstname = (Label) p.lookup("#label_firstname");
-                        Label l_lastname = (Label) p.lookup("#label_lastname");
-                        Label l_email = (Label) p.lookup("#label_email");
-                        ImageView imageView = (ImageView) p.lookup("#imageView_contact_icon");
-
                         // Set elements
-                        l_firstname.setText(u.getFirstname());
-                        l_lastname.setText(u.getLastname());
-                        l_email.setText(u.getEmail());
-                        imageView.setImage(new Image(u.getPicture()));
+                        ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
+                        ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
+                        ((Label) p.lookup("#label_email")).setText(u.getEmail());
+                        ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
 
                         // Add in scene
                         anchorPane_right.getChildren().clear();
@@ -157,13 +170,15 @@ public class SlyxController {
             });
             vBox_left.getChildren().add(p);
         }
-
+    }
+    public void refreshContactRequests(SlyxSocket slyxSocket) throws IOException {
         // Set the contact request in PENDING state in the request area
         User[] requests = slyxSocket.getUserRequests();
+        vBox_request.getChildren().clear();
         for (User u : requests) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
-            Label l_name = (Label) p.lookup("#label_name");
-            l_name.setText(u.getFirstname() + " " + u.getLastname());
+            ((Label) p.lookup("#label_name")).setText(u.getFirstname() + " " + u.getLastname());
+
             Button button_Reject = (Button) p.lookup("#button_reject_request");
             button_Reject.setOnAction(event -> {
                 slyxSocket.sendRejectContactRequest(u.getId());
@@ -178,7 +193,5 @@ public class SlyxController {
             });
             vBox_request.getChildren().add(p);
         }
-
-        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
     }
 }

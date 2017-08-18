@@ -1,6 +1,7 @@
 package slyx.communication;
 
 import slyx.controllers.SlyxController;
+import slyx.exceptions.SocketClosedException;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
 import slyx.jsonsimple.parser.ParseException;
@@ -57,7 +58,7 @@ public class SlyxSocket extends Thread {
             try {
                 o = jsonParser.parse(serverResponse);
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
             boolean isArray = false;
             if (serverResponse != null)
@@ -273,7 +274,7 @@ public class SlyxSocket extends Thread {
             System.out.println("Server emits : " + s);
             return s;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(new SocketClosedException().getMessage());
             this.socket = new Socket(getIpAddress(), getPort());
         }
         return null;

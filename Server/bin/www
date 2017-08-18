@@ -41,6 +41,8 @@ nodenet.createServer(function (socket) {
     console.log('SOCKET_CONNECTED');
 
     clients.push(socket);
+    // for (let c of clients)
+    //     console.log(c);
     nb_clients++;
 
     socket.socketId = nb_clients;

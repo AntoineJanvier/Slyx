@@ -36,7 +36,7 @@ public class AddContactController {
     public void initialize() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
-        // slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
+        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
         User[] contacts = slyxSocket.getOtherUsers();
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));

@@ -10,7 +10,7 @@ let db = {};
 let config = require(__dirname + '/../config/config.json')[env];
 
 // Deactivate console logging
-// config.logging = false;
+config.logging = false;
 
 let sequelize;
 

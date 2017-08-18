@@ -29,15 +29,15 @@ module.exports = {
                     socket.User = user.responsify();
                 } else {
                     console.log('Bad login input');
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockConnect C'}) + '\n');
                 }
             } else {
                 console.log('No user');
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockConnect B'}) + '\n');
             }
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockConnect A'}) + '\n');
         });
     },
     sockGetContacts: function (socket, json) {
@@ -69,19 +69,19 @@ module.exports = {
                         // socket.Contacts = resp;
                     }).catch(err => {
                         console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetContacts D'}) + '\n');
                     });
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetContacts C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetContacts B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetContacts A'}) + '\n');
         });
     },
     sockAddNewContact: function (socket, json, clients) {
@@ -109,22 +109,22 @@ module.exports = {
                                     send.toClient(clients, user_requested.userid, JSON.stringify(j));
                                 }).catch(err => {
                                     console.log(err);
-                                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_F'}) + '\n');});
+                                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAddNewContact F'}) + '\n');});
                             } else
-                                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_E'}) + '\n');
+                                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAddNewContact E'}) + '\n');
                         }).catch(err => {
                             console.log(err);
-                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAddNewContact D'}) + '\n');
                         });
                     } else
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAddNewContact C'}) + '\n');
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAddNewContact B'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAddNewContact A'}) + '\n');
             });
         });
     },
@@ -153,15 +153,15 @@ module.exports = {
                     // socket.write(JSON.stringify(resp) + '\n');
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetUsersNotInContactList C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetUsersNotInContactList B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetUsersNotInContactList A'}) + '\n');
         });
     },
     sockGetPendingContactRequests: function (socket, json, clients) {
@@ -180,20 +180,23 @@ module.exports = {
                     let resp = [];
                     for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    socket.Contacts = resp;
-                    resp.ACTION = 'GET_PENDING_CONTACT_REQUEST';
+                    if (resp.length > 0)
+                        socket.write(JSON.stringify({
+                            ACTION: 'GET_PENDING_CONTACT_REQUEST',
+                            CONTACTS: resp
+                        }) + '\n');
                     send.toClient(clients, user.userid, JSON.stringify(resp));
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetPendingContactRequests C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetPendingContactRequests B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetPendingContactRequests A'}) + '\n');
         });
     },
     sockGetMessagesOfContact: function (socket, json) {
@@ -209,23 +212,23 @@ module.exports = {
                 return Contact.find({
                     where: {
                         user: user1.userid,
-                        contact: user2.userid
-                    },
-                    $and: {
-                        user: user2.userid,
-                        contact: user1.userid
+                        contact: user2.userid,
+                        $and: {
+                            user: user2.userid,
+                            contact: user1.userid
+                        }
                     }
                 }).then(contacts => {
                     let contactIDs = [];
-                    for (let c of contacts)
-                        contactIDs.push(c.contactid);
-                    console.log();
-                    console.log();
-                    console.log(contactIDs);
-                    console.log();
-                    console.log();
+                    if (contacts)
+                        for (let c of contacts)
+                            contactIDs.push(c.contactid);
                     return Message.findAll({
-                        where: {users: {$in: contactIDs}}
+                        where: {
+                            contact: {
+                                $in: contactIDs
+                            }
+                        }
                     }).then(messages => {
                         let resp = [];
                         for (let m of messages)
@@ -235,19 +238,19 @@ module.exports = {
                         socket.Messages = resp;
                     }).catch(err => {
                         console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_E'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetMessagesOfContact D'}) + '\n');
                     });
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetMessagesOfContact C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetMessagesOfContact B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetMessagesOfContact A'}) + '\n');
         });
     },
     sockAcceptContactRequest: function (socket, json, clients) {
@@ -271,19 +274,19 @@ module.exports = {
                         });
                     }).catch(err => {
                         console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAcceptContactRequest D'}) + '\n');
                     });
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAcceptContactRequest C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAcceptContactRequest B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockAcceptContactRequest A'}) + '\n');
         });
     },
     sockRejectContactRequest: function (socket, json) {
@@ -303,15 +306,15 @@ module.exports = {
                     return contact.destroy();
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockRejectContactRequest C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockRejectContactRequest B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockRejectContactRequest A'}) + '\n');
         });
     },
     sockSendMessageToUser: function (socket, json, clients) {
@@ -335,19 +338,19 @@ module.exports = {
                         }));
                     }).catch(err => {
                         console.log(err);
-                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_D'}) + '\n');
+                        socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockSendMessageToUser D'}) + '\n');
                     });
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_C'}) + '\n');
+                    socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockSendMessageToUser C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_B'}) + '\n');
+                socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockSendMessageToUser B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION_A'}) + '\n');
+            socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockSendMessageToUser A'}) + '\n');
         });
     }
 };

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true,
     });
     Message.associate = function (models) {
-        Message.hasOne(models.Contact, {
+        Message.belongsTo(models.Contact, {
             foreignKey: 'contact'
         });
     };

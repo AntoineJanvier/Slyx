@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="50.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.MessageController">
    <children>
-      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="99.0" layoutY="8.0" prefHeight="35.0" prefWidth="482.0" style="-fx-background-color: green;" text="gerrztstrhthsf" textAlignment="RIGHT" AnchorPane.rightAnchor="15.0">
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="99.0" layoutY="8.0" prefHeight="35.0" prefWidth="482.0" style="-fx-background-color: green; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" text="gerrztstrhthsf" textAlignment="RIGHT" AnchorPane.rightAnchor="15.0">
          <padding>
             <Insets right="15.0" />
          </padding></Label>
