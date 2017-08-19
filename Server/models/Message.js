@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             type: 'MESSAGE',
             id: this.messageid,
             contact: this.contact,
-            sent: this.sent,
+            sent: (new Date(this.sent).getTime()).toString(),
             content: this.content
         };
     };

@@ -28,6 +28,7 @@ public class SlyxSocket extends Thread {
     private static HashMap<Integer, User> contacts = new HashMap<>();
     private static HashMap<Integer, User> otherUsers = new HashMap<>();
     private static HashMap<Integer, User> userRequests = new HashMap<>();
+    private static HashMap<Integer, Message> messagesOfCurrentContact = new HashMap<>();
     private static String version = null;
 
     private static SlyxSocket instance = null;
@@ -80,7 +81,7 @@ public class SlyxSocket extends Thread {
                                 contacts.get(uFrom.getId()).addMessage(
                                         Integer.parseInt(j.get("MESSAGE_ID").toString()),
                                         uFrom,
-                                        this.me,
+                                        this.me.getId(),
                                         j.get("CONTENT").toString(),
                                         d,
                                         "IN"
@@ -141,12 +142,14 @@ public class SlyxSocket extends Thread {
                                 }
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
-                                arrayJsonParser = new ArrayJsonParser(serverResponse);
+                                arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
                                 arrayJsonParser.processMessage();
                                 Message[] messages = arrayJsonParser.getMessages();
-                                User from = contacts.get(Integer.parseInt(j.get("id").toString()));
-                                for (Message m : messages) {
-                                    from.addMessage(m.getId(), m.getFrom(), m.getTo(), m.getContent(), new Date(), m.getInOrOut());
+                                messagesOfCurrentContact.clear();
+                                if (messages != null && messages.length > 0) {
+                                    for (Message m : messages) {
+                                        messagesOfCurrentContact.put(m.getId(), m);
+                                    }
                                 }
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
@@ -177,7 +180,7 @@ public class SlyxSocket extends Thread {
         }
     }
     public void sendMessage(String content, User to) {
-        Message m = new Message(0, this.me, to, new Date(), content, "OUT");
+        Message m = new Message(0, this.me, to.getId(), new Date(), content, "OUT");
         writeInSocket(m.toObject().put("request", "SEND_MESSAGE").toString());
     }
     public void sendGetContactsRequest(User user) {
@@ -329,9 +332,9 @@ public class SlyxSocket extends Thread {
         return users;
     }
     public Message[] getMessagesOfContact(User contact) {
-        Message[] messages = new Message[contacts.get(contact.getId()).getMessages().size()];
+        Message[] messages = new Message[messagesOfCurrentContact.size()];
         int counter = 0;
-        for (Message m : contacts.get(contact.getId()).getMessages().values()) {
+        for (Message m : messagesOfCurrentContact.values()) {
             messages[counter++] = m;
         }
         return messages;

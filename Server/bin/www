@@ -100,7 +100,7 @@ nodenet.createServer(function (socket) {
                         socketManagement.sockSendMessageToUser(socket, json, clients);
                         break;
                     default:
-                        socket.write({} + '\n');
+                        socket.write({ACTION: 'ERROR'} + '\n');
                 }
             }
         }

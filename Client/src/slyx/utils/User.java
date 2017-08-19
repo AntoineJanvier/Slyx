@@ -52,7 +52,7 @@ public class User {
     public HashMap<Integer, Message> getMessages() {
         return messages;
     }
-    public void addMessage(int messageID, User from, User to, String content, Date sent, String inOrOut) {
+    public void addMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
         Message m = new Message(messageID, from, to, sent, content, inOrOut);
         messages.put(messageID, m);
     }

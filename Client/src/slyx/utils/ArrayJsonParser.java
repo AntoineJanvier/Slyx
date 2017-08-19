@@ -66,7 +66,7 @@ public class ArrayJsonParser {
         base = '[' + base.split("\\[")[1];
         base = base.split("]")[0] + ']';
         int key = 0;
-        if (base.charAt(0) == '[' && base.charAt(base.length() - 1) == ']') {
+        if (base.charAt(0) == '[' && base.charAt(base.length() - 1) == ']' && base.length() > 2) {
             // Remove '[' and ']'
             String s1 = base.split("\\[")[1];
 
@@ -104,7 +104,7 @@ public class ArrayJsonParser {
     }
     public void processMessage() {
         int key = 0;
-        if (base.charAt(0) == '[' && base.charAt(base.length() - 1) == ']') {
+        if (base.charAt(0) == '[' && base.charAt(base.length() - 1) == ']' && base.length() > 2) {
             // Remove '[' and ']'
             String s1 = base.split("\\[")[1];
             String s2 = s1.split("]")[0];
@@ -122,20 +122,13 @@ public class ArrayJsonParser {
                 JSONObject jsonMe = (JSONObject) o;
                 if (jsonMe != null) {
                     Date dateSent = new Date();
-                    dateSent.setTime((long) jsonMe.get("sent"));
+                    dateSent.setTime(Long.parseLong(jsonMe.get("sent").toString()));
                     try {
                         SlyxSocket slyxSocket = SlyxSocket.getInstance();
                         Message u = new Message(
-                                Math.toIntExact((long) jsonMe.get("messageid")),
+                                Math.toIntExact((long) jsonMe.get("id")),
                                 slyxSocket.getMe(),
-                                new User(
-                                        Math.toIntExact((long) jsonMe.get("id")),
-                                        jsonMe.get("firstname").toString(),
-                                        jsonMe.get("lastname").toString(),
-                                        Math.toIntExact((long) jsonMe.get("age")),
-                                        jsonMe.get("email").toString(),
-                                        jsonMe.get("picture").toString()
-                                ),
+                                Math.toIntExact((long) jsonMe.get("contact")),
                                 dateSent,
                                 jsonMe.get("content").toString(),
                                 jsonMe.get("inOrOut").toString()

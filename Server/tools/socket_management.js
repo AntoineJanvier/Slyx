@@ -61,11 +61,11 @@ module.exports = {
                         let resp = [];
                         for (let uc of userContacts)
                             resp.push(uc.responsify());
-                        resp.ACTION = "GET_CONTACTS";
-                        socket.write(JSON.stringify({
-                            ACTION: 'GET_CONTACTS',
-                            CONTACTS: resp
-                        }) + '\n');
+                        if (resp.length > 0)
+                            socket.write(JSON.stringify({
+                                ACTION: 'GET_CONTACTS',
+                                CONTACTS: resp
+                            }) + '\n');
                         // socket.Contacts = resp;
                     }).catch(err => {
                         console.log(err);
@@ -145,12 +145,11 @@ module.exports = {
                     let resp = [];
                     for (let uc of userContacts)
                         resp.push(uc.responsify());
-                    // resp.ACTION = 'GET_USERS_NOT_IN_CONTACT_LIST';
-                    socket.write(JSON.stringify({
-                        ACTION: 'GET_USERS_NOT_IN_CONTACT_LIST',
-                        CONTACTS: resp
-                    }) + '\n');
-                    // socket.write(JSON.stringify(resp) + '\n');
+                    if (resp.length > 0)
+                        socket.write(JSON.stringify({
+                            ACTION: 'GET_USERS_NOT_IN_CONTACT_LIST',
+                            CONTACTS: resp
+                        }) + '\n');
                 }).catch(err => {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetUsersNotInContactList C'}) + '\n');
@@ -185,7 +184,7 @@ module.exports = {
                             ACTION: 'GET_PENDING_CONTACT_REQUEST',
                             CONTACTS: resp
                         }) + '\n');
-                    send.toClient(clients, user.userid, JSON.stringify(resp));
+                    // send.toClient(clients, user.userid, JSON.stringify(resp));
                 }).catch(err => {
                     console.log(err);
                     socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetPendingContactRequests C'}) + '\n');
@@ -247,8 +246,13 @@ module.exports = {
                                 resp.push(re);
                             }
                             resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
-                            socket.write(JSON.stringify(resp) + '\n');
-                            socket.Messages = resp;
+                            if (resp.length > 0) {
+                                socket.write(JSON.stringify({
+                                    ACTION: 'GET_MESSAGES_OF_CONTACT',
+                                    MESSAGES: resp
+                                }) + '\n');
+                                socket.Messages = resp;
+                            }
                         }).catch(err => {
                             console.log(err);
                             socket.write(JSON.stringify({request: 'REFUSE_CONNECTION - sockGetMessagesOfContact D'}) + '\n');
@@ -316,7 +320,6 @@ module.exports = {
                 return Contact.find({
                     where: {user: u1.userid, contact: u2.userid, status: 'PENDING'}
                 }).then(contact => {
-                    // socket.write(JSON.stringify({request: 'OK'}));
                     return contact.destroy();
                 }).catch(err => {
                     console.log(err);
@@ -344,7 +347,6 @@ module.exports = {
                     return Message.create({
                         sent: new Date(json.sent), content: json.content, contact: contact.contactid
                     }).then(message => {
-                        console.log('DATE => ' + json.sent);
                         send.toClient(clients, u2.userid, JSON.stringify({
                             ACTION: 'MESSAGE_INCOMING',
                             MESSAGE_ID: message.messageid,

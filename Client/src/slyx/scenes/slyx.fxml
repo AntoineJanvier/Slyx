@@ -68,7 +68,7 @@
         </HBox>
     </bottom>
    <center>
-      <ScrollPane fx:id="scrollPane_messages" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane_messages" onMouseMoved="#refreshContacts" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
          <content>
             <VBox fx:id="vBox_messages" prefHeight="596.0" prefWidth="748.0" />
          </content>

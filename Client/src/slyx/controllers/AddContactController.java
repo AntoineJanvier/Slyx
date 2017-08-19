@@ -40,11 +40,9 @@ public class AddContactController {
         User[] contacts = slyxSocket.getOtherUsers();
         for (User u : contacts) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
-            Label l_name = (Label) p.lookup("#label_name");
-            l_name.setText(u.getFirstname() + " " + u.getLastname());
+            ((Label) p.lookup("#label_name")).setText(u.getFirstname() + " " + u.getLastname());
 
-            Button button_Remove = (Button) p.lookup("#button_reject_request");
-            button_Remove.setVisible(false);
+            p.lookup("#button_reject_request").setVisible(false);
 
             Button button_Add = (Button) p.lookup("#button_add_accept_request");
             button_Add.setOnAction(event -> {
