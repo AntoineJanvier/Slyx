@@ -17,7 +17,7 @@ public class User {
     private boolean isConnected;
     private String picture;
 
-    private HashMap<Integer, Message> messages = new HashMap<>();
+    public HashMap<Integer, Message> messages = new HashMap<>();
     private HashMap<Integer, Call> calls = new HashMap<>();
 
     public User() {

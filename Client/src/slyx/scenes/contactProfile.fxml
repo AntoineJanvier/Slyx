@@ -7,10 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="598.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactProfileController">
    <children>
-      <ImageView fx:id="imageView_contact_icon" fitHeight="93.0" fitWidth="124.0" layoutX="38.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageView_contact_icon" fitHeight="93.0" fitWidth="124.0" layoutX="38.0" layoutY="26.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="30.0" />
       <Label fx:id="label_firstname" alignment="CENTER" contentDisplay="CENTER" layoutY="137.0" prefWidth="200.0" text="Firstname" textAlignment="CENTER" />
       <Label fx:id="label_lastname" alignment="CENTER" contentDisplay="CENTER" layoutY="161.0" prefWidth="200.0" text="Lastname" textAlignment="CENTER" />
       <Label fx:id="label_email" alignment="CENTER" contentDisplay="CENTER" layoutY="193.0" prefHeight="16.0" prefWidth="200.0" text="Email" textAlignment="CENTER">

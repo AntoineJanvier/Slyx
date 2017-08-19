@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import slyx.communication.SlyxSocket;
 import slyx.utils.Message;
+import slyx.utils.SlyxSound;
 import slyx.utils.User;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class SlyxController {
     @FXML
     VBox vBox_request;
     @FXML
-    VBox vBox_messages;
+    public VBox vBox_messages;
 
     public void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
@@ -93,6 +94,7 @@ public class SlyxController {
     }
 
     public void initialize() throws IOException {
+        SlyxSound.playSound("LOGIN");
 
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
@@ -113,21 +115,6 @@ public class SlyxController {
 
         refreshContacts();
         refreshContactRequests(slyxSocket);
-
-        Timeline timeline = new Timeline(
-                new KeyFrame(
-                        Duration.millis(10000),
-                        ae -> {
-                            try {
-                                refreshContacts();
-                                refreshContactRequests(slyxSocket);
-                            } catch (IOException e) {
-                                System.out.println(e.getMessage());
-                            }
-                        })
-        );
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
     }
 
     public void refreshContacts() throws IOException {
@@ -177,17 +164,17 @@ public class SlyxController {
 
                         refreshMessagesOfContact(slyxSocket, u);
 
-                        Timeline timeline = new Timeline(new KeyFrame(
-                                Duration.millis(15000),
-                                ae -> {
-                                    try {
-                                        refreshMessagesOfContact(slyxSocket, u);
-                                    } catch (IOException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                }));
-                        timeline.setCycleCount(Animation.INDEFINITE);
-                        timeline.play();
+//                        Timeline timeline = new Timeline(new KeyFrame(
+//                                Duration.millis(15000),
+//                                ae -> {
+//                                    try {
+//                                        refreshMessagesOfContact(slyxSocket, u);
+//                                    } catch (IOException e) {
+//                                        System.out.println(e.getMessage());
+//                                    }
+//                                }));
+//                        timeline.setCycleCount(Animation.INDEFINITE);
+//                        timeline.play();
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
                     }
@@ -226,21 +213,36 @@ public class SlyxController {
 
     public void refreshMessagesOfContact(SlyxSocket slyxSocket, User contact) throws IOException {
         // Set the contact request in PENDING state in the request area
-        Message[] messages = slyxSocket.getMessagesOfContact(contact);
-        vBox_messages.getChildren().clear();
-        for (Node observable : vBox_messages.getChildren()) {
-            vBox_messages.getChildren().remove(observable);
-        }
-        for (Message m : messages) {
-            Parent p;
-            if ("IN".equals(m.getInOrOut())) {
-                p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_in.fxml"));
-            } else {
-                p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
-            }
-            ((Label) p.lookup("#label_content")).setText(m.getContent());
-            ((Label) p.lookup("#label_date")).setText(m.getSent().toString());
-            vBox_messages.getChildren().add(p);
-        }
+        Parent p_IN = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_in.fxml"));
+        Parent p_OUT = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> {
+                    try {
+                        Message[] messages = slyxSocket.getMessagesOfContact(contact);
+                        vBox_messages.getChildren().clear();
+                        for (Node observable : vBox_messages.getChildren()) {
+                            vBox_messages.getChildren().remove(observable);
+                        }
+                        for (Message m : messages) {
+                            if ("IN".equals(m.getInOrOut())) {
+                                Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_in.fxml"));
+                                ((Label) p.lookup("#label_content")).setText(m.getContent());
+                                ((Label) p.lookup("#label_date")).setText(m.getSent().toString());
+                                vBox_messages.getChildren().add(p);
+                            } else {
+                                Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
+                                ((Label) p.lookup("#label_content")).setText(m.getContent());
+                                ((Label) p.lookup("#label_date")).setText(m.getSent().toString());
+                                vBox_messages.getChildren().add(p);
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
     }
 }

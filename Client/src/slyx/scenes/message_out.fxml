@@ -10,7 +10,7 @@
     <children>
         <Label fx:id="label_content" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="103.0" layoutY="4.0"
                prefHeight="35.0" prefWidth="482.0"
-               style="-fx-background-color: #b2b2bc; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;"
+               style="-fx-background-color: #b2b2bc; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);"
                text="Text message example" textAlignment="RIGHT" AnchorPane.rightAnchor="15.0">
             <padding>
                 <Insets right="15.0"/>

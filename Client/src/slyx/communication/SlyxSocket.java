@@ -23,6 +23,7 @@ public class SlyxSocket extends Thread {
     private Socket socket;
     private BufferedReader bufferedReader;
     private PrintWriter printWriter;
+    private int idx = -1;
 
     private User me;
     private static HashMap<Integer, User> contacts = new HashMap<>();
@@ -54,6 +55,7 @@ public class SlyxSocket extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if (serverResponse == null) break;
             JSONParser jsonParser = new JSONParser();
             Object o = null;
             try {
@@ -62,10 +64,9 @@ public class SlyxSocket extends Thread {
                 System.out.println(e.getMessage());
             }
             boolean isArray = false;
-            if (serverResponse != null)
-                if (serverResponse.charAt(0) == '[')
-                    isArray = true;
-            if (!isArray && serverResponse != null) {
+            if (serverResponse.charAt(0) == '[')
+                isArray = true;
+            if (!isArray) {
                 try {
                     JSONObject j = (JSONObject) o;
                     ArrayJsonParser arrayJsonParser;
@@ -75,16 +76,19 @@ public class SlyxSocket extends Thread {
                                 version = j.get("version").toString();
                                 break;
                             case "MESSAGE_INCOMING":
-                                System.out.println("MESSAGE_INCOMING");
+                                SlyxSound.playSound("NOTIFICATION");
                                 User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
                                 Date d = new Date();
-                                contacts.get(uFrom.getId()).addMessage(
+                                contacts.get(uFrom.getId()).messages.put(
                                         Integer.parseInt(j.get("MESSAGE_ID").toString()),
-                                        uFrom,
-                                        this.me.getId(),
-                                        j.get("CONTENT").toString(),
-                                        d,
-                                        "IN"
+                                        new Message(
+                                                Integer.parseInt(j.get("MESSAGE_ID").toString()),
+                                                uFrom,
+                                                this.me.getId(),
+                                                d,
+                                                j.get("CONTENT").toString(),
+                                                "IN"
+                                        )
                                 );
                                 break;
                             case "CALL_INCOMING":
@@ -182,6 +186,14 @@ public class SlyxSocket extends Thread {
     public void sendMessage(String content, User to) {
         Message m = new Message(0, this.me, to.getId(), new Date(), content, "OUT");
         writeInSocket(m.toObject().put("request", "SEND_MESSAGE").toString());
+        contacts.get(to.getId()).getMessages().put(idx, new Message(
+                idx,
+                me,
+                to.getId(),
+                new Date(),
+                content,
+                "OUT"
+        ));
     }
     public void sendGetContactsRequest(User user) {
         JSONObject j = new JSONObject();
@@ -232,14 +244,6 @@ public class SlyxSocket extends Thread {
         j.put("u1userid", user.getId());
         j.put("u2userid", to.getId());
         writeInSocket(j.toString());
-
-        // String returned = echo(j.toString());
-        // JSONParser jsonParser = new JSONParser();
-        // Object o = null;
-
-        // ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-        // arrayJsonParser.processMessage();
-        // return arrayJsonParser.getMessages();
     }
     public void sendAskVersion() {
         JSONObject j = new JSONObject();
@@ -253,32 +257,14 @@ public class SlyxSocket extends Thread {
         j.put("password", password);
         writeInSocket(j.toString());
     }
-
-    /**
-     * Send a message to the socket and receive the answer from it
-     * @param message: Message to send to the server
-     * @return Response from the server after have processed the message sent
-     */
-    private String echo(String message) {
-        try {
-            System.out.println("\nSending : " + message);
-            printWriter.println(message);
-            String s = bufferedReader.readLine();
-            System.out.println("Receiving : " + s);
-            return s;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
     private void writeInSocket(String message) {
-        System.out.println("\nSending to server : " + message);
+        // System.out.println("\nSending : " + message);
         printWriter.println(message);
     }
     private String listenInSocket() throws IOException {
         try {
             String s = bufferedReader.readLine();
-            System.out.println("Server emits : " + s);
+            // System.out.println("Answer : " + s);
             return s;
         } catch (IOException e) {
             System.out.println(new SocketClosedException().getMessage());
