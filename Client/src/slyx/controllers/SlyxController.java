@@ -203,10 +203,17 @@ public class SlyxController {
         Message[] messages = slyxSocket.getMessagesOfContact(contact);
         vBox_request.getChildren().clear();
         for (Message m : messages) {
-            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
-            ((Label) p.lookup("#label_content")).setText(m.getContent());
-            ((Label) p.lookup("#label_date")).setText(m.getSent().toString());
-            vBox_messages.getChildren().add(p);
+            Parent p = null;
+            if ("IN".equals(m.getInOrOut())) {
+                p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
+            } else if ("OUT".equals(m.getInOrOut())) {
+                p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
+            }
+            if (p != null) {
+                ((Label) p.lookup("#label_content")).setText(m.getContent());
+                ((Label) p.lookup("#label_date")).setText(m.getSent().toString());
+                vBox_messages.getChildren().add(p);
+            }
         }
     }
 }

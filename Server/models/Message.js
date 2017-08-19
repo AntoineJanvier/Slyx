@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         return {
             type: 'MESSAGE',
             id: this.messageid,
-            contact: this.contact.responsify(),
+            contact: this.contact,
             sent: this.sent,
             content: this.content
         };

@@ -31,15 +31,6 @@ public class User {
         this.setConnected(false);
         this.picture = picture;
     }
-//    public User(int id, String firstname, String lastname, int age, String email, String password) {
-//        this.id = id;
-//        this.firstname = firstname;
-//        this.lastname = lastname;
-//        this.age = age;
-//        this.email = email;
-//        this.password = password;
-//        this.setConnected(false);
-//    }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -61,8 +52,8 @@ public class User {
     public HashMap<Integer, Message> getMessages() {
         return messages;
     }
-    public void addMessage(int messageID, User from, User to, String content, Date sent) {
-        Message m = new Message(messageID, from, to, sent, content);
+    public void addMessage(int messageID, User from, User to, String content, Date sent, String inOrOut) {
+        Message m = new Message(messageID, from, to, sent, content, inOrOut);
         messages.put(messageID, m);
     }
     public void addCall(int callID, User from, User to) {
@@ -81,6 +72,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", isConnected=" + isConnected +
                 ", picture=" + picture +
+                ", nbOfMessages=" + messages.size() +
                 '}';
     }
 }

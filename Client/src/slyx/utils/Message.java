@@ -14,13 +14,15 @@ public class Message {
     private User to;
     private Date sent;
     private String content;
+    private String inOrOut;
 
-    public Message(int id, User from, User to, Date sent, String content) {
+    public Message(int id, User from, User to, Date sent, String content, String inOrOut) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.sent = sent;
         this.content = content;
+        this.inOrOut = inOrOut;
     }
 
     public int getId() { return id; }
@@ -33,6 +35,8 @@ public class Message {
     public void setSent(Date sent) { this.sent = sent; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
+    public String getInOrOut() { return inOrOut; }
+    public void setInOrOut(String inOrOut) { this.inOrOut = inOrOut; }
 
     @Override
     public String toString() {
@@ -41,6 +45,7 @@ public class Message {
                 ", to=" + this.to.getId() +
                 ", sent=" + this.sent +
                 ", content='" + this.content + '\'' +
+                ", inOrOut='" + this.inOrOut + '\'' +
                 '}';
     }
 

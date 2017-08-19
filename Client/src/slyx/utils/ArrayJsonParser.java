@@ -137,7 +137,8 @@ public class ArrayJsonParser {
                                         jsonMe.get("picture").toString()
                                 ),
                                 dateSent,
-                                jsonMe.get("content").toString()
+                                jsonMe.get("content").toString(),
+                                jsonMe.get("inOrOut").toString()
                         );
                         messageHashMap.put(++key, u);
                     } catch (IOException e) {

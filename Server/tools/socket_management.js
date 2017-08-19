@@ -215,19 +215,17 @@ module.exports = {
                         contact: user2.userid
                     }
                 }).then(contact1 => {
-                    // let contactIDs = [];
-                    // if (contact1)
-                    //     for (let c of contact1)
-                    //         contactIDs.push(c.contactid);
+                    let contactIDs = [];
+                    if (contact1)
+                        contactIDs.push(contact1.contactid);
                     return Contact.find({
                         where: {
                             user: user2.userid,
                             contact: user1.userid
                         }
                     }).then(contact2 => {
-                        // if (contact2)
-                        //     for (let c of contact2)
-                        //         contactIDs.push(c.contactid);
+                        if (contact2)
+                            contactIDs.push(contact2.contactid);
                         return Message.findAll({
                             where: {
                                 contact: {
@@ -236,12 +234,17 @@ module.exports = {
                             }
                         }).then(messages => {
                             let resp = [];
+                            let ior;
                             for (let m of messages) {
                                 if (m.contact === contact1.contactid)
-                                    m.inOrOut = 'OUT';
+                                    ior = 'OUT';
                                 else if (m.contact === contact2.contactid)
-                                    m.inOrOut = 'IN';
-                                resp.push(m.responsify());
+                                    ior = 'IN';
+                                else
+                                    ior = 'NONE';
+                                let re = m.responsify();
+                                re.inOrOut = ior;
+                                resp.push(re);
                             }
                             resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
                             socket.write(JSON.stringify(resp) + '\n');
@@ -344,6 +347,7 @@ module.exports = {
                         console.log('DATE => ' + json.sent);
                         send.toClient(clients, u2.userid, JSON.stringify({
                             ACTION: 'MESSAGE_INCOMING',
+                            MESSAGE_ID: message.messageid,
                             FROM: u1.userid,
                             CONTENT: message.content
                         }));

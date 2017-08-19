@@ -69,9 +69,9 @@
     </bottom>
    <center>
       <ScrollPane fx:id="scrollPane_messages" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
-        <content>
-          <AnchorPane fx:id="anchorPane_messages" minHeight="0.0" minWidth="0.0" prefHeight="596.0" prefWidth="748.0" />
-        </content>
+         <content>
+            <VBox fx:id="vBox_messages" prefHeight="596.0" prefWidth="748.0" />
+         </content>
       </ScrollPane>
    </center>
    <left>

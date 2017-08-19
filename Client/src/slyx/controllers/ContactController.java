@@ -24,9 +24,6 @@ public class ContactController {
     Label label_lastname;
 
     public void initialize() {
-//        String imagePath = "http://localhost:3000/images/icon_profile.png";
-//        Image image = new Image(imagePath);
-//        imageView_contact_icon.setImage(image);
         /*
         TODO : Get if contact is connected
          */

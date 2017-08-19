@@ -82,7 +82,8 @@ public class SlyxSocket extends Thread {
                                         uFrom,
                                         this.me,
                                         j.get("CONTENT").toString(),
-                                        d
+                                        d,
+                                        "IN"
                                 );
                                 break;
                             case "CALL_INCOMING":
@@ -141,11 +142,11 @@ public class SlyxSocket extends Thread {
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(serverResponse);
-                                arrayJsonParser.processUser();
+                                arrayJsonParser.processMessage();
                                 Message[] messages = arrayJsonParser.getMessages();
                                 User from = contacts.get(Integer.parseInt(j.get("id").toString()));
                                 for (Message m : messages) {
-                                    from.addMessage(m.getId(), m.getFrom(), m.getTo(), m.getContent(), new Date());
+                                    from.addMessage(m.getId(), m.getFrom(), m.getTo(), m.getContent(), new Date(), m.getInOrOut());
                                 }
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
@@ -158,6 +159,9 @@ public class SlyxSocket extends Thread {
                                         j.get("picture").toString()
                                 ));
                                 break;
+                                /*
+                                TODO : Add ping answer to ping request to know status of a contact
+                                 */
                             default:
                                 System.out.println("Unknown ACTION...");
                         }
@@ -173,10 +177,8 @@ public class SlyxSocket extends Thread {
         }
     }
     public void sendMessage(String content, User to) {
-        Date d = new Date();
-        Message m = new Message(0, this.me, to, d, content);
+        Message m = new Message(0, this.me, to, new Date(), content, "OUT");
         writeInSocket(m.toObject().put("request", "SEND_MESSAGE").toString());
-//        printWriter.println(m.toObject().put("request", "SEND_MESSAGE").toString());
     }
     public void sendGetContactsRequest(User user) {
         JSONObject j = new JSONObject();
@@ -191,6 +193,7 @@ public class SlyxSocket extends Thread {
         j.put("userid", userID);
         writeInSocket(j.toString());
     }
+    // TODO : Test sendRejectContactRequest
     public void sendRejectContactRequest(int userID) {
         System.out.println("sendRejectContactRequest");
         JSONObject j = new JSONObject();
@@ -199,6 +202,7 @@ public class SlyxSocket extends Thread {
         j.put("u2userid", userID);
         writeInSocket(j.toString());
     }
+    // TODO : Test sendAcceptContactRequest
     public void sendAcceptContactRequest(int userID) {
         System.out.println("sendAcceptContactRequest");
         JSONObject j = new JSONObject();
@@ -219,20 +223,20 @@ public class SlyxSocket extends Thread {
         j.put("userid", user.getId());
         writeInSocket(j.toString());
     }
-    // TODO : Modify sendGetMessagesOfContactRequest(User user, User to)
-    public Message[] sendGetMessagesOfContactRequest(User user, User to) {
+    public void sendGetMessagesOfContactRequest(User user, User to) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_MESSAGES_OF_CONTACT_REQUEST);
         j.put("u1userid", user.getId());
         j.put("u2userid", to.getId());
+        writeInSocket(j.toString());
 
-        String returned = echo(j.toString());
-        JSONParser jsonParser = new JSONParser();
-        Object o = null;
+        // String returned = echo(j.toString());
+        // JSONParser jsonParser = new JSONParser();
+        // Object o = null;
 
-        ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
-        arrayJsonParser.processMessage();
-        return arrayJsonParser.getMessages();
+        // ArrayJsonParser arrayJsonParser = new ArrayJsonParser(returned);
+        // arrayJsonParser.processMessage();
+        // return arrayJsonParser.getMessages();
     }
     public void sendAskVersion() {
         JSONObject j = new JSONObject();

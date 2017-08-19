@@ -39,6 +39,9 @@ server.on('error', onError);
 nodenet.createServer(function (socket) {
     socket.setEncoding("utf8");
     console.log('SOCKET_CONNECTED');
+    /**
+     * TODO : Add ping request to send to clients to know if they are connected
+     */
 
     clients.push(socket);
     // for (let c of clients)
