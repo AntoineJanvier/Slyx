@@ -22,10 +22,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import slyx.communication.SlyxSocket;
+import slyx.utils.Message;
 import slyx.utils.User;
 
 import java.io.IOException;
-import java.util.Observable;
 
 /**
  * Created by Antoine Janvier
@@ -56,6 +56,8 @@ public class SlyxController {
     Label label_my_email;
     @FXML
     VBox vBox_request;
+    @FXML
+    VBox vBox_messages;
 
     public void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
@@ -102,9 +104,10 @@ public class SlyxController {
         refresh(slyxSocket);
     }
 
-    public void refresh(SlyxSocket slyxSocket) throws IOException {
+    private void refresh(SlyxSocket slyxSocket) throws IOException {
         slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
         slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
+        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
 
         refreshContacts(slyxSocket);
         refreshContactRequests(slyxSocket);
@@ -113,9 +116,8 @@ public class SlyxController {
                 Duration.millis(2500),
                 ae -> {
                     try {
-                        slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
-                        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
-                        slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
+                        // slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
+                        // slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
                         refreshContacts(slyxSocket);
                         refreshContactRequests(slyxSocket);
                     } catch (IOException e) {
@@ -126,7 +128,7 @@ public class SlyxController {
         timeline.play();
     }
 
-    public void refreshContacts(SlyxSocket slyxSocket) throws IOException {
+    private void refreshContacts(SlyxSocket slyxSocket) throws IOException {
         // Set all contacts in the contact area
         User[] contacts = slyxSocket.getContacts();
         vBox_left.getChildren().clear();
@@ -163,15 +165,17 @@ public class SlyxController {
                             );
                             tf_message_to_send.setText("");
                         });
+
+                        refreshMessagesOfContact(slyxSocket, u);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                     }
                 }
             });
             vBox_left.getChildren().add(p);
         }
     }
-    public void refreshContactRequests(SlyxSocket slyxSocket) throws IOException {
+    private void refreshContactRequests(SlyxSocket slyxSocket) throws IOException {
         // Set the contact request in PENDING state in the request area
         User[] requests = slyxSocket.getUserRequests();
         vBox_request.getChildren().clear();
@@ -192,6 +196,17 @@ public class SlyxController {
                 button_Accept.setDisable(true);
             });
             vBox_request.getChildren().add(p);
+        }
+    }
+    private void refreshMessagesOfContact(SlyxSocket slyxSocket, User contact) throws IOException {
+        // Set the contact request in PENDING state in the request area
+        Message[] messages = slyxSocket.getMessagesOfContact(contact);
+        vBox_request.getChildren().clear();
+        for (Message m : messages) {
+            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
+            ((Label) p.lookup("#label_content")).setText(m.getContent());
+            ((Label) p.lookup("#label_date")).setText(m.getSent().toString());
+            vBox_messages.getChildren().add(p);
         }
     }
 }

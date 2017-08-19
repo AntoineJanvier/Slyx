@@ -299,31 +299,37 @@ public class SlyxSocket extends Thread {
     public static void setContacts(HashMap<Integer, User> contacts) { SlyxSocket.contacts = contacts; }
     public static String getVersion() { return version != null ? version : "0.0.0"; }
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
+
     public User[] getContacts() {
         User[] users = new User[contacts.size()];
-        int count = 0;
+        int counter = 0;
         for (User u : contacts.values()) {
-            users[count] = u;
-            count++;
+            users[counter++] = u;
         }
         return users;
     }
     public User[] getOtherUsers() {
         User[] users = new User[otherUsers.size()];
-        int count = 0;
+        int counter = 0;
         for (User u : otherUsers.values()) {
-            users[count] = u;
-            count++;
+            users[counter++] = u;
         }
         return users;
     }
     public User[] getUserRequests() {
         User[] users = new User[userRequests.size()];
-        int count = 0;
+        int counter = 0;
         for (User u : userRequests.values()) {
-            users[count] = u;
-            count++;
+            users[counter++] = u;
         }
         return users;
+    }
+    public Message[] getMessagesOfContact(User contact) {
+        Message[] messages = new Message[contacts.get(contact.getId()).getMessages().size()];
+        int counter = 0;
+        for (Message m : contacts.get(contact.getId()).getMessages().values()) {
+            messages[counter++] = m;
+        }
+        return messages;
     }
 }
