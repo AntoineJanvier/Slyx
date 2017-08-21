@@ -1,6 +1,5 @@
 package slyx.communication;
 
-import slyx.controllers.SlyxController;
 import slyx.exceptions.SocketClosedException;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
@@ -12,8 +11,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
 
-import static slyx.utils.Gender.FEMALE;
-import static slyx.utils.Gender.MALE;
+import static slyx.communication.SocketSender.*;
 
 /**
  * Created by Antoine Janvier
@@ -115,9 +113,8 @@ public class SlyxSocket extends Thread {
                                 arrayJsonParser = new ArrayJsonParser(j.get("CONTACTS").toString());
                                 arrayJsonParser.processUser();
                                 User[] users = arrayJsonParser.getUsers();
-                                for (User u : users) {
+                                for (User u : users)
                                     contacts.put(u.getId(), u);
-                                }
                                 break;
                             case "CONTACT_REQUEST":
                                 userRequests.put(Math.toIntExact((long) j.get("id")), new User(
@@ -133,28 +130,24 @@ public class SlyxSocket extends Thread {
                                 arrayJsonParser = new ArrayJsonParser(serverResponse);
                                 arrayJsonParser.processUser();
                                 User[] usersNotInContactList = arrayJsonParser.getUsers();
-                                for (User u : usersNotInContactList) {
+                                for (User u : usersNotInContactList)
                                     otherUsers.put(u.getId(), u);
-                                }
                                 break;
                             case "GET_PENDING_CONTACT_REQUEST":
                                 arrayJsonParser = new ArrayJsonParser(serverResponse);
                                 arrayJsonParser.processUser();
                                 User[] pendingRequests = arrayJsonParser.getUsers();
-                                for (User u : pendingRequests) {
+                                for (User u : pendingRequests)
                                     userRequests.put(u.getId(), u);
-                                }
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
                                 arrayJsonParser.processMessage();
                                 Message[] messages = arrayJsonParser.getMessages();
                                 messagesOfCurrentContact.clear();
-                                if (messages != null && messages.length > 0) {
-                                    for (Message m : messages) {
+                                if (messages != null && messages.length > 0)
+                                    for (Message m : messages)
                                         messagesOfCurrentContact.put(m.getId(), m);
-                                    }
-                                }
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
                                 contacts.put(Math.toIntExact((long) j.get("id")), new User(
@@ -184,78 +177,38 @@ public class SlyxSocket extends Thread {
         }
     }
     public void sendMessage(String content, User to) {
-        Message m = new Message(0, this.me, to.getId(), new Date(), content, "OUT");
-        writeInSocket(m.toObject().put("request", "SEND_MESSAGE").toString());
+        writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
         contacts.get(to.getId()).getMessages().put(idx, new Message(
-                idx,
-                me,
-                to.getId(),
-                new Date(),
-                content,
-                "OUT"
+                idx, me, to.getId(), new Date(), content, "OUT"
         ));
     }
     public void sendGetContactsRequest(User user) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_CONTACTS_REQUEST);
-        j.put("userid", user.getId());
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendGetContactsRequest(user.getId()));
     }
     public void sendAddContactRequest(int userID) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.ADD_CONTACT_REQUEST);
-        j.put("me", this.me.getId());
-        j.put("userid", userID);
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendAddContactRequest(this.me.getId(), userID));
     }
     // TODO : Test sendRejectContactRequest
     public void sendRejectContactRequest(int userID) {
-        System.out.println("sendRejectContactRequest");
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.REJECT_CONTACT_REQUEST);
-        j.put("u1userid", this.me.getId());
-        j.put("u2userid", userID);
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendRejectContactRequest(this.me.getId(), userID));
     }
-    // TODO : Test sendAcceptContactRequest
     public void sendAcceptContactRequest(int userID) {
-        System.out.println("sendAcceptContactRequest");
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.ACCEPT_CONTACT_REQUEST);
-        j.put("u1userid", this.me.getId());
-        j.put("u2userid", userID);
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendAcceptContactRequest(this.me.getId(), userID));
     }
     public void sendGetUsersNotInContactList(User user) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_USERS_NOT_IN_CONTACT_LIST_REQUEST);
-        j.put("userid", user.getId());
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendGetUsersNotInContactList(user.getId()));
     }
     public void sendGetPendingContactRequests(User user) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_PENDING_CONTACT_REQUESTS_REQUEST);
-        j.put("userid", user.getId());
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendGetPendingContactRequests(user.getId()));
     }
     public void sendGetMessagesOfContactRequest(User user, User to) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_MESSAGES_OF_CONTACT_REQUEST);
-        j.put("u1userid", user.getId());
-        j.put("u2userid", to.getId());
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendGetMessagesOfContactRequest(user.getId(), to.getId()));
     }
     public void sendAskVersion() {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_UPDATE_REQUEST);
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendAskVersion());
     }
     public void sendAskConnection(String email, String password) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.CONNECTION_REQUEST);
-        j.put("email", email);
-        j.put("password", password);
-        writeInSocket(j.toString());
+        writeInSocket(SocketSender_sendAskConnection(email, password));
     }
     private void writeInSocket(String message) {
         // System.out.println("\nSending : " + message);
@@ -296,33 +249,29 @@ public class SlyxSocket extends Thread {
     public User[] getContacts() {
         User[] users = new User[contacts.size()];
         int counter = 0;
-        for (User u : contacts.values()) {
+        for (User u : contacts.values())
             users[counter++] = u;
-        }
         return users;
     }
     public User[] getOtherUsers() {
         User[] users = new User[otherUsers.size()];
         int counter = 0;
-        for (User u : otherUsers.values()) {
+        for (User u : otherUsers.values())
             users[counter++] = u;
-        }
         return users;
     }
     public User[] getUserRequests() {
         User[] users = new User[userRequests.size()];
         int counter = 0;
-        for (User u : userRequests.values()) {
+        for (User u : userRequests.values())
             users[counter++] = u;
-        }
         return users;
     }
     public Message[] getMessagesOfContact(User contact) {
         Message[] messages = new Message[messagesOfCurrentContact.size()];
         int counter = 0;
-        for (Message m : messagesOfCurrentContact.values()) {
+        for (Message m : messagesOfCurrentContact.values())
             messages[counter++] = m;
-        }
         return messages;
     }
 }
