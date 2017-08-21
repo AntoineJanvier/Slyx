@@ -4,6 +4,7 @@ const models = require('../models');
 const User = models.User;
 const Contact = models.Contact;
 const Message = models.Message;
+const Setting = models.Setting;
 
 const send = require('./answerToSockets');
 
@@ -227,6 +228,7 @@ module.exports = {
                             resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
                             socket.write(JSON.stringify({
                                 ACTION: 'GET_MESSAGES_OF_CONTACT',
+                                CONTACT_ID: user2.userid,
                                 MESSAGES: resp
                             }) + '\n');
                         }).catch(err => {
@@ -340,6 +342,30 @@ module.exports = {
             }).catch(err => {
                 console.log(err);
                 socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser B'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser A'}) + '\n');
+        });
+    },
+    sockGetSettings: function (socket, json) {
+        User.find({
+            where: {
+                userid: json.me
+            }
+        }).then(user => {
+            return Setting.find({
+                where: {
+                    user: user.userid
+                }
+            }).then(setting => {
+                socket.write(JSON.stringify({
+                    ACTION: 'GET_SETTINGS',
+                    SETTING: setting.responsify()
+                }) + '\n');
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser A'}) + '\n');
             });
         }).catch(err => {
             console.log(err);

@@ -99,6 +99,9 @@ nodenet.createServer(function (socket) {
                     case 'SEND_MESSAGE':
                         socketManagement.sockSendMessageToUser(socket, json, clients);
                         break;
+                    case 'GET_SETTINGS':
+                        socketManagement.sockGetSettings(socket, json);
+                        break;
                     default:
                         socket.write({ACTION: 'ERROR'} + '\n');
                 }

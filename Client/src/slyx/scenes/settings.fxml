@@ -9,17 +9,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="anchorPane_settings" prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.SettingsController">
+<AnchorPane fx:id="anchorPane_settings" prefHeight="336.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.SettingsController">
    <children>
       <Label alignment="CENTER" layoutX="208.0" layoutY="13.0" prefHeight="19.0" prefWidth="85.0" text="Settings" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <ScrollPane fx:id="scrollPane_settings" layoutY="50.0" prefHeight="600.0" prefWidth="500.0">
+      <ScrollPane fx:id="scrollPane_settings" layoutY="50.0" prefHeight="300.0" prefWidth="500.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="498.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="298.0" prefWidth="498.0">
                <children>
                   <CheckBox fx:id="checkBox_sounds" layoutX="29.0" layoutY="60.0" mnemonicParsing="false" text="Sounds" />
                   <CheckBox fx:id="checkBox_notifications" layoutX="29.0" layoutY="187.0" mnemonicParsing="false" text="Notifications" />

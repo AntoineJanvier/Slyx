@@ -1,4 +1,4 @@
-package slyx.utils;
+package slyx.communication;
 
 /**
  * Created by Antoine Janvier
@@ -10,6 +10,7 @@ public class RequestTypes {
     public final static String GET_UPDATE_REQUEST = "GET_UPDATE";
 
     // Basic instructions
+    public final static String GET_SETTINGS_REQUEST = "GET_SETTINGS";
     public final static String CALL_REQUEST = "CALL";
     public final static String MESSAGE_REQUEST = "MESSAGE";
 

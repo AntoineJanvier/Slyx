@@ -8,6 +8,7 @@ import java.util.HashMap;
  * on 31/07/17.
  */
 public class User {
+    // To all contacts
     private int id;
     private String firstname;
     private String lastname;
@@ -17,7 +18,16 @@ public class User {
     private boolean isConnected;
     private String picture;
 
+    // To "Me" instance
+    private boolean setting_sounds;
+    private int setting_volume;
+    private boolean setting_notifications;
+    private boolean setting_calls;
+    private boolean setting_messages;
+    private boolean setting_connections;
+
     public HashMap<Integer, Message> messages = new HashMap<>();
+    public HashMap<Integer, Message> hashMapNewMessages = new HashMap<>();
     private HashMap<Integer, Call> calls = new HashMap<>();
 
     public User() {
@@ -32,34 +42,53 @@ public class User {
         this.picture = picture;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getFirstname() { return firstname; }
-    public void setFirstname(String firstname) { this.firstname = firstname; }
-    public String getLastname() { return lastname; }
-    public void setLastname(String lastname) { this.lastname = lastname; }
-    public int getAge() { return age; }
-    public void setAge(int age) { this.age = age; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-    public boolean isConnected() { return isConnected; }
-    public void setConnected(boolean connected) { isConnected = connected; }
-    public String getPicture() { return picture; }
-    public void setPicture(String picture) { this.picture = picture; }
-
-    public HashMap<Integer, Message> getMessages() {
-        return messages;
-    }
-    public void addMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
+    public void addNewMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
         Message m = new Message(messageID, from, to, sent, content, inOrOut);
         messages.put(messageID, m);
+        hashMapNewMessages.put(messageID, m);
     }
     public void addCall(int callID, User from, User to) {
         Call c = new Call(from, to);
         calls.put(callID, c);
     }
+    public Message[] getNewMessages() {
+        Message[] messages = new Message[hashMapNewMessages.size()];
+        int counter = 0;
+        for (Message m : hashMapNewMessages.values())
+            messages[counter++] = m;
+        return messages;
+    }
+    public void removeNewMessage(int messageID) {
+        if (hashMapNewMessages.containsKey(messageID))
+            hashMapNewMessages.remove(messageID);
+    }
+
+    public int getId() { return id; }
+    public String getFirstname() { return firstname; }
+    public String getLastname() { return lastname; }
+    public String getEmail() { return email; }
+    public boolean isConnected() { return isConnected; }
+    public String getPicture() { return picture; }
+    public HashMap<Integer, Message> getMessages() {
+        return messages;
+    }
+
+    public void setId(int id) { this.id = id; }
+    public void setConnected(boolean connected) { isConnected = connected; }
+
+    // Settings
+    public boolean isSetting_sounds() { return setting_sounds; }
+    public void setSetting_sounds(boolean setting_sounds) { this.setting_sounds = setting_sounds; }
+    public int getSetting_volume() { return setting_volume; }
+    public void setSetting_volume(int setting_volume) { this.setting_volume = setting_volume; }
+    public boolean isSetting_notifications() { return setting_notifications; }
+    public void setSetting_notifications(boolean setting_notifications) { this.setting_notifications = setting_notifications; }
+    public boolean isSetting_calls() { return setting_calls; }
+    public void setSetting_calls(boolean setting_calls) { this.setting_calls = setting_calls; }
+    public boolean isSetting_messages() { return setting_messages; }
+    public void setSetting_messages(boolean setting_messages) { this.setting_messages = setting_messages; }
+    public boolean isSetting_connections() { return setting_connections; }
+    public void setSetting_connections(boolean setting_connections) { this.setting_connections = setting_connections; }
 
     @Override
     public String toString() {

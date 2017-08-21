@@ -2,7 +2,6 @@ package slyx.communication;
 
 import slyx.jsonsimple.JSONObject;
 import slyx.utils.Message;
-import slyx.utils.RequestTypes;
 import slyx.utils.User;
 
 import java.util.Date;
@@ -77,6 +76,12 @@ class SocketSender {
         j.put("request", RequestTypes.CONNECTION_REQUEST);
         j.put("email", email);
         j.put("password", password);
+        return j.toString();
+    }
+    static String SocketSender_sendGetMySettings(int myID) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.GET_SETTINGS_REQUEST);
+        j.put("me", myID);
         return j.toString();
     }
 }
