@@ -4,6 +4,7 @@ let router = express.Router();
 
 const models = require('../models');
 const User = models.User;
+const Setting = models.Setting;
 
 router.post('/sign_up', (req, res) => {
     res.type('json');
@@ -26,7 +27,13 @@ router.post('/sign_up', (req, res) => {
                     picture: 'http://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png'
                 }).then(user => {
                     if (user) {
-                        res.redirect('/');
+                        return Setting.create({
+                            user: user.userid,
+                            sounds: true, volume: 100,
+                            notifications: true, calls: true, messages: true, connections: true
+                        }).then(settings => {
+                            res.redirect('/');
+                        });
                     } else
                         res.json({err: 'ERR_USER_FIND', content: {}});
                 }).catch(err => {

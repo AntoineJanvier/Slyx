@@ -9,12 +9,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -28,8 +27,6 @@ import slyx.utils.SlyxSound;
 import slyx.utils.User;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Antoine Janvier
@@ -64,6 +61,10 @@ public class SlyxController {
     VBox vBox_messages;
     @FXML
     ScrollPane scrollPane_messages;
+    @FXML
+    Tab tabPaneTab_requests;
+    @FXML
+    TabPane tabPane_left;
 
     public void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
@@ -103,7 +104,7 @@ public class SlyxController {
 
         // Set my informations
         User me = slyxSocket.getMe();
-        slyxSocket.sendGetMySettings();
+        //slyxSocket.sendGetMySettings();
         label_my_firstname.setText(me.getFirstname());
         label_my_lastname.setText(me.getLastname());
         label_my_email.setText(me.getEmail());
@@ -121,6 +122,88 @@ public class SlyxController {
         refreshContactRequests(slyxSocket);
     }
 
+    private void refreshContactsInContactList(User u) throws IOException {
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+        Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
+        ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
+        ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
+        ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
+
+        p.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), u);
+                try {
+                    Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
+
+                    // Set elements
+                    ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
+                    ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
+                    ((Label) p.lookup("#label_email")).setText(u.getEmail());
+                    ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
+
+                    // Add in scene
+                    anchorPane_right.getChildren().clear();
+                    anchorPane_right.getChildren().add(p);
+
+                    btn_send_message.setOnMouseClicked(event1 -> {
+                        slyxSocket.sendMessage(
+                                tf_message_to_send.getText(),
+                                slyxSocket.getHashmapContacts().get(u.getId())
+                        );
+                        tf_message_to_send.setText("");
+                    });
+                    tf_message_to_send.setOnKeyPressed(event12 -> {
+                        if (event12.getCode().equals(KeyCode.ENTER)) {
+                            slyxSocket.sendMessage(
+                                    tf_message_to_send.getText(),
+                                    slyxSocket.getHashmapContacts().get(u.getId())
+                            );
+                            tf_message_to_send.setText("");
+                        }
+                    });
+
+                    vBox_messages.getChildren().clear();
+                    for (Node observable : vBox_messages.getChildren()) {
+                        vBox_messages.getChildren().remove(observable);
+                    }
+
+                    Message[] messages = slyxSocket.getMessagesOfContact(u);
+                    vBox_messages.getChildren().clear();
+                    for (Node observable : vBox_messages.getChildren()) {
+                        vBox_messages.getChildren().remove(observable);
+                    }
+                    for (Message m : messages) {
+                        putInVBoxMessages(m);
+                    }
+                    scrollPane_messages.setVvalue(scrollPane_messages.getVmax());
+
+                    Timeline timeline = new Timeline(new KeyFrame(
+                            Duration.millis(500),
+                            ae -> {
+                                try {
+                                    if (!u.hashMapNewMessages.isEmpty()) {
+                                        Message[] messagesOfContact = u.getNewMessages();
+                                        for (Message m : messagesOfContact) {
+                                            putInVBoxMessages(m);
+                                            u.removeNewMessage(m.getId());
+                                        }
+                                        scrollPane_messages.setVvalue(scrollPane_messages.getVmax());
+                                    }
+                                } catch (IOException e) {
+                                    System.out.println(e.getMessage());
+                                }
+                            }));
+                    timeline.setCycleCount(Animation.INDEFINITE);
+                    timeline.play();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+        vBox_left.getChildren().add(p);
+    }
+
     public void refreshContacts() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
@@ -131,80 +214,30 @@ public class SlyxController {
             vBox_left.getChildren().remove(observable);
         }
         for (User u : contacts) {
-            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
-            ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
-            ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
-            ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
-
-            p.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), u);
+            refreshContactsInContactList(u);
+        }
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
                     try {
-                        Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
-
-                        // Set elements
-                        ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
-                        ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
-                        ((Label) p.lookup("#label_email")).setText(u.getEmail());
-                        ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
-
-                        // Add in scene
-                        anchorPane_right.getChildren().clear();
-                        anchorPane_right.getChildren().add(p);
-
-                        btn_send_message.setOnMouseClicked(event1 -> {
-                            slyxSocket.sendMessage(
-                                    tf_message_to_send.getText(),
-                                    slyxSocket.getHashmapContacts().get(u.getId())
-                            );
-                            tf_message_to_send.setText("");
-                        });
-
-                        vBox_messages.getChildren().clear();
-                        for (Node observable : vBox_messages.getChildren()) {
-                            vBox_messages.getChildren().remove(observable);
+                        if (!slyxSocket.newContacts.isEmpty()) {
+                            User[] users = slyxSocket.getNewContacts();
+                            for (User u : users) {
+                                refreshContactsInContactList(u);
+                                slyxSocket.removeNewContact(u.getId());
+                            }
                         }
-
-                        Message[] messages = slyxSocket.getMessagesOfContact(u);
-                        vBox_messages.getChildren().clear();
-                        for (Node observable : vBox_messages.getChildren()) {
-                            vBox_messages.getChildren().remove(observable);
-                        }
-                        for (Message m : messages) {
-                            putInVBoxMessages(m);
-                            scrollPane_messages.setVvalue(scrollPane_messages.getVmax());
-                        }
-
-                        Timeline timeline = new Timeline(new KeyFrame(
-                                Duration.millis(500),
-                                ae -> {
-                                    try {
-                                        if (!u.hashMapNewMessages.isEmpty()) {
-                                            Message[] messagesOfContact = u.getNewMessages();
-                                            for (Message m : messagesOfContact) {
-                                                putInVBoxMessages(m);
-                                                u.removeNewMessage(m.getId());
-                                                scrollPane_messages.setVvalue(scrollPane_messages.getVmax());
-                                            }
-                                        }
-                                    } catch (IOException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                }));
-                        timeline.setCycleCount(Animation.INDEFINITE);
-                        timeline.play();
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
                     }
-                }
-            });
-            vBox_left.getChildren().add(p);
-        }
+                }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
     private void refreshContactRequests(SlyxSocket slyxSocket) throws IOException {
         // Set the contact request in PENDING state in the request area
+        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
         User[] requests = slyxSocket.getUserRequests();
         vBox_request.getChildren().clear();
         for (Node observable : vBox_request.getChildren()) {
@@ -234,12 +267,12 @@ public class SlyxController {
         if ("IN".equals(m.getInOrOut())) {
             np = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_in.fxml"));
             ((Label) np.lookup("#label_content")).setText(m.getContent());
-            ((Label) np.lookup("#label_date")).setText(m.getSent().toString());
+            ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
             vBox_messages.getChildren().add(np);
         } else {
             np = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
             ((Label) np.lookup("#label_content")).setText(m.getContent());
-            ((Label) np.lookup("#label_date")).setText(m.getSent().toString());
+            ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
             vBox_messages.getChildren().add(np);
         }
     }

@@ -11,6 +11,7 @@ public class RequestTypes {
 
     // Basic instructions
     public final static String GET_SETTINGS_REQUEST = "GET_SETTINGS";
+    public final static String UPDATE_SETTINGS_REQUEST = "UPDATE_SETTINGS";
     public final static String CALL_REQUEST = "CALL";
     public final static String MESSAGE_REQUEST = "MESSAGE";
 

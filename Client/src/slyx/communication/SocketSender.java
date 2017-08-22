@@ -84,4 +84,17 @@ class SocketSender {
         j.put("me", myID);
         return j.toString();
     }
+    static String SocketSender_sendUpdateMySettings(int myID, boolean sounds, int volume, boolean notifications,
+                                                    boolean calls, boolean messages, boolean connections) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.UPDATE_SETTINGS_REQUEST);
+        j.put("me", myID);
+        j.put("sounds", String.valueOf(sounds));
+        j.put("volume", volume);
+        j.put("notifications", String.valueOf(notifications));
+        j.put("calls", String.valueOf(calls));
+        j.put("messages", String.valueOf(messages));
+        j.put("connections", String.valueOf(connections));
+        return j.toString();
+    }
 }

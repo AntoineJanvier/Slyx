@@ -24,10 +24,27 @@ module.exports = {
         }).then(function (user) {
             if (user) {
                 if (passwordHash.verify(json.password, user.pwd)) {
-                    jsonToReturn = user.responsify();
-                    jsonToReturn.ACTION = "ACCEPT_CONNECTION";
-                    socket.write(JSON.stringify(jsonToReturn) + '\n');
-                    socket.User = user.responsify();
+                    return Setting.find({
+                        where: {
+                            user: user.userid
+                        }
+                    }).then(setting => {
+                        jsonToReturn = user.responsify();
+                        if (setting) {
+                            jsonToReturn.sounds = setting.sounds;
+                            jsonToReturn.volume = setting.volume;
+                            jsonToReturn.notifications = setting.notifications;
+                            jsonToReturn.calls = setting.calls;
+                            jsonToReturn.messages = setting.messages;
+                            jsonToReturn.connections = setting.connections;
+                        }
+                        jsonToReturn.ACTION = "ACCEPT_CONNECTION";
+                        socket.write(JSON.stringify(jsonToReturn) + '\n');
+                        socket.User = user.responsify();
+                    }).catch(err => {
+                        console.log(err);
+                        socket.write(JSON.stringify({request: 'ERROR - sockConnect D'}) + '\n');
+                    });
                 } else
                     socket.write(JSON.stringify({request: 'ERROR - sockConnect C'}) + '\n');
             } else
@@ -253,12 +270,15 @@ module.exports = {
         User.find({
             where: {userid: json.u1userid}
         }).then(u1 => {
+            console.log(JSON.stringify(u1.responsify()));
             return User.find({
                 where: {userid: json.u2userid}
             }).then(u2 => {
+                console.log(JSON.stringify(u2.responsify()));
                 return Contact.find({
                     where: {user: u2.userid, contact: u1.userid, status: 'PENDING'}
                 }).then(contact => {
+                    console.log(JSON.stringify(contact.responsify()));
                     return Contact.create({
                         user: u1.userid, contact: u2.userid, status: 'ACCEPTED'
                     }).then(n_contact => {
@@ -350,19 +370,43 @@ module.exports = {
     },
     sockGetSettings: function (socket, json) {
         User.find({
-            where: {
-                userid: json.me
-            }
+            where: {userid: json.me}
         }).then(user => {
             return Setting.find({
-                where: {
-                    user: user.userid
-                }
+                where: {user: user.userid}
             }).then(setting => {
                 socket.write(JSON.stringify({
                     ACTION: 'GET_SETTINGS',
                     SETTING: setting.responsify()
                 }) + '\n');
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser A'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser A'}) + '\n');
+        });
+    },
+    sockUpdateSettings: function (socket, json) {
+        User.find({
+            where: {
+                userid: json.me
+            }
+        }).then(user => {
+            return Setting.find({
+                where: {user: user.userid}
+            }).then(setting => {
+                return setting.update({
+                    sounds: json.sounds,
+                    volume: json.volume,
+                    notifications: json.notifications,
+                    calls: json.calls,
+                    messages: json.messages,
+                    connections: json.connections,
+                }, {
+                    fields: ['sounds', 'volume', 'notifications', 'calls', 'messages', 'connections']
+                });
             }).catch(err => {
                 console.log(err);
                 socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser A'}) + '\n');

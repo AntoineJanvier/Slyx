@@ -125,8 +125,17 @@ public class SettingsController {
         }
     }
 
-    public void saveSettings() {
+    public void saveSettings() throws IOException {
         System.out.println("SEND REQUEST SAVE");
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+        slyxSocket.sendUpdateMySettings(
+                checkBox_sounds.isSelected(),
+                (int) Math.round(slider_volume_sound.getValue()),
+                checkBox_notifications.isSelected(),
+                checkBox_notifications_calls.isSelected(),
+                checkBox_notifications_messages.isSelected(),
+                checkBox_notifications_connections.isSelected()
+        );
         /*
         TODO : Find a way to save settings in function of the User, DB, file or other
          */

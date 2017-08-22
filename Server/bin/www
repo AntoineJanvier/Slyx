@@ -102,6 +102,9 @@ nodenet.createServer(function (socket) {
                     case 'GET_SETTINGS':
                         socketManagement.sockGetSettings(socket, json);
                         break;
+                    case 'UPDATE_SETTINGS':
+                        socketManagement.sockUpdateSettings(socket, json);
+                        break;
                     default:
                         socket.write({ACTION: 'ERROR'} + '\n');
                 }
