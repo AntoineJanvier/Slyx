@@ -18,6 +18,7 @@
     "path": "^0.12.7",
     "pug": "~2.0.0-beta10",
     "querystring": "^0.2.0",
+    "rtc": "^3.4.0",
     "sequelize": "^4.4.2",
     "serve-favicon": "^2.3.2",
     "superagent": "^3.5.2",

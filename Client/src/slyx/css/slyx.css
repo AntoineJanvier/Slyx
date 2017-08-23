@@ -1,0 +1,22 @@
+#hBox_top {
+    /*-fx-background-color: linear-gradient(to bottom, #abfcff 0, #88cacd 100%);*/
+}
+#anchorPane_right {
+    /*-fx-background-color: linear-gradient(to bottom, #abfcff 0, #88cacd 100%);*/
+}
+
+#vBox_messages {
+    /*-fx-background-color: #8ed7da;*/
+}
+
+#btn_disconnection {
+    -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}
+#btn_settings {
+    -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}
+#btn_send_message {
+    -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
+}

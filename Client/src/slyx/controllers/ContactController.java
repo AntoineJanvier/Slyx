@@ -24,8 +24,6 @@ public class ContactController {
     Label label_lastname;
 
     public void initialize() {
-        /*
-        TODO : Get if contact is connected
-         */
+        // TODO : Get if contact is connected
     }
 }

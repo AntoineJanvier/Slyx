@@ -1,14 +1,3 @@
-.contact {
-    -fx-background-color: blue;
-}
-.contact:hover {
-    -fx-border-radius: 5px;
-}
-
-.contact-online {
-    -fx-background-color: #05e54a;
-}
-
-.contact-offline {
-    -fx-background-color: #05b33a;
+#anchorPane_contact {
+    -fx-border-radius: 10px !important;
 }

@@ -38,14 +38,12 @@ server.on('error', onError);
 
 nodenet.createServer(function (socket) {
     socket.setEncoding("utf8");
-    console.log('SOCKET_CONNECTED');
     /**
      * TODO : Add ping request to send to clients to know if they are connected
      */
 
     clients.push(socket);
-    // for (let c of clients)
-    //     console.log(c);
+
     nb_clients++;
 
     socket.socketId = nb_clients;
@@ -68,7 +66,7 @@ nodenet.createServer(function (socket) {
                         break;
                     // Client connection
                     case 'CONNECTION':
-                        socketManagement.sockConnect(socket, json);
+                        socketManagement.sockConnect(socket, json, clients);
                         break;
                     // Client loading its contacts
                     case 'GET_CONTACTS':

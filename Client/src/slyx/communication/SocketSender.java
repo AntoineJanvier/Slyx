@@ -11,9 +11,7 @@ import java.util.Date;
  * on 16/08/17.
  */
 class SocketSender {
-    /*
-     * TODO : Put function which are sending infos to server here
-     */
+     // TODO : Put function which are sending infos to server here
     static String SocketSender_sendGetContactsRequest(int userID) {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_CONTACTS_REQUEST);

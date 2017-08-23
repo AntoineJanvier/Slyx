@@ -70,6 +70,7 @@ public class LoginController {
 
                 // Launch app window
                 Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
+                next_root.getStylesheets().add(getClass().getResource("/slyx/css/slyx.css").toExternalForm());
                 Stage next_stage = new Stage();
                 next_stage.setTitle("Slyx");
                 next_stage.setScene(new Scene(next_root));

@@ -81,31 +81,22 @@ public class SlyxSocket extends Thread {
                                 User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
                                 Date d = new Date();
                                 contacts.get(uFrom.getId()).addNewMessage(
-                                        Integer.parseInt(j.get("MESSAGE_ID").toString()),
-                                        uFrom,
-                                        this.me.getId(),
-                                        j.get("CONTENT").toString(),
-                                        d,
-                                        "IN"
+                                        Integer.parseInt(j.get("MESSAGE_ID").toString()), uFrom, this.me.getId(),
+                                        j.get("CONTENT").toString(), d, "IN"
                                 );
                                 break;
                             case "CALL_INCOMING":
                                 System.out.println("CALL_INCOMING");
                                 User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
                                 contacts.get(caller.getId()).addCall(
-                                        Integer.parseInt(j.get("CALL_ID").toString()),
-                                        caller,
-                                        this.me
+                                        Integer.parseInt(j.get("CALL_ID").toString()), caller, this.me
                                 );
                                 break;
                             case "ACCEPT_CONNECTION":
                                 this.me = new User(
-                                        Math.toIntExact((long) j.get("id")),
-                                        j.get("firstname").toString(),
-                                        j.get("lastname").toString(),
-                                        Math.toIntExact((long) j.get("age")),
-                                        j.get("email").toString(),
-                                        j.get("picture").toString()
+                                        Math.toIntExact((long) j.get("id")), j.get("firstname").toString(),
+                                        j.get("lastname").toString(), Math.toIntExact((long) j.get("age")),
+                                        j.get("email").toString(), j.get("picture").toString()
                                 );
                                 this.me.setConnected(true);
                                 if (j.get("sounds") != null) {
@@ -121,17 +112,15 @@ public class SlyxSocket extends Thread {
                                 arrayJsonParser = new ArrayJsonParser(j.get("CONTACTS").toString());
                                 arrayJsonParser.processUser();
                                 User[] users = arrayJsonParser.getUsers();
+                                contacts.clear();
                                 for (User u : users)
                                     addNewContact(u, false);
                                 break;
                             case "CONTACT_REQUEST":
                                 userRequests.put(Math.toIntExact((long) j.get("id")), new User(
-                                        Math.toIntExact((long) j.get("id")),
-                                        j.get("firstname").toString(),
-                                        j.get("lastname").toString(),
-                                        Math.toIntExact((long) j.get("age")),
-                                        j.get("email").toString(),
-                                        j.get("picture").toString()
+                                        Math.toIntExact((long) j.get("id")), j.get("firstname").toString(),
+                                        j.get("lastname").toString(), Math.toIntExact((long) j.get("age")),
+                                        j.get("email").toString(), j.get("picture").toString()
                                 ));
                                 break;
                             case "GET_USERS_NOT_IN_CONTACT_LIST":
@@ -155,29 +144,32 @@ public class SlyxSocket extends Thread {
                                 if (messages != null && messages.length > 0) {
                                     for (Message m : messages) {
                                         contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).addNewMessage(
-                                                m.getId(),
-                                                m.getFrom(),
-                                                m.getTo2(),
-                                                m.getContent(),
-                                                m.getSent(),
+                                                m.getId(), m.getFrom(), m.getTo2(), m.getContent(), m.getSent(),
                                                 m.getInOrOut()
                                         );
                                     }
                                 }
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
-                                addNewContact(new User(
-                                        Math.toIntExact((long) j.get("id")),
-                                        j.get("firstname").toString(),
-                                        j.get("lastname").toString(),
-                                        Math.toIntExact((long) j.get("age")),
-                                        j.get("email").toString(),
-                                        j.get("picture").toString()
-                                ), true);
+                                User user = new User(
+                                        Math.toIntExact((long) j.get("id")), j.get("firstname").toString(),
+                                        j.get("lastname").toString(), Math.toIntExact((long) j.get("age")),
+                                        j.get("email").toString(), j.get("picture").toString()
+                                );
+                                user.setConnected(Boolean.valueOf(j.get("connected").toString()));
+                                addNewContact(user, true);
                                 break;
-                                /*
-                                TODO : Add ping answer to ping request to know status of a contact
-                                 */
+                            case "CONTACT_CONNECTION":
+                                //sendGetContactsRequest(this.me);
+                                User toConnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
+                                toConnect.setConnected(true);
+                                contacts.remove(toConnect.getId());
+                                newContacts.put(toConnect.getId(), toConnect);
+                                break;
+                            case "CONTACT_DISCONNECTION":
+                                contacts.get(Math.toIntExact((long) j.get("CONTACT_ID"))).setConnected(false);
+                                break;
+                                // TODO : Add ping answer to ping request to know status of a contact
                             default:
                                 System.out.println("Unknown ACTION...");
                         }
@@ -192,16 +184,12 @@ public class SlyxSocket extends Thread {
             }
         }
     }
+
     public void sendMessage(String content, User to) {
         if (content.length() > 0) {
             writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
             contacts.get(to.getId()).addNewMessage(
-                    idx--,
-                    this.me,
-                    to.getId(),
-                    content,
-                    new Date(),
-                    "OUT"
+                    idx--, this.me, to.getId(), content, new Date(), "OUT"
             );
         }
     }
@@ -221,9 +209,7 @@ public class SlyxSocket extends Thread {
     public void sendGetUsersNotInContactList(User user) {
         writeInSocket(SocketSender_sendGetUsersNotInContactList(user.getId()));
     }
-    public void sendGetPendingContactRequests(User user) {
-        writeInSocket(SocketSender_sendGetPendingContactRequests(user.getId()));
-    }
+    public void sendGetPendingContactRequests(User user) { writeInSocket(SocketSender_sendGetPendingContactRequests(user.getId())); }
     public void sendGetMessagesOfContactRequest(User user, User to) {
         writeInSocket(SocketSender_sendGetMessagesOfContactRequest(user.getId(), to.getId()));
     }
@@ -233,9 +219,6 @@ public class SlyxSocket extends Thread {
     public void sendAskConnection(String email, String password) {
         writeInSocket(SocketSender_sendAskConnection(email, password));
     }
-    public void sendGetMySettings() {
-        writeInSocket(SocketSender_sendGetMySettings(this.me.getId()));
-    }
     public void sendUpdateMySettings(boolean sounds, int volume, boolean notifications,
                                      boolean calls, boolean messages, boolean connections) {
         writeInSocket(
@@ -243,7 +226,14 @@ public class SlyxSocket extends Thread {
                         this.me.getId(), sounds, volume, notifications, calls, messages, connections
                 )
         );
+        this.me.setSetting_sounds(sounds);
+        this.me.setSetting_volume(volume);
+        this.me.setSetting_notifications(notifications);
+        this.me.setSetting_calls(calls);
+        this.me.setSetting_messages(messages);
+        this.me.setSetting_connections(connections);
     }
+
     private void writeInSocket(String message) {
          System.out.println("\nSending : " + message);
         printWriter.println(message);
@@ -273,18 +263,15 @@ public class SlyxSocket extends Thread {
     private int getPort() {
         return 3895;
     }
-
     public User getMe() { return this.me; }
     public void setMe(User me) { this.me = me; }
     public void setContacts(HashMap<Integer, User> contacts) { contacts = contacts; }
     public static String getVersion() { return version != null ? version : "0.0.0"; }
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
-
     private void addNewContact(User u, boolean isNew) {
         if (isNew) newContacts.put(u.getId(), u);
         contacts.put(u.getId(), u);
     }
-
     public User[] getContacts() {
         User[] users = new User[contacts.size()];
         int counter = 0;
@@ -303,7 +290,6 @@ public class SlyxSocket extends Thread {
         if (newContacts.containsKey(contactID))
             newContacts.remove(contactID);
     }
-
     public User[] getOtherUsers() {
         User[] users = new User[otherUsers.size()];
         int counter = 0;
@@ -311,7 +297,6 @@ public class SlyxSocket extends Thread {
             users[counter++] = u;
         return users;
     }
-
     public User[] getUserRequests() {
         User[] users = new User[userRequests.size()];
         int counter = 0;
@@ -319,7 +304,6 @@ public class SlyxSocket extends Thread {
             users[counter++] = u;
         return users;
     }
-
     public Message[] getMessagesOfContact(User contact) {
         Message[] messages = new Message[contacts.get(contact.getId()).getMessages().size()];
         int counter = 0;
@@ -327,5 +311,4 @@ public class SlyxSocket extends Thread {
             messages[counter++] = m;
         return messages;
     }
-
 }

@@ -1,0 +1,10 @@
+doctype html
+html
+    head
+        title rtc.io simple conferencing
+        link(rel='stylesheet' href='http://yui.yahooapis.com/pure/0.5.0/pure-min.css')
+    body(onload="RTC()" class="pure-g")
+        div.pure-u-1-5
+            div#l-video
+        div.pure-u-4-5#r-video
+        script(src="https://cdn.jsdelivr.net/rtc/latest/rtc.min.js")

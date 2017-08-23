@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             age: {type: DataTypes.BIGINT},
             email: {type: DataTypes.STRING},
             pwd: {type: DataTypes.STRING},
-            connected: {type: DataTypes.BOOLEAN}
+            connected: {type: DataTypes.BOOLEAN, defaultValue: false}
         },
         {
             paranoid: true,
@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
             lastname: this.last_name,
             age: this.age,
             email: this.email,
-            picture: this.picture
+            picture: this.picture,
+            connected: this.connected
         };
     };
     return User;

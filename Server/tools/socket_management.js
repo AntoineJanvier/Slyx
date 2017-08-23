@@ -18,7 +18,7 @@ module.exports = {
     sockGetUpdate: function (socket) {
         socket.write(JSON.stringify({ACTION: 'GET_VERSION_OF_SLYX', version: "1.0.0"}) + '\n');
     },
-    sockConnect: function (socket, json) {
+    sockConnect: function (socket, json, clients) {
         User.find({
             where: {'email': json.email}
         }).then(function (user) {
@@ -41,6 +41,29 @@ module.exports = {
                         jsonToReturn.ACTION = "ACCEPT_CONNECTION";
                         socket.write(JSON.stringify(jsonToReturn) + '\n');
                         socket.User = user.responsify();
+
+                        return Contact.findAll({
+                            where: {user: user.userid}
+                        }).then(contacts => {
+                            let contactIDs = [];
+                            for (let c of contacts) {
+                                contactIDs.push(c.contact);
+                            }
+                            return User.findAll({
+                                where: {userid: {$in: contactIDs}}
+                            }).then(users => {
+                                let r = [];
+                                for (let k of users) {
+                                    r.push(k.userid);
+                                }
+                                console.log('NB USERS : ' + users.length);
+                                send.toClients(clients, r, JSON.stringify({
+                                    ACTION: 'CONTACT_CONNECTION',
+                                    CONTACT_ID: user.userid
+                                }));
+                                return user.update({connected: true}, {fields: ['connected']});
+                            })
+                        })
                     }).catch(err => {
                         console.log(err);
                         socket.write(JSON.stringify({request: 'ERROR - sockConnect D'}) + '\n');

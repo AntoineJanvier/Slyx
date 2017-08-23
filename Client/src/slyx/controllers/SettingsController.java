@@ -41,7 +41,6 @@ public class SettingsController {
     CheckBox checkBox_notifications_connections;
 
     private void setCheckedSettings(CheckBox a, CheckBox b, CheckBox c) {
-        // TODO : Split setOnMouseClicked functions here
         boolean v = a.isSelected();
         if (!v) {
             checkBox_notifications.setSelected(false);
@@ -126,7 +125,6 @@ public class SettingsController {
     }
 
     public void saveSettings() throws IOException {
-        System.out.println("SEND REQUEST SAVE");
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
         slyxSocket.sendUpdateMySettings(
                 checkBox_sounds.isSelected(),
@@ -136,9 +134,6 @@ public class SettingsController {
                 checkBox_notifications_messages.isSelected(),
                 checkBox_notifications_connections.isSelected()
         );
-        /*
-        TODO : Find a way to save settings in function of the User, DB, file or other
-         */
     }
 
     public void closePanelSettings() {

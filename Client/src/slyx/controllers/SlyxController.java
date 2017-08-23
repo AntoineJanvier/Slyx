@@ -69,6 +69,7 @@ public class SlyxController {
     public void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/addContact.fxml"));
+        next_root.getStylesheets().add(getClass().getResource("/slyx/css/addContact.css").toExternalForm());
         Stage next_stage = new Stage();
         next_stage.setTitle("Add Contact");
         next_stage.setScene(new Scene(next_root));
@@ -78,6 +79,7 @@ public class SlyxController {
     public void launchSettingsWindow() throws IOException {
         // Launch Settings window
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/settings.fxml"));
+        next_root.getStylesheets().add(getClass().getResource("/slyx/css/settings.css").toExternalForm());
         Stage next_stage = new Stage();
         next_stage.setTitle("Settings");
         next_stage.setScene(new Scene(next_root));
@@ -89,6 +91,7 @@ public class SlyxController {
         slyxSocket.close();
 
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
+        next_root.getStylesheets().add(getClass().getResource("/slyx/css/login.css").toExternalForm());
         Stage stage = (Stage) btn_disconnection.getScene().getWindow();
         stage.close();
         Stage next_stage = new Stage();
@@ -125,6 +128,16 @@ public class SlyxController {
     private void refreshContactsInContactList(User u) throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
         Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
+        p.getStylesheets().add(getClass().getResource("/slyx/css/contact.css").toExternalForm());
+        if (u.isConnected()) {
+            p.lookup("#rect_connected").setStyle(
+                    "-fx-fill: green"
+            );
+        } else {
+            p.lookup("#rect_connected").setStyle(
+                    "-fx-fill: red"
+            );
+        }
         ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
         ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
         ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
@@ -135,6 +148,7 @@ public class SlyxController {
                 slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), u);
                 try {
                     Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
+                    p.getStylesheets().add(getClass().getResource("/slyx/css/contactProfile.css").toExternalForm());
 
                     // Set elements
                     ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
@@ -176,10 +190,10 @@ public class SlyxController {
                     for (Message m : messages) {
                         putInVBoxMessages(m);
                     }
-                    scrollPane_messages.setVvalue(scrollPane_messages.getVmax());
+                    scrollPane_messages.setVvalue(1);
 
                     Timeline timeline = new Timeline(new KeyFrame(
-                            Duration.millis(500),
+                            Duration.millis(1000),
                             ae -> {
                                 try {
                                     if (!u.hashMapNewMessages.isEmpty()) {
@@ -187,8 +201,8 @@ public class SlyxController {
                                         for (Message m : messagesOfContact) {
                                             putInVBoxMessages(m);
                                             u.removeNewMessage(m.getId());
+                                            scrollPane_messages.setVvalue(1);
                                         }
-                                        scrollPane_messages.setVvalue(scrollPane_messages.getVmax());
                                     }
                                 } catch (IOException e) {
                                     System.out.println(e.getMessage());
@@ -245,6 +259,7 @@ public class SlyxController {
         }
         for (User u : requests) {
             Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
+            p.getStylesheets().add(getClass().getResource("/slyx/css/contact.css").toExternalForm());
             ((Label) p.lookup("#label_name")).setText(u.getFirstname() + " " + u.getLastname());
 
             Button button_Reject = (Button) p.lookup("#button_reject_request");
@@ -264,13 +279,17 @@ public class SlyxController {
     }
     private void putInVBoxMessages(Message m) throws IOException {
         Parent np;
+        String in = getClass().getResource("/slyx/css/messageIn.css").toExternalForm();
+        String out = getClass().getResource("/slyx/css/messageOut.css").toExternalForm();
         if ("IN".equals(m.getInOrOut())) {
             np = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_in.fxml"));
+            np.getStylesheets().add(in);
             ((Label) np.lookup("#label_content")).setText(m.getContent());
             ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
             vBox_messages.getChildren().add(np);
         } else {
             np = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
+            np.getStylesheets().add(out);
             ((Label) np.lookup("#label_content")).setText(m.getContent());
             ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
             vBox_messages.getChildren().add(np);

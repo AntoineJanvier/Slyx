@@ -47,7 +47,7 @@
                         </VBox>
                      </children>
                   </AnchorPane>
-                  <Button layoutX="867.0" layoutY="20.0" mnemonicParsing="false" onAction="#launchSettingsWindow" prefHeight="55.0" prefWidth="145.0" text="Settings" />
+                  <Button fx:id="btn_settings" layoutX="867.0" layoutY="20.0" mnemonicParsing="false" onAction="#launchSettingsWindow" prefHeight="55.0" prefWidth="145.0" text="Settings" />
                   <Button fx:id="btn_disconnection" layoutX="1032.0" layoutY="20.0" minWidth="145.0" mnemonicParsing="false" onAction="#disconnect" prefHeight="55.0" prefWidth="130.0" text="Disconnection" />
                </children>
             </AnchorPane>
@@ -70,7 +70,7 @@
    <center>
       <ScrollPane fx:id="scrollPane_messages" fitToWidth="true" onMouseMoved="#refreshContacts" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="vBox_messages" prefHeight="596.0" prefWidth="748.0" />
+            <VBox fx:id="vBox_messages" prefHeight="595.0" prefWidth="748.0" />
          </content>
       </ScrollPane>
    </center>

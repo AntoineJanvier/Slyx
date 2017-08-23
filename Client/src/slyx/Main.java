@@ -6,13 +6,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         primaryStage.setTitle("Slyx");
-        primaryStage.setScene(new Scene(root));
+        root.getStylesheets().add(getClass().getResource("/slyx/css/login.css").toExternalForm());
+        Scene scene = new Scene(root);
+        //scene.getStylesheets()
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 

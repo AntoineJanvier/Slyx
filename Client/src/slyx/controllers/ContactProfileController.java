@@ -22,15 +22,11 @@ public class ContactProfileController {
 
 
     public void removeContact() {
-        /*
-        TODO : Send remove contact request
-         */
+        // TODO : Send remove contact request
     }
 
     public void callContact() {
-        /*
-        TODO : Call contact
-         */
+        // TODO : Call contact
     }
 
     public void initialize() {
