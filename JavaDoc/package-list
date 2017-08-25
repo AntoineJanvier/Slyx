@@ -1,0 +1,9 @@
+slyx
+slyx.communication
+slyx.controllers
+slyx.exceptions
+slyx.jsonsimple
+slyx.jsonsimple.parser
+slyx.libs
+slyx.utils
+slyx.validators

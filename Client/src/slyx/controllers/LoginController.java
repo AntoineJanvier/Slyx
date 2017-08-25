@@ -9,8 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import slyx.Version;
 import slyx.communication.SlyxSocket;
-import slyx.utils.Me;
-import slyx.utils.User;
 import slyx.validators.Validator;
 
 import java.io.IOException;
@@ -84,12 +82,11 @@ public class LoginController {
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             label_get_update.setText("Checking updates...");
-            // String version = slyxSocket.sendGetUpdateRequest();
+
             slyxSocket.sendAskVersion();
             initSetUpdateLabel(SlyxSocket.getVersion().split("\\."));
 
         } catch (IOException e) {
-            System.out.println("TOO BAD");
             label_get_update.setText("Error while checking updates");
             e.printStackTrace();
         }

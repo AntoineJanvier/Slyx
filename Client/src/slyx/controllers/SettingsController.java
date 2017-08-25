@@ -1,11 +1,9 @@
 package slyx.controllers;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import slyx.communication.SlyxSocket;
 import slyx.utils.User;

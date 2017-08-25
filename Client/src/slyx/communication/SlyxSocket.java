@@ -24,13 +24,12 @@ public class SlyxSocket extends Thread {
     private int idx = -1;
 
     private User me;
-    public HashMap<Integer, User> contacts = new HashMap<>();
+    private HashMap<Integer, User> contacts = new HashMap<>();
     public HashMap<Integer, User> newContacts = new HashMap<>();
 
     private static HashMap<Integer, User> otherUsers = new HashMap<>();
 
     private static HashMap<Integer, User> userRequests = new HashMap<>();
-    private static HashMap<Integer, User> newUserRequests = new HashMap<>();
     private static String version = null;
 
     private static SlyxSocket instance = null;
@@ -144,7 +143,7 @@ public class SlyxSocket extends Thread {
                                 if (messages != null && messages.length > 0) {
                                     for (Message m : messages) {
                                         contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).addNewMessage(
-                                                m.getId(), m.getFrom(), m.getTo2(), m.getContent(), m.getSent(),
+                                                m.getId(), m.getFrom(), m.getTo(), m.getContent(), m.getSent(),
                                                 m.getInOrOut()
                                         );
                                     }
@@ -265,7 +264,6 @@ public class SlyxSocket extends Thread {
     }
     public User getMe() { return this.me; }
     public void setMe(User me) { this.me = me; }
-    public void setContacts(HashMap<Integer, User> contacts) { contacts = contacts; }
     public static String getVersion() { return version != null ? version : "0.0.0"; }
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
     private void addNewContact(User u, boolean isNew) {

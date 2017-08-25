@@ -10,13 +10,34 @@
 }
 
 #btn_disconnection {
+    /*-fx-font-size: 12px;*/
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
     -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
-    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
 }
 #btn_settings {
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
     -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
-    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
 }
 #btn_send_message {
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
     -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
+}
+#button_addNewContact {
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}
+
+#tabPaneTab_contacts,
+#tabPaneTab_requests {
+    -fx-font-weight: bold;
+    -fx-text-fill: red;
+    -fx-background-color: linear-gradient(to bottom, #0a93ff 0, #0058c6 100%);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
 }

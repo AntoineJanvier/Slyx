@@ -13,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -33,39 +32,55 @@ import java.io.IOException;
  * on 30/07/17.
  */
 public class SlyxController {
+    // Containers
     @FXML
-    BorderPane borderPane_general;
+    AnchorPane anchorPane_top;
     @FXML
     AnchorPane anchorPane_right;
     @FXML
+    BorderPane borderPane_general;
+    @FXML
     HBox hBox_top;
-    @FXML
-    VBox vBox_left;
-    @FXML
-    Button btn_send_message;
-    @FXML
-    TextField tf_message_to_send;
-    @FXML
-    Button btn_disconnection;
-    @FXML
-    ImageView imageView_my_icon;
-    @FXML
-    Label label_my_firstname;
-    @FXML
-    Label label_my_lastname;
-    @FXML
-    Label label_my_email;
-    @FXML
-    VBox vBox_request;
-    @FXML
-    VBox vBox_messages;
     @FXML
     ScrollPane scrollPane_messages;
     @FXML
     Tab tabPaneTab_requests;
     @FXML
     TabPane tabPane_left;
+    @FXML
+    VBox vBox_left;
+    @FXML
+    VBox vBox_messages;
+    @FXML
+    VBox vBox_request;
 
+    // Buttons
+    @FXML
+    Button btn_send_message;
+    @FXML
+    Button btn_disconnection;
+    @FXML
+    Button button_addNewContact;
+
+    // Utils
+    @FXML
+    ImageView imageView_my_icon;
+    @FXML
+    TextField tf_message_to_send;
+
+    // Labels
+    @FXML
+    Label label_my_firstname;
+    @FXML
+    Label label_my_lastname;
+    @FXML
+    Label label_my_email;
+
+
+    /**
+     * Launch the window where user can add a new contact
+     * @throws IOException : When FXMLLoader.load(...) fail
+     */
     public void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/addContact.fxml"));
@@ -76,6 +91,10 @@ public class SlyxController {
         next_stage.show();
     }
 
+    /**
+     * Launch the window where user can change its settings (notifications, volume sound, sounds, ...)
+     * @throws IOException : When FXMLLoader.load(...) fail
+     */
     public void launchSettingsWindow() throws IOException {
         // Launch Settings window
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/settings.fxml"));
@@ -86,6 +105,10 @@ public class SlyxController {
         next_stage.show();
     }
 
+    /**
+     * Close the link between client and server
+     * @throws IOException : When getting the instance of the SlyxSocket (singleton)
+     */
     public void disconnect() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
         slyxSocket.close();
@@ -100,31 +123,53 @@ public class SlyxController {
         next_stage.show();
     }
 
+    /**
+     * Initialize all components of the Slyx app : Contacts, user requests, events etc...
+     * @throws IOException : When getting the instance of the SlyxSocket (singleton)
+     */
     public void initialize() throws IOException {
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+
         SlyxSound.playSound("LOGIN");
 
-        SlyxSocket slyxSocket = SlyxSocket.getInstance();
+        button_addNewContact.setOnMouseClicked(event -> {
+            try {
+                launchAddNewContactWindow();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Set my informations
         User me = slyxSocket.getMe();
-        //slyxSocket.sendGetMySettings();
-        label_my_firstname.setText(me.getFirstname());
-        label_my_lastname.setText(me.getLastname());
-        label_my_email.setText(me.getEmail());
-        imageView_my_icon.setImage(new Image(me.getPicture()));
-
+        Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/myProfile.fxml"));
+        p.getStylesheets().add(getClass().getResource("/slyx/css/myProfile.css").toExternalForm());
+        ((ImageView) p.lookup("#imageView_myImage")).setImage(new Image(me.getPicture()));
+        ((Label) p.lookup("#label_myName")).setText(me.getFirstname() + " - " + me.getLastname());
+        ((Label) p.lookup("#label_myEmail")).setText(me.getEmail());
+        anchorPane_top.getChildren().add(p);
         refresh(slyxSocket);
     }
 
+    /**
+     * Call the refresh functions in the Slyx app window
+     * @param slyxSocket : Instance of SlyxSocket (singleton)
+     * @throws IOException : When refreshContacts() or refreshContactRequests() calls
+     */
     private void refresh(SlyxSocket slyxSocket) throws IOException {
         slyxSocket.sendGetContactsRequest(slyxSocket.getMe());
         slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
         slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
 
         refreshContacts();
-        refreshContactRequests(slyxSocket);
+        refreshContactRequests();
     }
 
+    /**
+     * Load the view of a contact and add it to contact list with specific user informations
+     * @param u : The user to print in contact list
+     * @throws IOException : On FXMLLoader.load(...) call
+     */
     private void refreshContactsInContactList(User u) throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
         Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
@@ -218,6 +263,10 @@ public class SlyxController {
         vBox_left.getChildren().add(p);
     }
 
+    /**
+     * Refresh the contact list
+     * @throws IOException : When getting the instance of the SlyxSocket (singleton)
+     */
     public void refreshContacts() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
@@ -249,8 +298,13 @@ public class SlyxController {
         timeline.play();
     }
 
-    private void refreshContactRequests(SlyxSocket slyxSocket) throws IOException {
+    /**
+     * Refresh the user requests in the Requests Tab
+     * @throws IOException : When getting the instance of the SlyxSocket (singleton)
+     */
+    private void refreshContactRequests() throws IOException {
         // Set the contact request in PENDING state in the request area
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
         slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
         User[] requests = slyxSocket.getUserRequests();
         vBox_request.getChildren().clear();
@@ -277,6 +331,12 @@ public class SlyxController {
             vBox_request.getChildren().add(p);
         }
     }
+
+    /**
+     * Add a specific message to the message list (VBox)
+     * @param m : Message to print
+     * @throws IOException : On FXMLLoader.load(...) call
+     */
     private void putInVBoxMessages(Message m) throws IOException {
         Parent np;
         String in = getClass().getResource("/slyx/css/messageIn.css").toExternalForm();

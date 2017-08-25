@@ -42,7 +42,7 @@ class SocketSender {
     static String SocketSender_sendMessage(User me, int toUserID, String content, String ior) {
         return new Message(0, me, toUserID, new Date(), content, ior)
                 .toObject()
-                .put("request", "SEND_MESSAGE")
+                .put("request", RequestTypes.MESSAGE_REQUEST)
                 .toString();
     }
     static String SocketSender_sendGetUsersNotInContactList(int myID) {

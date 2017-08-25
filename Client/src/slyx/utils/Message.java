@@ -11,17 +11,16 @@ import java.util.Date;
 public class Message {
     private int id;
     private User from;
-    private User to;
-    private int to2;
+    private int to;
     private Date sent;
     private String content;
     private String inOrOut;
 
-    public Message(int id, User from, int to2, Date sent, String content, String inOrOut) {
+    public Message(int id, User from, int to, Date sent, String content, String inOrOut) {
         this.id = id;
         this.from = from;
         // this.to = to;
-        this.to2 = to2;
+        this.to = to;
         this.sent = sent;
         this.content = content;
         this.inOrOut = inOrOut;
@@ -33,8 +32,8 @@ public class Message {
     public void setFrom(User from) { this.from = from; }
     // public User getTo() { return to; }
     // public void setTo(User to) { this.to = to; }
-    public int getTo2() { return to2; }
-    public void setTo2(int to2) { this.to2 = to2; }
+    public int getTo() { return to; }
+    public void setTo(int to) { this.to = to; }
     public Date getSent() { return sent; }
     public void setSent(Date sent) { this.sent = sent; }
     public String getContent() { return content; }
@@ -46,7 +45,7 @@ public class Message {
     public String toString() {
         return "Message{" +
                 ", from=" + this.from.getId() +
-                ", to=" + this.to2 +
+                ", to=" + this.to +
                 ", sent=" + this.sent +
                 ", content='" + this.content + '\'' +
                 ", inOrOut='" + this.inOrOut + '\'' +
@@ -56,7 +55,7 @@ public class Message {
     public JSONObject toObject() {
         JSONObject o = new JSONObject();
         o.put("from", this.from.getId());
-        o.put("to", this.to2);
+        o.put("to", this.to);
         o.put("sent", this.sent.getTime());
         o.put("content", this.content);
         return o;
