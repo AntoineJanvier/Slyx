@@ -2,7 +2,7 @@
 Skype like, RTSP streams displayed by Java, managed by a NodeJS server
 
 ### Test on messages
-![img1](/medias/app_messages.png)
+![img1](/medias/slyx.png)
 
 ### Add contacts window
 ![img2](/medias/contacts.png)
