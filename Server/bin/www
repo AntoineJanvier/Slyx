@@ -103,6 +103,9 @@ nodenet.createServer(function (socket) {
                     case 'UPDATE_SETTINGS':
                         socketManagement.sockUpdateSettings(socket, json);
                         break;
+                    case 'DISCONNECTION':
+                        socketManagement.sockDisconnectUser(socket, json, clients);
+                        break;
                     default:
                         socket.write({ACTION: 'ERROR'} + '\n');
                 }
@@ -113,7 +116,15 @@ nodenet.createServer(function (socket) {
     socket.on('close', function () {
         for (let i = 0; i < clients.length; i++) {
             if (clients[i].socketId === socket.socketId) {
-                clients.splice(i, 1);
+                User.find({where: {
+                    userid: clients[i].User.id
+                }}).then(user => {
+                    return user.update({connected: false}, {fields: ['connected']
+                    }).then(user => {
+                        console.log(user.first_name + ' ' + user.last_name + ' disconnected');
+                        clients.splice(i, 1);
+                    });
+                })
             }
         }
         console.log('SOCKET_CLOSED');

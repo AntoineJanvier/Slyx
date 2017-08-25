@@ -25,19 +25,29 @@ public class SlyxSocket extends Thread {
 
     private User me;
     private HashMap<Integer, User> contacts = new HashMap<>();
-    public HashMap<Integer, User> newContacts = new HashMap<>();
+    public boolean hasNewConnection = false;
 
     private static HashMap<Integer, User> otherUsers = new HashMap<>();
 
     private static HashMap<Integer, User> userRequests = new HashMap<>();
+    public boolean hasNewPendingRequest = false;
+
     private static String version = null;
 
     private static SlyxSocket instance = null;
 
-    private SlyxSocket() throws IOException {
-        this.socket = new Socket(getIpAddress(), getPort());
-        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.printWriter = new PrintWriter(socket.getOutputStream(), true);
+    private SlyxSocket() {
+        try {
+            this.socket = new Socket(getIpAddress(), getPort());
+        } catch (IOException e) {
+            System.out.println("Connection refused");
+        }
+        try {
+            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.printWriter = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("Socket not open");
+        }
         this.start();
     }
 
@@ -113,7 +123,7 @@ public class SlyxSocket extends Thread {
                                 User[] users = arrayJsonParser.getUsers();
                                 contacts.clear();
                                 for (User u : users)
-                                    addNewContact(u, false);
+                                    addNewContact(u);
                                 break;
                             case "CONTACT_REQUEST":
                                 userRequests.put(Math.toIntExact((long) j.get("id")), new User(
@@ -121,6 +131,7 @@ public class SlyxSocket extends Thread {
                                         j.get("lastname").toString(), Math.toIntExact((long) j.get("age")),
                                         j.get("email").toString(), j.get("picture").toString()
                                 ));
+                                hasNewPendingRequest = true;
                                 break;
                             case "GET_USERS_NOT_IN_CONTACT_LIST":
                                 arrayJsonParser = new ArrayJsonParser(serverResponse);
@@ -135,6 +146,7 @@ public class SlyxSocket extends Thread {
                                 User[] pendingRequests = arrayJsonParser.getUsers();
                                 for (User u : pendingRequests)
                                     userRequests.put(u.getId(), u);
+                                hasNewPendingRequest = true;
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
@@ -156,19 +168,18 @@ public class SlyxSocket extends Thread {
                                         j.get("email").toString(), j.get("picture").toString()
                                 );
                                 user.setConnected(Boolean.valueOf(j.get("connected").toString()));
-                                addNewContact(user, true);
+                                addNewContact(user);
                                 break;
                             case "CONTACT_CONNECTION":
-                                //sendGetContactsRequest(this.me);
                                 User toConnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
                                 toConnect.setConnected(true);
-                                contacts.remove(toConnect.getId());
-                                newContacts.put(toConnect.getId(), toConnect);
+                                hasNewConnection = true;
                                 break;
                             case "CONTACT_DISCONNECTION":
-                                contacts.get(Math.toIntExact((long) j.get("CONTACT_ID"))).setConnected(false);
+                                User toDisconnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
+                                toDisconnect.setConnected(false);
+                                hasNewConnection = true;
                                 break;
-                                // TODO : Add ping answer to ping request to know status of a contact
                             default:
                                 System.out.println("Unknown ACTION...");
                         }
@@ -248,6 +259,9 @@ public class SlyxSocket extends Thread {
         }
         return null;
     }
+    public void sendDisconnectionEvent() {
+        writeInSocket(SocketSender_sendDisconnectionEvent(this.me.getId()));
+    }
 
     public void close() throws IOException {
         this.interrupt();
@@ -255,6 +269,7 @@ public class SlyxSocket extends Thread {
         bufferedReader.close();
         printWriter.close();
         instance = new SlyxSocket();
+        this.me = null;
     }
     private String getIpAddress() {
         return "127.0.0.1";
@@ -266,8 +281,7 @@ public class SlyxSocket extends Thread {
     public void setMe(User me) { this.me = me; }
     public static String getVersion() { return version != null ? version : "0.0.0"; }
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
-    private void addNewContact(User u, boolean isNew) {
-        if (isNew) newContacts.put(u.getId(), u);
+    private void addNewContact(User u) {
         contacts.put(u.getId(), u);
     }
     public User[] getContacts() {
@@ -276,17 +290,6 @@ public class SlyxSocket extends Thread {
         for (User u : contacts.values())
             users[counter++] = u;
         return users;
-    }
-    public User[] getNewContacts() {
-        User[] users = new User[newContacts.size()];
-        int counter = 0;
-        for (User u : newContacts.values())
-            users[counter++] = u;
-        return users;
-    }
-    public void removeNewContact(int contactID) {
-        if (newContacts.containsKey(contactID))
-            newContacts.remove(contactID);
     }
     public User[] getOtherUsers() {
         User[] users = new User[otherUsers.size()];

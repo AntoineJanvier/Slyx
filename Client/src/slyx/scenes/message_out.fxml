@@ -12,7 +12,7 @@
                 <Insets right="15.0" />
             </padding>
         </Label>
-        <Label fx:id="label_date" layoutX="499.0" layoutY="41.0" text="Sent at 18:51" textFill="#727272">
+        <Label fx:id="label_date" layoutX="499.0" layoutY="41.0" text="Sent at 18:51" textAlignment="RIGHT" textFill="#727272" AnchorPane.rightAnchor="26.0">
             <font>
                 <Font name="System Italic" size="11.0" />
             </font>

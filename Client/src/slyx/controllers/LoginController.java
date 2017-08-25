@@ -1,5 +1,8 @@
 package slyx.controllers;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import slyx.Version;
 import slyx.communication.SlyxSocket;
+import slyx.utils.User;
 import slyx.validators.Validator;
 
 import java.io.IOException;
@@ -39,8 +44,13 @@ public class LoginController {
     Label label_error_hint;
 
     @FXML
-    public void launch_next_screen() throws Exception {
-        SlyxSocket slyxSocket =  SlyxSocket.getInstance();
+    public void launch_next_screen() {
+        SlyxSocket slyxSocket = null;
+        try {
+            slyxSocket = SlyxSocket.getInstance();
+        } catch (IOException e) {
+            System.out.println("Problem on Sign in");
+        }
 
         // Get connection information
         String u_email = tf_email.getText();
@@ -52,29 +62,39 @@ public class LoginController {
         else if (!Validator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
-            slyxSocket.setMe(null);
-            // If all seems ok, request the server a connection
-            slyxSocket.sendAskConnection(u_email, u_pwd);
+            if (slyxSocket != null) {
+                slyxSocket.setMe(null);
+                // If all seems ok, request the server a connection
+                slyxSocket.sendAskConnection(u_email, u_pwd);
 
-            // Test singleton of Me object to know if we can launch the app just if he is connected
-            while (slyxSocket.getMe() == null) {
-                Thread.sleep(100);
-            }
-            if (slyxSocket.getMe().isConnected()) {
+                // Test singleton of Me object to know if we can launch the app just if he is connected
+                while (slyxSocket.getMe() == null) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        System.out.println("Thread.sleep() interrupted");
+                    }
+                }
+                if (slyxSocket.getMe().isConnected()) {
 
-                // Close login window
-                Stage stage = (Stage) btn_sign_in.getScene().getWindow();
-                stage.close();
+                    // Close login window
+                    Stage stage = (Stage) btn_sign_in.getScene().getWindow();
+                    stage.close();
 
-                // Launch app window
-                Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
-                next_root.getStylesheets().add(getClass().getResource("/slyx/css/slyx.css").toExternalForm());
-                Stage next_stage = new Stage();
-                next_stage.setTitle("Slyx");
-                next_stage.setScene(new Scene(next_root));
-                next_stage.show();
-            } else {
-                label_error_hint.setText(getError(ERR_CONNECTION));
+                    // Launch app window
+                    try {
+                        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
+                        next_root.getStylesheets().add(getClass().getResource("/slyx/css/slyx.css").toExternalForm());
+                        Stage next_stage = new Stage();
+                        next_stage.setTitle("Slyx");
+                        next_stage.setScene(new Scene(next_root));
+                        next_stage.show();
+                    } catch (IOException e) {
+                        System.out.println("FXMLLoader.load(...) error");
+                    }
+                } else {
+                    label_error_hint.setText(getError(ERR_CONNECTION));
+                }
             }
         }
     }
@@ -84,7 +104,14 @@ public class LoginController {
             label_get_update.setText("Checking updates...");
 
             slyxSocket.sendAskVersion();
-            initSetUpdateLabel(SlyxSocket.getVersion().split("\\."));
+
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.millis(1000),
+                    ae -> {
+                        initSetUpdateLabel(SlyxSocket.getVersion().split("\\."));
+                    }));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
 
         } catch (IOException e) {
             label_get_update.setText("Error while checking updates");

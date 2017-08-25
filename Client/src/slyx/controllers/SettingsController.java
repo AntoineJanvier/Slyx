@@ -132,6 +132,8 @@ public class SettingsController {
                 checkBox_notifications_messages.isSelected(),
                 checkBox_notifications_connections.isSelected()
         );
+        Stage stage = (Stage) button_save_settings.getScene().getWindow();
+        stage.close();
     }
 
     public void closePanelSettings() {

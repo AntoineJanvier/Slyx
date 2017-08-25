@@ -95,4 +95,10 @@ class SocketSender {
         j.put("connections", String.valueOf(connections));
         return j.toString();
     }
+    static String SocketSender_sendDisconnectionEvent(int myID) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.DISCONNECTION_REQUEST);
+        j.put("me", myID);
+        return j.toString();
+    }
 }

@@ -56,7 +56,6 @@ module.exports = {
                                 for (let k of users) {
                                     r.push(k.userid);
                                 }
-                                console.log('NB USERS : ' + users.length);
                                 send.toClients(clients, r, JSON.stringify({
                                     ACTION: 'CONTACT_CONNECTION',
                                     CONTACT_ID: user.userid
@@ -293,15 +292,12 @@ module.exports = {
         User.find({
             where: {userid: json.u1userid}
         }).then(u1 => {
-            console.log(JSON.stringify(u1.responsify()));
             return User.find({
                 where: {userid: json.u2userid}
             }).then(u2 => {
-                console.log(JSON.stringify(u2.responsify()));
                 return Contact.find({
                     where: {user: u2.userid, contact: u1.userid, status: 'PENDING'}
                 }).then(contact => {
-                    console.log(JSON.stringify(contact.responsify()));
                     return Contact.create({
                         user: u1.userid, contact: u2.userid, status: 'ACCEPTED'
                     }).then(n_contact => {
@@ -329,15 +325,12 @@ module.exports = {
         });
     },
     sockRejectContactRequest: function (socket, json) {
-        console.log('A');
         User.find({
             where: {userid: json.u1userid}
         }).then(u1 => {
-            console.log('B');
             return User.find({
                 where: {userid: json.u2userid}
             }).then(u2 => {
-                console.log('C');
                 return Contact.find({
                     where: {user: u1.userid, contact: u2.userid, status: 'PENDING'}
                 }).then(contact => {
@@ -437,6 +430,39 @@ module.exports = {
         }).catch(err => {
             console.log(err);
             socket.write(JSON.stringify({request: 'ERROR - sockSendMessageToUser A'}) + '\n');
+        });
+    },
+    sockDisconnectUser: function(socket, json, clients) {
+        User.find({
+            where: { userid: json.me }
+        }).then(user => {
+            return Contact.findAll({
+                where : {user: user.userid, status: 'ACCEPTED'}
+            }).then(contacts => {
+                if (contacts && contacts.length > 0) {
+                    let r1 = [];
+                    for (let k of contacts)
+                        r1.push(k.contact);
+                    return User.findAll({
+                        where: {userid: {$in: r1}}
+                    }).then(users => {
+                        let r = [];
+                        for (let k of users)
+                            r.push(k.userid);
+                        send.toClients(clients, r, JSON.stringify({
+                            ACTION: 'CONTACT_DISCONNECTION',
+                            CONTACT_ID: user.userid
+                        }));
+                        return user.update({connected: true}, {fields: ['connected']});
+                    })
+                }
+            }).catch(err => {
+                console.log(err);
+                socket.write(JSON.stringify({request: 'ERROR - sockDisconnectUser B'}) + '\n');
+            });
+        }).catch(err => {
+            console.log(err);
+            socket.write(JSON.stringify({request: 'ERROR - sockDisconnectUser A'}) + '\n');
         });
     }
 };

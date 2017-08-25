@@ -7,6 +7,7 @@ package slyx.communication;
 public class RequestTypes {
     // Login
     final static String CONNECTION_REQUEST = "CONNECTION";
+    final static String DISCONNECTION_REQUEST = "DISCONNECTION";
     final static String GET_UPDATE_REQUEST = "GET_UPDATE";
 
     // Basic instructions

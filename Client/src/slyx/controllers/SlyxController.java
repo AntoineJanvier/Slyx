@@ -111,7 +111,8 @@ public class SlyxController {
      */
     public void disconnect() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
-        slyxSocket.close();
+        slyxSocket.sendDisconnectionEvent();
+        slyxSocket.setMe(null);
 
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         next_root.getStylesheets().add(getClass().getResource("/slyx/css/login.css").toExternalForm());
@@ -162,7 +163,25 @@ public class SlyxController {
         slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
 
         refreshContacts();
-        refreshContactRequests();
+
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> {
+                    try {
+                        if (slyxSocket.hasNewPendingRequest) {
+                            vBox_request.getChildren().clear();
+                            for (Node observable : vBox_request.getChildren()) {
+                                vBox_request.getChildren().remove(observable);
+                            }
+                            refreshContactRequests();
+                            slyxSocket.hasNewConnection = false;
+                        }
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
     /**
@@ -283,12 +302,16 @@ public class SlyxController {
                 Duration.millis(1000),
                 ae -> {
                     try {
-                        if (!slyxSocket.newContacts.isEmpty()) {
-                            User[] users = slyxSocket.getNewContacts();
+                        if (slyxSocket.hasNewConnection) {
+                            vBox_left.getChildren().clear();
+                            for (Node observable : vBox_left.getChildren()) {
+                                vBox_left.getChildren().remove(observable);
+                            }
+                            User[] users = slyxSocket.getContacts();
                             for (User u : users) {
                                 refreshContactsInContactList(u);
-                                slyxSocket.removeNewContact(u.getId());
                             }
+                            slyxSocket.hasNewConnection = false;
                         }
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
@@ -305,7 +328,7 @@ public class SlyxController {
     private void refreshContactRequests() throws IOException {
         // Set the contact request in PENDING state in the request area
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
-        slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
+        //slyxSocket.sendGetPendingContactRequests(slyxSocket.getMe());
         User[] requests = slyxSocket.getUserRequests();
         vBox_request.getChildren().clear();
         for (Node observable : vBox_request.getChildren()) {
