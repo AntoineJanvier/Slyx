@@ -180,6 +180,9 @@ public class SlyxSocket extends Thread {
                                 toDisconnect.setConnected(false);
                                 hasNewConnection = true;
                                 break;
+                            case "CONTACT_REMOVE":
+                                hasNewConnection = true;
+                                break;
                             default:
                                 System.out.println("Unknown ACTION...");
                         }
@@ -242,6 +245,12 @@ public class SlyxSocket extends Thread {
         this.me.setSetting_calls(calls);
         this.me.setSetting_messages(messages);
         this.me.setSetting_connections(connections);
+    }
+    public void sendRemoveContactOfContactList(int userID) {
+        writeInSocket(SocketSender_sendRemoveContactOfContactList(this.me.getId(), userID));
+    }
+    public void sendCallContactRequest(int from, int to) {
+        writeInSocket(SocketSender_sendCallContactRequest(from, to));
     }
 
     private void writeInSocket(String message) {

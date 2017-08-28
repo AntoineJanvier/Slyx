@@ -6,6 +6,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const express_session = require('express-session');
 
+// const Peer = require('peerjs');
+// var peer = new Peer({key: 'y4hmxzxfng7m0a4i'});
+
 const models = require('./models');
 models.sequelize.sync();
 
@@ -37,6 +40,8 @@ app.use(express_session({
     resave: true,
     saveUninitialized: true
 }));
+
+// app.use(peer);
 
 app.use('/', server_routes.index);
 app.use('/users', server_routes.users);

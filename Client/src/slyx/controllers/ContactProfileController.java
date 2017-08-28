@@ -1,8 +1,10 @@
 package slyx.controllers;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
 /**
  * Created by Antoine Janvier
@@ -19,11 +21,6 @@ public class ContactProfileController {
     Button button_remove_contact;
     @FXML
     Button button_call_contact;
-
-
-    public void removeContact() {
-        // TODO : Send remove contact request
-    }
 
     public void callContact() {
         // TODO : Call contact

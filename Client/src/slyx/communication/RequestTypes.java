@@ -13,7 +13,7 @@ public class RequestTypes {
     // Basic instructions
     final static String GET_SETTINGS_REQUEST = "GET_SETTINGS";
     final static String UPDATE_SETTINGS_REQUEST = "UPDATE_SETTINGS";
-    public final static String CALL_REQUEST = "CALL";
+    final static String CALL_REQUEST = "CALL";
     final static String MESSAGE_REQUEST = "SEND_MESSAGE";
 
     // Contacts
@@ -21,11 +21,11 @@ public class RequestTypes {
     final static String GET_USERS_NOT_IN_CONTACT_LIST_REQUEST = "GET_USERS_NOT_IN_CONTACT_LIST";
     final static String GET_PENDING_CONTACT_REQUESTS_REQUEST = "GET_PENDING_CONTACT_REQUESTS";
     final static String ADD_CONTACT_REQUEST = "ADD_CONTACT";
-    public final static String REMOVE_CONTACT_REQUEST = "REMOVE_CONTACT";
+    final static String REMOVE_CONTACT_REQUEST = "REMOVE_CONTACT";
     final static String ACCEPT_CONTACT_REQUEST = "ACCEPT_CONTACT";
     final static String REJECT_CONTACT_REQUEST = "REJECT_CONTACT";
 
     // On contact
     final static String GET_MESSAGES_OF_CONTACT_REQUEST = "GET_MESSAGES_OF_CONTACT";
-    public final static String GET_CALLS_OF_CONTACT_REQUEST = "GET_CALLS_OF_CONTACT";
+    final static String GET_CALLS_OF_CONTACT_REQUEST = "GET_CALLS_OF_CONTACT";
 }

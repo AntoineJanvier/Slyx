@@ -101,4 +101,18 @@ class SocketSender {
         j.put("me", myID);
         return j.toString();
     }
+    static String SocketSender_sendRemoveContactOfContactList(int myID, int userID) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.REMOVE_CONTACT_REQUEST);
+        j.put("me", myID);
+        j.put("userToRemove", userID);
+        return j.toString();
+    }
+    static String SocketSender_sendCallContactRequest(int from, int to) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.CALL_REQUEST);
+        j.put("from", from);
+        j.put("to", to);
+        return j.toString();
+    }
 }

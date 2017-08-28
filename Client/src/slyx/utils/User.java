@@ -2,6 +2,7 @@ package slyx.utils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * Created by Antoine Janvier
@@ -26,7 +27,7 @@ public class User {
     private boolean setting_messages;
     private boolean setting_connections;
 
-    public HashMap<Integer, Message> messages = new HashMap<>();
+    public TreeMap<Date, Message> messages = new TreeMap<>();
     public HashMap<Integer, Message> hashMapNewMessages = new HashMap<>();
     private HashMap<Integer, Call> calls = new HashMap<>();
 
@@ -44,7 +45,7 @@ public class User {
 
     public void addNewMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
         Message m = new Message(messageID, from, to, sent, content, inOrOut);
-        messages.put(messageID, m);
+        messages.put(sent, m);
         hashMapNewMessages.put(messageID, m);
     }
     public void addCall(int callID, User from, User to) {
@@ -69,7 +70,7 @@ public class User {
     public String getEmail() { return email; }
     public boolean isConnected() { return isConnected; }
     public String getPicture() { return picture; }
-    public HashMap<Integer, Message> getMessages() {
+    public TreeMap<Date, Message> getMessages() {
         return messages;
     }
 

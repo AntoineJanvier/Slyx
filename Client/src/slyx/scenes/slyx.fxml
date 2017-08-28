@@ -60,7 +60,7 @@
             <children>
                 <Pane prefHeight="62.0" prefWidth="253.0">
                <children>
-                  <Button fx:id="button_addNewContact" layoutX="25.0" layoutY="16.0" mnemonicParsing="false" onAction="#launchAddNewContactWindow" prefHeight="30.0" prefWidth="203.0" text="Add contact" />
+                  <Button fx:id="button_addNewContact" layoutX="25.0" layoutY="16.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="203.0" text="Add contact" />
                </children></Pane>
             <TextField fx:id="tf_message_to_send" prefHeight="62.0" prefWidth="841.0" promptText="Type your message here..." />
                 <Button fx:id="btn_send_message" alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="115.0" text="Send" textAlignment="CENTER" />
@@ -70,7 +70,7 @@
    <center>
       <ScrollPane fx:id="scrollPane_messages" fitToWidth="true" onMouseMoved="#refreshContacts" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="vBox_messages" prefHeight="595.0" prefWidth="748.0" />
+            <VBox fx:id="vBox_messages" prefHeight="540.0" prefWidth="748.0" />
          </content>
       </ScrollPane>
    </center>

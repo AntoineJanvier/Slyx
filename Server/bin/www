@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
+const send = require('../tools/answerToSockets');
+
 /**
  * Module dependencies.
  */
+let navigator = require('navigator');
 let app = require('../app');
 let debug = require('debug')('server:server');
 let http = require('http');
 let nodenet = require('net');
-const socketManagement = require('../tools/socket_management');
+const sock = require('../tools/socketManagement/socket_management');
 const passwordHash = require('password-hash');
 
 const models = require('../models');
@@ -20,6 +23,9 @@ const Contact = models.Contact;
 let port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 const socketPort = 3895;
+const rtcPort = 3896;
+
+app.set('navigator', navigator);
 
 /**
  * Create HTTP server.
@@ -62,49 +68,75 @@ nodenet.createServer(function (socket) {
                 switch (json.request) {
                     // Know if the client is up to date
                     case 'GET_UPDATE':
-                        socketManagement.sockGetUpdate(socket);
+                        sock.getUpdate.getUpdate(socket);
                         break;
                     // Client connection
                     case 'CONNECTION':
-                        socketManagement.sockConnect(socket, json, clients);
+                        sock.connect.connect(socket, json, clients);
                         break;
                     // Client loading its contacts
                     case 'GET_CONTACTS':
-                        socketManagement.sockGetContacts(socket, json);
+                        sock.getContacts.getContacts(socket, json);
                         break;
                     // Client want to add a new contact
                     case 'ADD_CONTACT':
-                        socketManagement.sockAddNewContact(socket, json, clients);
+                        sock.addNewContact.addNewContact(socket, json, clients);
                         break;
                     // Client loading new possible contacts
                     case 'GET_USERS_NOT_IN_CONTACT_LIST':
-                        socketManagement.sockGetUsersNotInContactList(socket, json);
+                        sock.getUsersNotInContactList.getUsersNotInContactList(socket, json);
                         break;
                     // Client want to print all contact requests
                     case 'GET_PENDING_CONTACT_REQUESTS':
-                        socketManagement.sockGetPendingContactRequests(socket, json, clients);
+                        sock.getPendingContactRequests.getPendingContactRequests(socket, json, clients);
                         break;
                     // Get messages of a specific contact
                     case 'GET_MESSAGES_OF_CONTACT':
-                        socketManagement.sockGetMessagesOfContact(socket, json);
+                        sock.getMessagesOfContact.getMessagesOfContact(socket, json);
                         break;
                     case 'ACCEPT_CONTACT':
-                        socketManagement.sockAcceptContactRequest(socket, json, clients);
+                        sock.acceptContactRequest.acceptContactRequest(socket, json, clients);
                         break;
                     case 'REJECT_CONTACT':
-                        socketManagement.sockRejectContactRequest(socket, json);
+                        sock.rejectContactRequest.rejectContactRequest(socket, json);
                         break;
                     case 'SEND_MESSAGE':
-                        socketManagement.sockSendMessageToUser(socket, json, clients);
+                        sock.sendMessageToUser.sendMessageToUser(socket, json, clients);
                         break;
                     case 'GET_SETTINGS':
-                        socketManagement.sockGetSettings(socket, json);
+                        sock.getSettings.getSettings(socket, json);
                         break;
                     case 'UPDATE_SETTINGS':
-                        socketManagement.sockUpdateSettings(socket, json);
+                        sock.updateSettings.updateSettings(socket, json);
                         break;
                     case 'DISCONNECTION':
-                        socketManagement.sockDisconnectUser(socket, json, clients);
+                        sock.disconnectUser.disconnectUser(socket, json, clients);
+                        break;
+                    case 'REMOVE_CONTACT':
+                        sock.removeContactOfContactList.removeContactOfContactList(socket, json, clients);
+                        break;
+                    case 'CALL':
+                        peer.on('open', function (id) {
+                            socket.rtcPeerID = id;
+                        });
+                        send.toClient(clients, json.to, JSON.stringify({
+                            ACTION: 'CALL_INCOMING',
+                            FROM: json.from,
+                            PEERID: socket.rtcPeerId
+                        }));
+                        break;
+                    case 'ACCEPT_CALL':
+                        send.toClient(clients, json.to, JSON.stringify({
+                            ACTION: 'CALL_ACCEPTED',
+                            FROM: json.from,
+                            PEERID: socket.rtcPeerId
+                        }));
+                        break;
+                    case 'REJECT_CALL':
+                        send.toClient(clients, json.to, JSON.stringify({
+                            ACTION: 'CALL_REJECTED',
+                            FROM: json.from
+                        }));
                         break;
                     default:
                         socket.write({ACTION: 'ERROR'} + '\n');

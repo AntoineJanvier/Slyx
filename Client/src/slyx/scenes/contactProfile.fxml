@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="598.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactProfileController">
    <children>
-      <ImageView fx:id="imageView_contact_icon" fitHeight="93.0" fitWidth="124.0" layoutX="38.0" layoutY="26.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="30.0" />
+      <ImageView fx:id="imageView_contact_icon" fitHeight="100.0" fitWidth="124.0" layoutX="47.0" layoutY="25.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" AnchorPane.topAnchor="25.0" />
       <Label fx:id="label_firstname" alignment="CENTER" contentDisplay="CENTER" layoutY="137.0" prefWidth="200.0" text="Firstname" textAlignment="CENTER" />
       <Label fx:id="label_lastname" alignment="CENTER" contentDisplay="CENTER" layoutY="161.0" prefWidth="200.0" text="Lastname" textAlignment="CENTER" />
       <Label fx:id="label_email" alignment="CENTER" contentDisplay="CENTER" layoutY="193.0" prefHeight="16.0" prefWidth="200.0" text="Email" textAlignment="CENTER">
@@ -18,7 +18,7 @@
          </font>
       </Label>
       <Separator layoutX="23.0" layoutY="241.0" prefHeight="4.0" prefWidth="155.0" />
-      <Button fx:id="button_remove_contact" layoutX="37.0" layoutY="260.0" mnemonicParsing="false" text="Remove Contact" />
-      <Button fx:id="button_call_contact" layoutX="79.0" layoutY="550.0" mnemonicParsing="false" text="Call" />
+      <Button fx:id="button_remove_contact" layoutX="37.0" layoutY="260.0" mnemonicParsing="false" prefHeight="40.0" text="Remove Contact" />
+      <Button fx:id="button_call_contact" layoutX="38.0" layoutY="533.0" mnemonicParsing="false" prefHeight="50.0" text="Call" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="38.0" />
    </children>
 </AnchorPane>

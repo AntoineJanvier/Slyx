@@ -79,6 +79,7 @@ public class SlyxController {
 
     /**
      * Launch the window where user can add a new contact
+     *
      * @throws IOException : When FXMLLoader.load(...) fail
      */
     public void launchAddNewContactWindow() throws IOException {
@@ -93,6 +94,7 @@ public class SlyxController {
 
     /**
      * Launch the window where user can change its settings (notifications, volume sound, sounds, ...)
+     *
      * @throws IOException : When FXMLLoader.load(...) fail
      */
     public void launchSettingsWindow() throws IOException {
@@ -107,6 +109,7 @@ public class SlyxController {
 
     /**
      * Close the link between client and server
+     *
      * @throws IOException : When getting the instance of the SlyxSocket (singleton)
      */
     public void disconnect() throws IOException {
@@ -126,6 +129,7 @@ public class SlyxController {
 
     /**
      * Initialize all components of the Slyx app : Contacts, user requests, events etc...
+     *
      * @throws IOException : When getting the instance of the SlyxSocket (singleton)
      */
     public void initialize() throws IOException {
@@ -143,6 +147,7 @@ public class SlyxController {
 
         // Set my informations
         User me = slyxSocket.getMe();
+
         Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/myProfile.fxml"));
         p.getStylesheets().add(getClass().getResource("/slyx/css/myProfile.css").toExternalForm());
         ((ImageView) p.lookup("#imageView_myImage")).setImage(new Image(me.getPicture()));
@@ -154,6 +159,7 @@ public class SlyxController {
 
     /**
      * Call the refresh functions in the Slyx app window
+     *
      * @param slyxSocket : Instance of SlyxSocket (singleton)
      * @throws IOException : When refreshContacts() or refreshContactRequests() calls
      */
@@ -186,6 +192,7 @@ public class SlyxController {
 
     /**
      * Load the view of a contact and add it to contact list with specific user informations
+     *
      * @param u : The user to print in contact list
      * @throws IOException : On FXMLLoader.load(...) call
      */
@@ -219,6 +226,19 @@ public class SlyxController {
                     ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
                     ((Label) p.lookup("#label_email")).setText(u.getEmail());
                     ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
+
+                    if (!u.isConnected()) {
+                        p.lookup("#button_call_contact").setDisable(true);
+                    } else {
+                        p.lookup("#button_call_contact").setOnMouseClicked(new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent event) {
+                                slyxSocket.sendCallContactRequest(slyxSocket.getMe().getId(), u.getId());
+                            }
+                        });
+                    }
+
+                    p.lookup("#button_remove_contact").setOnMouseClicked(event13 -> slyxSocket.sendRemoveContactOfContactList(u.getId()));
 
                     // Add in scene
                     anchorPane_right.getChildren().clear();
@@ -254,20 +274,28 @@ public class SlyxController {
                     for (Message m : messages) {
                         putInVBoxMessages(m);
                     }
-                    scrollPane_messages.setVvalue(1);
-
                     Timeline timeline = new Timeline(new KeyFrame(
-                            Duration.millis(1000),
+                            Duration.millis(500),
                             ae -> {
                                 try {
+                                    boolean toPutAtEnd = false;
                                     if (!u.hashMapNewMessages.isEmpty()) {
+                                        toPutAtEnd = true;
                                         Message[] messagesOfContact = u.getNewMessages();
                                         for (Message m : messagesOfContact) {
                                             putInVBoxMessages(m);
                                             u.removeNewMessage(m.getId());
-                                            scrollPane_messages.setVvalue(1);
                                         }
                                     }
+                                    if (toPutAtEnd) {
+                                        try {
+                                            Thread.sleep(10);
+                                            scrollPane_messages.setVvalue(1);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
                                 } catch (IOException e) {
                                     System.out.println(e.getMessage());
                                 }
@@ -284,6 +312,7 @@ public class SlyxController {
 
     /**
      * Refresh the contact list
+     *
      * @throws IOException : When getting the instance of the SlyxSocket (singleton)
      */
     public void refreshContacts() throws IOException {
@@ -323,6 +352,7 @@ public class SlyxController {
 
     /**
      * Refresh the user requests in the Requests Tab
+     *
      * @throws IOException : When getting the instance of the SlyxSocket (singleton)
      */
     private void refreshContactRequests() throws IOException {
@@ -357,6 +387,7 @@ public class SlyxController {
 
     /**
      * Add a specific message to the message list (VBox)
+     *
      * @param m : Message to print
      * @throws IOException : On FXMLLoader.load(...) call
      */
@@ -377,5 +408,6 @@ public class SlyxController {
             ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
             vBox_messages.getChildren().add(np);
         }
+        scrollPane_messages.setVvalue(1);
     }
 }

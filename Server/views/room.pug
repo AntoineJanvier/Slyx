@@ -8,3 +8,8 @@ html
             div#l-video
         div.pure-u-4-5#r-video
         script(src="https://cdn.jsdelivr.net/rtc/latest/rtc.min.js")
+        - rtc = RTC({room: 'room/' + json.from + '/' + json.to + '/',signaller: 'https://switchboard.rtc.io/'});
+//        - var localVideo = document.getElementById('l-video');
+//        - var remoteVideo = document.getElementById('r-video');
+//        - localVideo.appendChild(rtc.local);
+//        - remoteVideo.appendChild(rtc.remote);
