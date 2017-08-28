@@ -284,16 +284,11 @@ public class SlyxController {
                                         Message[] messagesOfContact = u.getNewMessages();
                                         for (Message m : messagesOfContact) {
                                             putInVBoxMessages(m);
-                                            u.removeNewMessage(m.getId());
+                                            u.removeNewMessage(m);
                                         }
                                     }
                                     if (toPutAtEnd) {
-                                        try {
-                                            Thread.sleep(10);
-                                            scrollPane_messages.setVvalue(1);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
+                                        scrollPane_messages.setVvalue(1);
                                     }
 
                                 } catch (IOException e) {
