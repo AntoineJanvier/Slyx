@@ -234,6 +234,19 @@ public class SlyxController {
                             @Override
                             public void handle(MouseEvent event) {
                                 slyxSocket.sendCallContactRequest(slyxSocket.getMe().getId(), u.getId());
+                                try {
+                                    Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/callWindow.fxml"));
+                                    next_root.getStylesheets().add(getClass().getResource("/slyx/css/callWindow.css").toExternalForm());
+                                    ((Label) next_root.lookup("#label_from")).setText(slyxSocket.getMe().getId() + "");
+                                    ((Label) next_root.lookup("#label_to")).setText(u.getId() + "");
+                                    Stage next_stage = new Stage();
+                                    next_stage.setTitle("Calling " + u.getFirstname() + "...");
+                                    next_stage.setScene(new Scene(next_root));
+                                    next_stage.show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         });
                     }
