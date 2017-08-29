@@ -31,6 +31,9 @@ router.get('/room/:from/:to/', function (req, res) {
         return User.find({
             where: {userid: parseInt(req.params.to)}
         }).then(user2 => {
+            peer.on('open', function(id) {
+                console.log('My peer ID is: ' + id);
+            });
             res.render('room', {
                 title: 'Call between ' + user1.first_name + ' and ' + user2.first_name,
                 u1: user1,

@@ -16,10 +16,10 @@ module.exports = {
                 }).then(contact => {
                     return Contact.create({
                         user: u1.userid, contact: u2.userid, status: 'ACCEPTED'
-                    }).then(n_contact => {
+                    }).then(() => {
                         return contact.update({status: 'ACCEPTED'}, {fields: ['status']
-                        }).then(c => {
-                            let resp = u2.responsify();
+                        }).then(() => {
+                            let resp = u1.responsify();
                             resp.ACTION = 'CONTACT_REQUEST_ACCEPTED';
                             send.toClient(clients, u2.userid, JSON.stringify(resp));
                         });

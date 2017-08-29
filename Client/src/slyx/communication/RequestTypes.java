@@ -1,10 +1,14 @@
 package slyx.communication;
 
-/**
+/*
  * Created by Antoine Janvier
  * on 04/08/17.
  */
-public class RequestTypes {
+
+/**
+ * This class serves as a formatter of request that will be transmitted in the socket link to the server
+ */
+class RequestTypes {
     // Login
     final static String CONNECTION_REQUEST = "CONNECTION";
     final static String DISCONNECTION_REQUEST = "DISCONNECTION";

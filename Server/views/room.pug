@@ -7,8 +7,10 @@ html
         div.pure-u-1-5
             div#l-video
         div.pure-u-4-5#r-video
-        script(src="https://cdn.jsdelivr.net/rtc/latest/rtc.min.js")
-        - rtc = RTC({room: 'room/' + json.from + '/' + json.to + '/',signaller: 'https://switchboard.rtc.io/'});
+        script(src="http://cdn.peerjs.com/0.3/peer.min.js")
+        - var peer = new Peer({key: 'y4hmxzxfng7m0a4i'});
+        //script(src="https://cdn.jsdelivr.net/rtc/latest/rtc.min.js")
+//        - rtc = RTC({room: 'room/' + json.from + '/' + json.to + '/',signaller: 'https://switchboard.rtc.io/'});
 //        - var localVideo = document.getElementById('l-video');
 //        - var remoteVideo = document.getElementById('r-video');
 //        - localVideo.appendChild(rtc.local);

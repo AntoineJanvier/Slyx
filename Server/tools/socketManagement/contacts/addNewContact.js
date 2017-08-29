@@ -25,7 +25,7 @@ module.exports = {
                                     contact: user_requested.userid,
                                     status: 'PENDING'
                                 }).then(() => {
-                                    let j = user_requested.responsify();
+                                    let j = user.responsify();
                                     j.ACTION = "CONTACT_REQUEST";
                                     send.toClient(clients, user_requested.userid, JSON.stringify(j));
                                 }).catch(err => {

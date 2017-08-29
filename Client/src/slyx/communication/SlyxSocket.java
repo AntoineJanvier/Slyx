@@ -25,17 +25,24 @@ public class SlyxSocket extends Thread {
 
     private User me;
     private HashMap<Integer, User> contacts = new HashMap<>();
-    public boolean hasNewConnection = false;
+    public boolean needToRefreshContacts = false;
 
     private static HashMap<Integer, User> otherUsers = new HashMap<>();
 
     private static HashMap<Integer, User> userRequests = new HashMap<>();
+    public HashMap<Integer, Integer> listOfContactWhoHasNewMessages = new HashMap<>();
     public boolean hasNewPendingRequest = false;
 
     private static String version = null;
 
     private static SlyxSocket instance = null;
 
+    public int idOfCurrentContactPrinted = 0;
+    public boolean needToClearCurrent = false;
+
+    /**
+     * Private construstor, called only if the instance of this object is null
+     */
     private SlyxSocket() {
         try {
             this.socket = new Socket(getIpAddress(), getPort());
@@ -51,12 +58,20 @@ public class SlyxSocket extends Thread {
         this.start();
     }
 
+    /**
+     * Instance getter of SlyxSocket, if instance is null, create a new one
+     * @return An instance of SlyxSocket (socket connected to server)
+     * @throws IOException In case of connection is not possible
+     */
     public static synchronized SlyxSocket getInstance() throws IOException {
         if (instance == null)
             instance = new SlyxSocket();
         return instance;
     }
 
+    /**
+     * The threaded comportment of the threaded socket
+     */
     public void run() {
         while (!this.isInterrupted()) {
             String serverResponse = null;
@@ -86,13 +101,17 @@ public class SlyxSocket extends Thread {
                                 version = j.get("version").toString();
                                 break;
                             case "MESSAGE_INCOMING":
-                                SlyxSound.playSound("NOTIFICATION");
                                 User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
                                 Date d = new Date();
                                 contacts.get(uFrom.getId()).addNewMessage(
                                         Integer.parseInt(j.get("MESSAGE_ID").toString()), uFrom, this.me.getId(),
                                         j.get("CONTENT").toString(), d, "IN"
                                 );
+                                if (uFrom.getId() != idOfCurrentContactPrinted) {
+                                    SlyxSound.playSound("NOTIFICATION");
+                                    needToRefreshContacts = true;
+                                } else
+                                    listOfContactWhoHasNewMessages.put(uFrom.getId(), uFrom.getId());
                                 break;
                             case "CALL_INCOMING":
                                 System.out.println("CALL_INCOMING");
@@ -146,7 +165,8 @@ public class SlyxSocket extends Thread {
                                 User[] pendingRequests = arrayJsonParser.getUsers();
                                 for (User u : pendingRequests)
                                     userRequests.put(u.getId(), u);
-                                hasNewPendingRequest = true;
+                                if (pendingRequests.length > 0)
+                                    hasNewPendingRequest = true;
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
@@ -169,19 +189,24 @@ public class SlyxSocket extends Thread {
                                 );
                                 user.setConnected(Boolean.valueOf(j.get("connected").toString()));
                                 addNewContact(user);
+                                needToRefreshContacts = true;
                                 break;
                             case "CONTACT_CONNECTION":
                                 User toConnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
                                 toConnect.setConnected(true);
-                                hasNewConnection = true;
+                                needToRefreshContacts = true;
                                 break;
                             case "CONTACT_DISCONNECTION":
                                 User toDisconnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
                                 toDisconnect.setConnected(false);
-                                hasNewConnection = true;
+                                needToRefreshContacts = true;
                                 break;
                             case "CONTACT_REMOVE":
-                                hasNewConnection = true;
+                                needToRefreshContacts = true;
+                                if (Integer.parseInt(j.get("USER_A").toString()) == idOfCurrentContactPrinted
+                                        || Integer.parseInt(j.get("USER_B").toString()) == idOfCurrentContactPrinted) {
+                                    needToClearCurrent = true;
+                                }
                                 break;
                             default:
                                 System.out.println("Unknown ACTION...");
@@ -198,6 +223,11 @@ public class SlyxSocket extends Thread {
         }
     }
 
+    /**
+     * Send a message to a specific user
+     * @param content Message content
+     * @param to Recipient
+     */
     public void sendMessage(String content, User to) {
         if (content.length() > 0) {
             writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
@@ -206,32 +236,85 @@ public class SlyxSocket extends Thread {
             );
         }
     }
-    public void sendGetContactsRequest(User user) {
-        writeInSocket(SocketSender_sendGetContactsRequest(user.getId()));
+
+    /**
+     * Send a get contact request to server, it will answer later
+     */
+    public void sendGetContactsRequest() {
+        writeInSocket(SocketSender_sendGetContactsRequest(this.me.getId()));
     }
+
+    /**
+     * Send an add contact request to server, it will answer later
+     * @param userID User to add as a new contact
+     */
     public void sendAddContactRequest(int userID) {
         writeInSocket(SocketSender_sendAddContactRequest(this.me.getId(), userID));
     }
-    // TODO : Test sendRejectContactRequest
+
+    /**
+     * Send a reject contact request to server, it will answer later
+     * @param userID User to reject from requests
+     */
     public void sendRejectContactRequest(int userID) {
         writeInSocket(SocketSender_sendRejectContactRequest(this.me.getId(), userID));
     }
+
+    /**
+     * Send an accept contact request to server, it will answer later
+     * @param userID User to accept as new contact
+     */
     public void sendAcceptContactRequest(int userID) {
         writeInSocket(SocketSender_sendAcceptContactRequest(this.me.getId(), userID));
     }
+
+    /**
+     * Send a get user request to server, it will answer later
+     * @param user Me
+     */
     public void sendGetUsersNotInContactList(User user) {
         writeInSocket(SocketSender_sendGetUsersNotInContactList(user.getId()));
     }
-    public void sendGetPendingContactRequests(User user) { writeInSocket(SocketSender_sendGetPendingContactRequests(user.getId())); }
+
+    /**
+     * Send a get pending contact request to server, it will answer later
+     */
+    public void sendGetPendingContactRequests() { writeInSocket(SocketSender_sendGetPendingContactRequests(this.me.getId())); }
+
+    /**
+     * Send a get message of contact request to server, it will answer later
+     * @param user Me
+     * @param to We want messages of this contact
+     */
     public void sendGetMessagesOfContactRequest(User user, User to) {
         writeInSocket(SocketSender_sendGetMessagesOfContactRequest(user.getId(), to.getId()));
     }
+
+    /**
+     * Send an ask version request to server, it will answer later
+     */
     public void sendAskVersion() {
         writeInSocket(SocketSender_sendAskVersion());
     }
+
+    /**
+     * Send an ask connection request to server, it will answer later
+     * @param email Email of user
+     * @param password Password of user
+     */
     public void sendAskConnection(String email, String password) {
         writeInSocket(SocketSender_sendAskConnection(email, password));
     }
+
+    /**
+     * Send an update settings request to server, it will answer later
+     * @param sounds CheckBox to mute/unmute general sounds
+     * @param volume Slider (0 to 100 percent) for general sounds
+     * @param notifications CheckBox to have sounds in case of notification
+     * @param calls CheckBox to have sounds in case of incoming call
+     * @param messages CheckBox to have sounds in case of incoming message
+     * @param connections CheckBox to have sounds in case of contact connections
+     */
     public void sendUpdateMySettings(boolean sounds, int volume, boolean notifications,
                                      boolean calls, boolean messages, boolean connections) {
         writeInSocket(
@@ -246,17 +329,38 @@ public class SlyxSocket extends Thread {
         this.me.setSetting_messages(messages);
         this.me.setSetting_connections(connections);
     }
+
+    /**
+     * Send a remove contact request to server, it will answer later
+     * @param userID User to remove of contact list
+     */
     public void sendRemoveContactOfContactList(int userID) {
         writeInSocket(SocketSender_sendRemoveContactOfContactList(this.me.getId(), userID));
     }
+
+    /**
+     * Send a call contact request to server, it will answer later
+     * @param from User who want to launch a call
+     * @param to User who will be called
+     */
     public void sendCallContactRequest(int from, int to) {
         writeInSocket(SocketSender_sendCallContactRequest(from, to));
     }
 
+    /**
+     * Send an message to the server by the printWriter
+     * @param message Message content
+     */
     private void writeInSocket(String message) {
          System.out.println("\nSending : " + message);
         printWriter.println(message);
     }
+
+    /**
+     * Listen incoming messages of the server by the bufferedReader
+     * @return The message sent by the server
+     * @throws IOException In case of the reader has a problem (closed for example)
+     */
     private String listenInSocket() throws IOException {
         try {
             String s = bufferedReader.readLine();
@@ -268,10 +372,18 @@ public class SlyxSocket extends Thread {
         }
         return null;
     }
+
+    /**
+     * Send a disconnection request to the server
+     */
     public void sendDisconnectionEvent() {
         writeInSocket(SocketSender_sendDisconnectionEvent(this.me.getId()));
     }
 
+    /**
+     * Close all processes in this instance and set the instance and the connected user to null
+     * @throws IOException In case of problem while closing or interrupting socket
+     */
     public void close() throws IOException {
         this.interrupt();
         socket.close();
@@ -280,19 +392,69 @@ public class SlyxSocket extends Thread {
         instance = new SlyxSocket();
         this.me = null;
     }
+
+    /**
+     * Get the IP address of the socket server
+     * @return IP address of the socket server
+     */
     private String getIpAddress() {
         return "127.0.0.1";
     }
+
+    /**
+     * Get the port of the socket server
+     * @return The port of the socket server
+     */
     private int getPort() {
         return 3895;
     }
+
+    /**
+     * Get the connected user
+     * @return The connected user
+     */
     public User getMe() { return this.me; }
+
+    /**
+     * Set the connected user
+     * @param me User object to set as connected
+     */
     public void setMe(User me) { this.me = me; }
+
+    /**
+     * Get the version of the application
+     * @return The version of the application or 0.0.0 in case of the server hasn't told it to the app
+     */
     public static String getVersion() { return version != null ? version : "0.0.0"; }
+
+    /**
+     * Get contacts
+     * @return The hashMap of contacts
+     */
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
+
+    /**
+     * Add a contact to contact list
+     * @param u User to add in contact list
+     */
     private void addNewContact(User u) {
         contacts.put(u.getId(), u);
     }
+
+    /**
+     * Remove a user of contact requests list
+     * @param user User to remove of contact requests
+     */
+    public void removeContactRequest(User user) {
+        if (userRequests.containsKey(user.getId())) {
+            userRequests.remove(user.getId());
+        }
+    }
+
+    /**
+     * Get an array of contacts of contact list
+     * @return The hashmap of contacts as an array
+     */
     public User[] getContacts() {
         User[] users = new User[contacts.size()];
         int counter = 0;
@@ -300,6 +462,11 @@ public class SlyxSocket extends Thread {
             users[counter++] = u;
         return users;
     }
+
+    /**
+     * Get an array of contacts who are not in contact list
+     * @return The hashmap of users as an array
+     */
     public User[] getOtherUsers() {
         User[] users = new User[otherUsers.size()];
         int counter = 0;
@@ -307,6 +474,11 @@ public class SlyxSocket extends Thread {
             users[counter++] = u;
         return users;
     }
+
+    /**
+     * Get an array of contact requests
+     * @return The hashmap of requests
+     */
     public User[] getUserRequests() {
         User[] users = new User[userRequests.size()];
         int counter = 0;
@@ -314,6 +486,12 @@ public class SlyxSocket extends Thread {
             users[counter++] = u;
         return users;
     }
+
+    /**
+     * Get messages of a specific contact
+     * @param contact We want to get messages of this contact
+     * @return An array of messages
+     */
     public Message[] getMessagesOfContact(User contact) {
         Message[] messages = new Message[contacts.get(contact.getId()).getMessages().size()];
         int counter = 0;

@@ -148,15 +148,25 @@ nodenet.createServer(function (socket) {
     socket.on('close', function () {
         for (let i = 0; i < clients.length; i++) {
             if (clients[i].socketId === socket.socketId) {
-                User.find({where: {
-                    userid: clients[i].User.id
-                }}).then(user => {
-                    return user.update({connected: false}, {fields: ['connected']
-                    }).then(user => {
-                        console.log(user.first_name + ' ' + user.last_name + ' disconnected');
-                        clients.splice(i, 1);
-                    });
-                })
+                if (clients[i].User) {
+                    User.find({where: {
+                        userid: clients[i].User.id
+                    }}).then(user => {
+                        return user.update({connected: false}, {fields: ['connected']
+                        }).then(user => {
+                            console.log(user.first_name + ' ' + user.last_name + ' disconnected');
+                            clients.splice(i, 1);
+                        });
+                    }).catch(err => {
+                        console.log('User can\'t be modified...');
+                        throw err;
+                    })
+                } else {
+                    console.log('Removing ' + clients[i].socketId + ' from clients...');
+                    let a = clients.length;
+                    clients.splice(i, 1);
+                    console.log(a > clients.length ? 'Done !' : 'Error while removing client from client list...');
+                }
             }
         }
         console.log('SOCKET_CLOSED');

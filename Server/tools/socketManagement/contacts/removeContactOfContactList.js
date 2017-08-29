@@ -22,7 +22,9 @@ module.exports = {
                             return contact2.destroy().then(() => {
                                 let r = [user.userid, userToRemove.userid];
                                 send.toClients(clients, r, JSON.stringify({
-                                    ACTION: 'CONTACT_REMOVE'
+                                    ACTION: 'CONTACT_REMOVE',
+                                    USER_A: user.userid,
+                                    USER_B: userToRemove.userid
                                 }));
                             })
                         })

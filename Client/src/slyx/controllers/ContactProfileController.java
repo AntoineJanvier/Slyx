@@ -22,10 +22,6 @@ public class ContactProfileController {
     @FXML
     Button button_call_contact;
 
-    public void callContact() {
-        // TODO : Call contact
-    }
-
     public void initialize() {
     }
 }

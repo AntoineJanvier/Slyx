@@ -1,0 +1,11 @@
+#label_myName {
+    -fx-font-size: 20px;
+}
+
+#label_myEmail {
+    -fx-font-style: italic;
+}
+
+#imageView_myImage {
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}

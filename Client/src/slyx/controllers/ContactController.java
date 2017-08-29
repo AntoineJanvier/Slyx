@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 
 
 /**
@@ -19,8 +20,6 @@ public class ContactController {
     Label label_firstname;
     @FXML
     Label label_lastname;
-
-    public void initialize() {
-        // TODO : Get if contact is connected
-    }
+    @FXML
+    Circle circle_notifications;
 }
