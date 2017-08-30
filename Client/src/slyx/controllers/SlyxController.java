@@ -71,7 +71,6 @@ public class SlyxController {
     @FXML
     Label label_my_email;
 
-
     /**
      * Launch the window where user can add a new contact
      * @throws IOException : When FXMLLoader.load(...) fail
@@ -168,10 +167,7 @@ public class SlyxController {
                 Duration.millis(1000),
                 ae -> {
                     if (slyxSocket.hasNewPendingRequest) {
-                        vBox_request.getChildren().clear();
-                        for (Node observable : vBox_request.getChildren()) {
-                            vBox_request.getChildren().remove(observable);
-                        }
+                        slyxSocket.clearVBox(vBox_request);
                         slyxSocket.needToRefreshContacts = false;
                     }
                 }));
@@ -202,10 +198,7 @@ public class SlyxController {
 
         // Set all contacts in the contact area
         User[] contacts = slyxSocket.getContacts();
-        vBox_left.getChildren().clear();
-        for (Node observable : vBox_left.getChildren()) {
-            vBox_left.getChildren().remove(observable);
-        }
+        slyxSocket.clearVBox(vBox_left);
         for (User u : contacts) {
             refreshContactsInContactList(u);
         }
@@ -214,10 +207,7 @@ public class SlyxController {
                 ae -> {
                     try {
                         if (slyxSocket.needToRefreshContacts) {
-                            vBox_left.getChildren().clear();
-                            for (Node observable : vBox_left.getChildren()) {
-                                vBox_left.getChildren().remove(observable);
-                            }
+                            slyxSocket.clearVBox(vBox_left);
                             User[] users = slyxSocket.getContacts();
                             for (User u : users) {
                                 refreshContactsInContactList(u);
@@ -230,10 +220,7 @@ public class SlyxController {
                     }
                     if (slyxSocket.needToClearCurrent) {
                         slyxSocket.needToClearCurrent = false;
-                        vBox_messages.getChildren().clear();
-                        for (Node observable : vBox_messages.getChildren()) {
-                            vBox_messages.getChildren().remove(observable);
-                        }
+                        slyxSocket.clearVBox(vBox_messages);
                         anchorPane_right.getChildren().clear();
                     }
                 }));
@@ -250,9 +237,7 @@ public class SlyxController {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
         // Clear vBox_request
-        vBox_request.getChildren().clear();
-        for (Node observable : vBox_request.getChildren())
-            vBox_request.getChildren().remove(observable);
+        slyxSocket.clearVBox(vBox_request);
 
         // Add refresh when new request income
         Timeline timeline = new Timeline(new KeyFrame(
@@ -260,9 +245,7 @@ public class SlyxController {
                 ae -> {
                     try {
                         if (slyxSocket.hasNewPendingRequest) {
-                            vBox_request.getChildren().clear();
-                            for (Node observable : vBox_request.getChildren())
-                                vBox_request.getChildren().remove(observable);
+                            slyxSocket.clearVBox(vBox_request);
                             for (User u : slyxSocket.getUserRequests()) {
                                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
                                 Parent p = fxmlLoader.load();

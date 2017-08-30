@@ -1,5 +1,7 @@
 package slyx.communication;
 
+import javafx.scene.Node;
+import javafx.scene.layout.VBox;
 import slyx.exceptions.SocketClosedException;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
@@ -499,4 +501,12 @@ public class SlyxSocket extends Thread {
             messages[counter++] = m;
         return messages;
     }
+
+    public void clearVBox(VBox vBox) {
+        vBox.getChildren().clear();
+        for (Node observable : vBox.getChildren()) {
+            vBox.getChildren().remove(observable);
+        }
+    }
+
 }

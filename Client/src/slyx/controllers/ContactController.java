@@ -111,16 +111,8 @@ public class ContactController {
                             }
                         });
 
-                        vBox.getChildren().clear();
-                        for (Node observable : vBox.getChildren()) {
-                            vBox.getChildren().remove(observable);
-                        }
-
                         Message[] messages = slyxSocket.getMessagesOfContact(user);
-                        vBox.getChildren().clear();
-                        for (Node observable : vBox.getChildren()) {
-                            vBox.getChildren().remove(observable);
-                        }
+                        slyxSocket.clearVBox(vBox);
                         for (Message message : messages) {
                             putInVBoxMessages(message, vBox, scrollPane);
                         }
