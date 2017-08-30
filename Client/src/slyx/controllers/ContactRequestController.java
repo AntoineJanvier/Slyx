@@ -27,19 +27,29 @@ public class ContactRequestController {
     @FXML
     Button button_add_accept_request;
 
-    void setWithUser(User user) {
+    void setWithUser(User user, boolean before) {
         label_name.setText(user.getFirstname() + " " + user.getLastname());
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
-            button_reject_request.setOnMouseClicked(event -> {
-                slyxSocket.sendRejectContactRequest(user.getId());
-                slyxSocket.removeContactRequest(user);
-            });
+            if (!before) {
+                button_reject_request.setOnMouseClicked(event -> {
+                    slyxSocket.sendRejectContactRequest(user.getId());
+                    slyxSocket.removeContactRequest(user);
+                    anchorPane_contact.setVisible(false);
+                });
+            } else {
+                button_reject_request.setVisible(false);
+            }
             button_add_accept_request.setOnMouseClicked(event -> {
-                slyxSocket.sendAcceptContactRequest(user.getId());
+                if (before) {
+                    slyxSocket.sendAddContactRequest(user.getId());
+                } else {
+                    slyxSocket.sendAcceptContactRequest(user.getId());
+                    slyxSocket.removeContactRequest(user);
+                    slyxSocket.sendGetPendingContactRequests();
+                }
+                anchorPane_contact.setVisible(false);
                 slyxSocket.needToRefreshContacts = true;
-                slyxSocket.removeContactRequest(user);
-                slyxSocket.sendGetPendingContactRequests();
             });
         } catch (IOException e) {
             e.printStackTrace();

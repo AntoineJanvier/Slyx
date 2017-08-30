@@ -43,19 +43,11 @@ public class AddContactController {
         slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
         User[] contacts = slyxSocket.getOtherUsers();
         for (User u : contacts) {
-            Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
-            ((Label) p.lookup("#label_name")).setText(u.getFirstname() + " " + u.getLastname());
-
-            p.lookup("#button_reject_request").setVisible(false);
-
-            Button button_Add = (Button) p.lookup("#button_add_accept_request");
-            button_Add.setOnAction(event -> {
-                slyxSocket.sendAddContactRequest(u.getId());
-                p.setDisable(true);
-                button_Add.setDisable(true);
-            });
-
-            vBox_in_scrollPane.getChildren().add(p);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
+            Parent parent = fxmlLoader.load();
+            ContactRequestController contactRequestController = fxmlLoader.getController();
+            contactRequestController.setWithUser(u, true);
+            vBox_in_scrollPane.getChildren().add(parent);
         }
     }
 }

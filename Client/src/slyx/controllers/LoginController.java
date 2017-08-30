@@ -82,11 +82,11 @@ public class LoginController {
 
                     // Launch app window
                     try {
-                        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/slyx.fxml"));
-                        next_root.getStylesheets().add(getClass().getResource("/slyx/css/slyx.css").toExternalForm());
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/slyx.fxml"));
+                        Parent parent = fxmlLoader.load();
                         Stage next_stage = new Stage();
                         next_stage.setTitle("Slyx");
-                        next_stage.setScene(new Scene(next_root));
+                        next_stage.setScene(new Scene(parent));
                         next_stage.show();
                     } catch (IOException e) {
                         System.out.println("FXMLLoader.load(...) error");

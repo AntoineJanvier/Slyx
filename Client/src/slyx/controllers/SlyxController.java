@@ -78,11 +78,10 @@ public class SlyxController {
      */
     private void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
-        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/addContact.fxml"));
-        next_root.getStylesheets().add(getClass().getResource("/slyx/css/addContact.css").toExternalForm());
+        Parent parent = FXMLLoader.load(getClass().getResource("/slyx/scenes/addContact.fxml"));
         Stage next_stage = new Stage();
         next_stage.setTitle("Add Contact");
-        next_stage.setScene(new Scene(next_root));
+        next_stage.setScene(new Scene(parent));
         next_stage.show();
     }
 
@@ -92,11 +91,10 @@ public class SlyxController {
      */
     public void launchSettingsWindow() throws IOException {
         // Launch Settings window
-        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/settings.fxml"));
-        next_root.getStylesheets().add(getClass().getResource("/slyx/css/settings.css").toExternalForm());
+        Parent parent = FXMLLoader.load(getClass().getResource("/slyx/scenes/settings.fxml"));
         Stage next_stage = new Stage();
         next_stage.setTitle("Settings");
-        next_stage.setScene(new Scene(next_root));
+        next_stage.setScene(new Scene(parent));
         next_stage.show();
     }
 
@@ -109,13 +107,12 @@ public class SlyxController {
         slyxSocket.sendDisconnectionEvent();
         slyxSocket.setMe(null);
 
-        Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
-        next_root.getStylesheets().add(getClass().getResource("/slyx/css/login.css").toExternalForm());
+        Parent parent = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         Stage stage = (Stage) btn_disconnection.getScene().getWindow();
         stage.close();
         Stage next_stage = new Stage();
         next_stage.setTitle("Slyx");
-        next_stage.setScene(new Scene(next_root));
+        next_stage.setScene(new Scene(parent));
         next_stage.show();
     }
 
@@ -270,7 +267,7 @@ public class SlyxController {
                                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
                                 Parent p = fxmlLoader.load();
                                 ContactRequestController contactRequestController = fxmlLoader.getController();
-                                contactRequestController.setWithUser(u);
+                                contactRequestController.setWithUser(u, false);
                                 vBox_request.getChildren().add(p);
                             }
                             slyxSocket.hasNewPendingRequest = false;
