@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import slyx.Version;
 import slyx.communication.SlyxSocket;
-import slyx.utils.User;
 import slyx.validators.Validator;
 
 import java.io.IOException;
@@ -99,6 +98,9 @@ public class LoginController {
         }
     }
     public void initialize() {
+        // CSS
+        anchorPane_general
+                .getStylesheets().add(getClass().getResource("/slyx/css/login.css").toExternalForm());
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             label_get_update.setText("Checking updates...");
@@ -107,9 +109,7 @@ public class LoginController {
 
             Timeline timeline = new Timeline(new KeyFrame(
                     Duration.millis(1000),
-                    ae -> {
-                        initSetUpdateLabel(SlyxSocket.getVersion().split("\\."));
-                    }));
+                    ae -> initSetUpdateLabel(SlyxSocket.getVersion().split("\\."))));
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
 

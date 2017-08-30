@@ -19,7 +19,7 @@
                 <Font size="12.0" />
             </font>
         </Label>
-      <Button fx:id="button_reject_request" layoutX="187.0" layoutY="19.0" mnemonicParsing="false" text="X" />
-      <Button fx:id="button_add_accept_request" layoutX="217.0" layoutY="19.0" mnemonicParsing="false" text="+" />
+      <Button fx:id="button_reject_request" layoutX="215.0" layoutY="19.0" mnemonicParsing="false" text="X" />
+      <Button fx:id="button_add_accept_request" layoutX="181.0" layoutY="19.0" mnemonicParsing="false" text="+" />
     </children>
 </AnchorPane>

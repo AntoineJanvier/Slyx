@@ -23,7 +23,6 @@ const Contact = models.Contact;
 let port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 const socketPort = 3895;
-const rtcPort = 3896;
 
 app.set('navigator', navigator);
 
@@ -54,7 +53,7 @@ nodenet.createServer(function (socket) {
 
     socket.socketId = nb_clients;
 
-    console.log(clients.length + ' clients connected');
+    console.log('New client connected ! Total of ' + clients.length);
 
     socket.on('data', function (data) {
         data = data.split('\n');
@@ -156,6 +155,7 @@ nodenet.createServer(function (socket) {
                         }).then(user => {
                             console.log(user.first_name + ' ' + user.last_name + ' disconnected');
                             clients.splice(i, 1);
+                            console.log(clients.length + ' clients connected');
                         });
                     }).catch(err => {
                         console.log('User can\'t be modified...');
@@ -166,10 +166,10 @@ nodenet.createServer(function (socket) {
                     let a = clients.length;
                     clients.splice(i, 1);
                     console.log(a > clients.length ? 'Done !' : 'Error while removing client from client list...');
+                    console.log(clients.length + ' clients connected');
                 }
             }
         }
-        console.log('SOCKET_CLOSED');
     });
 
     socket.on('error', function (err) {

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="598.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactProfileController">
+<AnchorPane fx:id="anchorPane_contactProfile" prefHeight="598.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.ContactProfileController">
    <children>
       <ImageView fx:id="imageView_contact_icon" fitHeight="100.0" fitWidth="124.0" layoutX="47.0" layoutY="25.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" AnchorPane.topAnchor="25.0" />
       <Label fx:id="label_firstname" alignment="CENTER" contentDisplay="CENTER" layoutY="137.0" prefWidth="200.0" text="Firstname" textAlignment="CENTER" />

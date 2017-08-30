@@ -3,17 +3,13 @@ package slyx.controllers;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -21,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import slyx.communication.SlyxSocket;
-import slyx.utils.Message;
 import slyx.utils.SlyxSound;
 import slyx.utils.User;
 
@@ -81,7 +76,7 @@ public class SlyxController {
      * Launch the window where user can add a new contact
      * @throws IOException : When FXMLLoader.load(...) fail
      */
-    public void launchAddNewContactWindow() throws IOException {
+    private void launchAddNewContactWindow() throws IOException {
         // Launch Settings window
         Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/addContact.fxml"));
         next_root.getStylesheets().add(getClass().getResource("/slyx/css/addContact.css").toExternalForm());
@@ -129,9 +124,12 @@ public class SlyxController {
      * @throws IOException : When getting the instance of the SlyxSocket (singleton)
      */
     public void initialize() throws IOException {
-        SlyxSocket slyxSocket = SlyxSocket.getInstance();
-
         SlyxSound.playSound("LOGIN");
+
+        // Add CSS
+        borderPane_general.getStylesheets().add(getClass().getResource("/slyx/css/slyx.css").toExternalForm());
+
+        SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
         button_addNewContact.setOnMouseClicked(event -> {
             try {
@@ -144,11 +142,10 @@ public class SlyxController {
         // Set my informations
         User me = slyxSocket.getMe();
 
-        Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/myProfile.fxml"));
-        p.getStylesheets().add(getClass().getResource("/slyx/css/myProfile.css").toExternalForm());
-        ((ImageView) p.lookup("#imageView_myImage")).setImage(new Image(me.getPicture()));
-        ((Label) p.lookup("#label_myName")).setText(me.getFirstname() + " " + me.getLastname());
-        ((Label) p.lookup("#label_myEmail")).setText(me.getEmail());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/myProfile.fxml"));
+        Parent p = fxmlLoader.load();
+        MyProfileController myProfileController = fxmlLoader.getController();
+        myProfileController.setMe(me);
         anchorPane_top.getChildren().add(p);
 
         tf_message_to_send.setDisable(true);
@@ -187,157 +184,15 @@ public class SlyxController {
 
     /**
      * Load the view of a contact and add it to contact list with specific user informations
-     * @param u : The user to print in contact list
+     * @param user : The user to print in contact list
      * @throws IOException : On FXMLLoader.load(...) call
      */
-    private void refreshContactsInContactList(User u) throws IOException {
-        SlyxSocket slyxSocket = SlyxSocket.getInstance();
-        Parent parent = FXMLLoader.load(getClass().getResource("/slyx/scenes/contact.fxml"));
-        parent.getStylesheets().add(getClass().getResource("/slyx/css/contact.css").toExternalForm());
-        if (u.isConnected()) {
-            parent.lookup("#rect_connected").setStyle(
-                    "-fx-fill: green"
-            );
-        } else {
-            parent.lookup("#rect_connected").setStyle(
-                    "-fx-fill: red"
-            );
-        }
-        ((Label) parent.lookup("#label_firstname")).setText(u.getFirstname());
-        ((Label) parent.lookup("#label_lastname")).setText(u.getLastname());
-        ((ImageView) parent.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
+    private void refreshContactsInContactList(User user) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contact.fxml"));
+        Parent parent = fxmlLoader.load();
+        ContactController contactController = fxmlLoader.getController();
+        contactController.setContact(user, vBox_messages, tf_message_to_send, btn_send_message, anchorPane_right, scrollPane_messages);
 
-        if (slyxSocket.listOfContactWhoHasNewMessages.containsKey(u.getId())) {
-            parent.lookup("#circle_notifications").setVisible(true);
-        } else {
-            parent.lookup("#circle_notifications").setVisible(false);
-        }
-
-        parent.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                slyxSocket.idOfCurrentContactPrinted = u.getId();
-                slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), u);
-
-                if (parent.lookup("#circle_notifications").isVisible()) {
-                    parent.lookup("#circle_notifications").setVisible(false);
-                    slyxSocket.listOfContactWhoHasNewMessages.remove(u.getId());
-                    slyxSocket.needToRefreshContacts = true;
-                }
-
-                if (btn_send_message.isDisable())
-                    btn_send_message.setDisable(false);
-                if (tf_message_to_send.isDisable())
-                    tf_message_to_send.setDisable(false);
-
-                try {
-                    Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
-                    p.getStylesheets().add(getClass().getResource("/slyx/css/contactProfile.css").toExternalForm());
-
-                    // Set elements
-                    ((Label) p.lookup("#label_firstname")).setText(u.getFirstname());
-                    ((Label) p.lookup("#label_lastname")).setText(u.getLastname());
-                    ((Label) p.lookup("#label_email")).setText(u.getEmail());
-                    ((ImageView) p.lookup("#imageView_contact_icon")).setImage(new Image(u.getPicture()));
-
-                    if (!u.isConnected()) {
-                        p.lookup("#button_call_contact").setDisable(true);
-                    } else {
-                        p.lookup("#button_call_contact").setOnMouseClicked(new EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event) {
-                                slyxSocket.sendCallContactRequest(slyxSocket.getMe().getId(), u.getId());
-                                try {
-                                    Parent next_root = FXMLLoader.load(getClass().getResource("/slyx/scenes/callWindow.fxml"));
-                                    next_root.getStylesheets().add(getClass().getResource("/slyx/css/callWindow.css").toExternalForm());
-                                    ((Label) next_root.lookup("#label_from")).setText(slyxSocket.getMe().getId() + "");
-                                    ((Label) next_root.lookup("#label_to")).setText(u.getId() + "");
-                                    Stage next_stage = new Stage();
-                                    next_stage.setTitle("Calling " + u.getFirstname() + "...");
-                                    next_stage.setScene(new Scene(next_root));
-                                    next_stage.show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        });
-                    }
-
-                    p.lookup("#button_remove_contact").setOnMouseClicked(event13 -> {
-                        slyxSocket.sendRemoveContactOfContactList(u.getId());
-                        anchorPane_right.getChildren().clear();
-                        vBox_messages.getChildren().clear();
-                        for (Node observable : vBox_messages.getChildren()) {
-                            vBox_messages.getChildren().remove(observable);
-                        }
-                        tf_message_to_send.setDisable(true);
-                        btn_send_message.setDisable(true);
-                    });
-
-                    // Add in scene
-                    anchorPane_right.getChildren().clear();
-                    anchorPane_right.getChildren().add(p);
-
-                    btn_send_message.setOnMouseClicked(event1 -> {
-                        slyxSocket.sendMessage(
-                                tf_message_to_send.getText(),
-                                slyxSocket.getHashmapContacts().get(u.getId())
-                        );
-                        tf_message_to_send.setText("");
-                    });
-                    tf_message_to_send.setOnKeyPressed(event12 -> {
-                        if (event12.getCode().equals(KeyCode.ENTER)) {
-                            slyxSocket.sendMessage(
-                                    tf_message_to_send.getText(),
-                                    slyxSocket.getHashmapContacts().get(u.getId())
-                            );
-                            tf_message_to_send.setText("");
-                        }
-                    });
-
-                    vBox_messages.getChildren().clear();
-                    for (Node observable : vBox_messages.getChildren()) {
-                        vBox_messages.getChildren().remove(observable);
-                    }
-
-                    Message[] messages = slyxSocket.getMessagesOfContact(u);
-                    vBox_messages.getChildren().clear();
-                    for (Node observable : vBox_messages.getChildren()) {
-                        vBox_messages.getChildren().remove(observable);
-                    }
-                    for (Message m : messages) {
-                        putInVBoxMessages(m);
-                    }
-                    Timeline timeline = new Timeline(new KeyFrame(
-                            Duration.millis(500),
-                            ae -> {
-                                try {
-                                    boolean toPutAtEnd = false;
-                                    if (!u.hashMapNewMessages.isEmpty()) {
-                                        toPutAtEnd = true;
-                                        Message[] messagesOfContact = u.getNewMessages();
-                                        for (Message m : messagesOfContact) {
-                                            if (slyxSocket.idOfCurrentContactPrinted == u.getId())
-                                                putInVBoxMessages(m);
-                                            u.removeNewMessage(m);
-                                        }
-                                    }
-                                    if (toPutAtEnd) {
-                                        scrollPane_messages.setVvalue(1);
-                                    }
-
-                                } catch (IOException e) {
-                                    System.out.println(e.getMessage());
-                                }
-                            }));
-                    timeline.setCycleCount(Animation.INDEFINITE);
-                    timeline.play();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        });
         vBox_left.getChildren().add(parent);
     }
 
@@ -396,46 +251,26 @@ public class SlyxController {
     private void refreshContactRequests() throws IOException {
         // Set the contact request in PENDING state in the request area
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
+
+        // Clear vBox_request
         vBox_request.getChildren().clear();
-        for (Node observable : vBox_request.getChildren()) {
+        for (Node observable : vBox_request.getChildren())
             vBox_request.getChildren().remove(observable);
-        }
+
+        // Add refresh when new request income
         Timeline timeline = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
                     try {
                         if (slyxSocket.hasNewPendingRequest) {
                             vBox_request.getChildren().clear();
-                            for (Node observable : vBox_request.getChildren()) {
+                            for (Node observable : vBox_request.getChildren())
                                 vBox_request.getChildren().remove(observable);
-                            }
-                            User[] users = slyxSocket.getUserRequests();
-
-                            for (User u : users) {
-
-//                                ContactRequestController contactRequestController = new ContactRequestController();
-//                                contactRequestController.setWithUser(u);
-
-                                Parent p = FXMLLoader.load(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
-                                p.getStylesheets().add(getClass().getResource("/slyx/css/contact.css").toExternalForm());
-
-                                ((Label) p.lookup("#label_name")).setText(u.getFirstname() + " " + u.getLastname());
-
-                                p.lookup("#button_reject_request").setOnMouseClicked(event -> {
-                                    slyxSocket.sendRejectContactRequest(u.getId());
-                                    slyxSocket.removeContactRequest(u);
-                                });
-                                p.lookup("#button_add_accept_request").setOnMouseClicked(event -> {
-                                    slyxSocket.sendAcceptContactRequest(u.getId());
-                                    try {
-                                        Thread.sleep(10);
-                                    } catch (InterruptedException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                    slyxSocket.needToRefreshContacts = true;
-                                    slyxSocket.removeContactRequest(u);
-                                    slyxSocket.sendGetPendingContactRequests();
-                                });
+                            for (User u : slyxSocket.getUserRequests()) {
+                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactRequest.fxml"));
+                                Parent p = fxmlLoader.load();
+                                ContactRequestController contactRequestController = fxmlLoader.getController();
+                                contactRequestController.setWithUser(u);
                                 vBox_request.getChildren().add(p);
                             }
                             slyxSocket.hasNewPendingRequest = false;
@@ -447,30 +282,5 @@ public class SlyxController {
                 }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-    }
-
-    /**
-     * Add a specific message to the message list (VBox)
-     * @param m : Message to print
-     * @throws IOException : On FXMLLoader.load(...) call
-     */
-    private void putInVBoxMessages(Message m) throws IOException {
-        Parent np;
-        String in = getClass().getResource("/slyx/css/messageIn.css").toExternalForm();
-        String out = getClass().getResource("/slyx/css/messageOut.css").toExternalForm();
-        if ("IN".equals(m.getInOrOut())) {
-            np = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_in.fxml"));
-            np.getStylesheets().add(in);
-            ((Label) np.lookup("#label_content")).setText(m.getContent());
-            ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
-            vBox_messages.getChildren().add(np);
-        } else {
-            np = FXMLLoader.load(getClass().getResource("/slyx/scenes/message_out.fxml"));
-            np.getStylesheets().add(out);
-            ((Label) np.lookup("#label_content")).setText(m.getContent());
-            ((Label) np.lookup("#label_date")).setText("Sent at : " + m.getSent().toString());
-            vBox_messages.getChildren().add(np);
-        }
-        scrollPane_messages.setVvalue(1);
     }
 }

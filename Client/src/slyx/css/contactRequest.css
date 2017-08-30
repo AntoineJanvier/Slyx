@@ -1,0 +1,10 @@
+#button_add_accept_request {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: linear-gradient(to bottom, #17ff00 0, #10ad00 100%);
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}
+#button_reject_request {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: linear-gradient(to bottom, #ff0000 0, #b10000 100%);
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+}

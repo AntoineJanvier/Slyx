@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import slyx.communication.SlyxSocket;
@@ -19,6 +20,8 @@ import java.io.IOException;
  */
 public class AddContactController {
     @FXML
+    AnchorPane anchorPane_addContact;
+    @FXML
     ScrollPane scrollPane_add_contact;
     @FXML
     VBox vBox_in_scrollPane;
@@ -31,6 +34,10 @@ public class AddContactController {
     }
 
     public void initialize() throws IOException {
+        // CSS
+        anchorPane_addContact
+                .getStylesheets().add(getClass().getResource("/slyx/css/addContact.css").toExternalForm());
+
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
         slyxSocket.sendGetUsersNotInContactList(slyxSocket.getMe());
