@@ -97,7 +97,8 @@ public class ContactController {
                         button.setOnMouseClicked(event1 -> {
                             slyxSocket.sendMessage(
                                     textField.getText(),
-                                    slyxSocket.getHashmapContacts().get(user.getId())
+                                    slyxSocket.getHashmapContacts().get(user.getId()),
+                                    vBox
                             );
                             textField.setText("");
                         });
@@ -105,27 +106,37 @@ public class ContactController {
                             if (event12.getCode().equals(KeyCode.ENTER)) {
                                 slyxSocket.sendMessage(
                                         textField.getText(),
-                                        slyxSocket.getHashmapContacts().get(user.getId())
+                                        slyxSocket.getHashmapContacts().get(user.getId()),
+                                        vBox
                                 );
                                 textField.setText("");
                             }
                         });
 
-                        Message[] messages = slyxSocket.getMessagesOfContact(user);
-                        slyxSocket.clearVBox(vBox);
-                        for (Message message : messages) {
-                            putInVBoxMessages(message, vBox, scrollPane);
-                        }
+//                        Message[] messages = slyxSocket.getMessagesOfContact(user);
+//                        slyxSocket.clearVBox(vBox);
+//                        for (Message message : messages) {
+//                            putInVBoxMessages(message, vBox, scrollPane);
+//                        }
                         Timeline timeline = new Timeline(new KeyFrame(
                                 Duration.millis(500),
                                 ae -> {
+//                                    for (Message m : user.messages.values()) {
+//                                        System.out.println("M => " + m.getContent());
+//                                    }
                                     try {
+                                        if (slyxSocket.needToEmptyVBoxMessages) {
+                                            slyxSocket.clearVBox(vBox);
+                                            slyxSocket.needToEmptyVBoxMessages = false;
+                                        }
                                         if (!user.hashMapNewMessages.isEmpty()) {
                                             Message[] messagesOfContact = user.getNewMessages();
                                             for (Message m : messagesOfContact) {
+                                                user.messages.put(m.getSent(), m);
+                                                user.removeNewMessage(m);
                                                 if (slyxSocket.idOfCurrentContactPrinted == user.getId())
                                                     putInVBoxMessages(m, vBox, scrollPane);
-                                                user.removeNewMessage(m);
+
                                             }
                                             scrollPane.setVvalue(1);
                                         }

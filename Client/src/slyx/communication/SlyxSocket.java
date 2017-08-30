@@ -1,7 +1,11 @@
 package slyx.communication;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
+import slyx.controllers.MessageOutController;
 import slyx.exceptions.SocketClosedException;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
@@ -41,6 +45,7 @@ public class SlyxSocket extends Thread {
 
     public int idOfCurrentContactPrinted = 0;
     public boolean needToClearCurrent = false;
+    public boolean needToEmptyVBoxMessages = false;
 
     /**
      * Private construstor, called only if the instance of this object is null
@@ -175,12 +180,14 @@ public class SlyxSocket extends Thread {
                                 arrayJsonParser.processMessage();
                                 Message[] messages = arrayJsonParser.getMessages();
                                 if (messages != null && messages.length > 0) {
+//                                    contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).messages.clear();
                                     for (Message m : messages) {
                                         contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).addNewMessage(
                                                 m.getId(), m.getFrom(), m.getTo(), m.getContent(), m.getSent(),
                                                 m.getInOrOut()
                                         );
                                     }
+                                    needToEmptyVBoxMessages = true;
                                 }
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
@@ -230,12 +237,24 @@ public class SlyxSocket extends Thread {
      * @param content Message content
      * @param to Recipient
      */
-    public void sendMessage(String content, User to) {
+    public void sendMessage(String content, User to, VBox vBox) {
         if (content.length() > 0) {
             writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
             contacts.get(to.getId()).addNewMessage(
                     idx--, this.me, to.getId(), content, new Date(), "OUT"
             );
+//            try {
+//                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/message_out.fxml"));
+//                Parent parent = fxmlLoader.load();
+//                MessageOutController messageOutController = fxmlLoader.getController();
+//                messageOutController.setMessage(new Message(
+//                        0, this.getMe(), to.getId(), new Date(), content, "OUT"
+//                ));
+//                vBox.getChildren().add(parent);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
         }
     }
 
@@ -495,9 +514,9 @@ public class SlyxSocket extends Thread {
      * @return An array of messages
      */
     public Message[] getMessagesOfContact(User contact) {
-        Message[] messages = new Message[contacts.get(contact.getId()).getMessages().size()];
+        Message[] messages = new Message[contacts.get(contact.getId()).messages.size()];
         int counter = 0;
-        for (Message m : contacts.get(contact.getId()).getMessages().values())
+        for (Message m : contacts.get(contact.getId()).messages.values())
             messages[counter++] = m;
         return messages;
     }

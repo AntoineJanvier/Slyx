@@ -43,14 +43,24 @@ public class User {
         this.picture = picture;
     }
 
-    public void addNewMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
+    public void addMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
         Message m = new Message(messageID, from, to, sent, content, inOrOut);
         messages.put(sent, m);
+    }
+    public void addNewMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
+        Message m = new Message(messageID, from, to, sent, content, inOrOut);
         hashMapNewMessages.put(sent, m);
     }
     public void addCall(int callID, User from, User to) {
         Call c = new Call(from, to);
         calls.put(callID, c);
+    }
+    public Message[] getMessages() {
+        Message[] messages = new Message[this.messages.size()];
+        int counter = 0;
+        for (Message m : this.messages.values())
+            messages[counter++] = m;
+        return messages;
     }
     public Message[] getNewMessages() {
         Message[] messages = new Message[hashMapNewMessages.size()];
@@ -70,9 +80,9 @@ public class User {
     public String getEmail() { return email; }
     public boolean isConnected() { return isConnected; }
     public String getPicture() { return picture; }
-    public TreeMap<Date, Message> getMessages() {
-        return messages;
-    }
+//    public TreeMap<Date, Message> getMessages() {
+//        return messages;
+//    }
 
     public void setId(int id) { this.id = id; }
     public void setConnected(boolean connected) { isConnected = connected; }
