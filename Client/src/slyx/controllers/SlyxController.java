@@ -162,17 +162,6 @@ public class SlyxController {
 
         refreshContacts();
         refreshContactRequests();
-
-        Timeline timeline = new Timeline(new KeyFrame(
-                Duration.millis(1000),
-                ae -> {
-                    if (slyxSocket.hasNewPendingRequest) {
-                        slyxSocket.clearVBox(vBox_request);
-                        slyxSocket.needToRefreshContacts = false;
-                    }
-                }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
     }
 
     /**
@@ -196,24 +185,31 @@ public class SlyxController {
     public void refreshContacts() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
-        // Set all contacts in the contact area
+        // Get current contacts
         User[] contacts = slyxSocket.getContacts();
+
+        // Clear the VBox
         slyxSocket.clearVBox(vBox_left);
-        for (User u : contacts) {
+
+        // Set all contacts in the contact area
+        for (User u : contacts)
             refreshContactsInContactList(u);
-        }
+
+        // If needed, clear VBox to reset contact list (in case of connection or other things)
         Timeline timeline = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
                     try {
+                        // If refresh is needed
                         if (slyxSocket.needToRefreshContacts) {
+                            // Clear VBox
                             slyxSocket.clearVBox(vBox_left);
+                            // Get contacts
                             User[] users = slyxSocket.getContacts();
-                            for (User u : users) {
+                            // Set contacts in contact list
+                            for (User u : users)
                                 refreshContactsInContactList(u);
-                            }
                             slyxSocket.needToRefreshContacts = false;
-                            slyxSocket.sendGetContactsRequest();
                         }
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
@@ -254,7 +250,6 @@ public class SlyxController {
                                 vBox_request.getChildren().add(p);
                             }
                             slyxSocket.hasNewPendingRequest = false;
-                            slyxSocket.sendGetPendingContactRequests();
                         }
                     } catch (IOException e) {
                         System.out.println(e.getMessage());

@@ -44,6 +44,7 @@ public class SlyxSocket extends Thread {
     private static SlyxSocket instance = null;
 
     public int idOfCurrentContactPrinted = 0;
+    public int messagesPrinted = 0;
     public boolean needToClearCurrent = false;
     public boolean needToEmptyVBoxMessages = false;
 
@@ -107,26 +108,6 @@ public class SlyxSocket extends Thread {
                             case "GET_VERSION_OF_SLYX":
                                 version = j.get("version").toString();
                                 break;
-                            case "MESSAGE_INCOMING":
-                                User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
-                                Date d = new Date();
-                                contacts.get(uFrom.getId()).addNewMessage(
-                                        Integer.parseInt(j.get("MESSAGE_ID").toString()), uFrom, this.me.getId(),
-                                        j.get("CONTENT").toString(), d, "IN"
-                                );
-                                if (uFrom.getId() != idOfCurrentContactPrinted) {
-                                    SlyxSound.playSound("NOTIFICATION");
-                                    needToRefreshContacts = true;
-                                } else
-                                    listOfContactWhoHasNewMessages.put(uFrom.getId(), uFrom.getId());
-                                break;
-                            case "CALL_INCOMING":
-                                System.out.println("CALL_INCOMING");
-                                User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
-                                contacts.get(caller.getId()).addCall(
-                                        Integer.parseInt(j.get("CALL_ID").toString()), caller, this.me
-                                );
-                                break;
                             case "ACCEPT_CONNECTION":
                                 this.me = new User(
                                         Math.toIntExact((long) j.get("id")), j.get("firstname").toString(),
@@ -175,19 +156,52 @@ public class SlyxSocket extends Thread {
                                 if (pendingRequests.length > 0)
                                     hasNewPendingRequest = true;
                                 break;
+                            case "CALL_INCOMING":
+                                System.out.println("CALL_INCOMING");
+                                User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
+                                contacts.get(caller.getId()).addCall(
+                                        Integer.parseInt(j.get("CALL_ID").toString()), caller, this.me
+                                );
+                                break;
+                            case "MESSAGE_INCOMING":
+                                User uFrom = contacts.get(Integer.parseInt(j.get("FROM").toString()));
+                                Date d = new Date();
+                                contacts.get(uFrom.getId()).addMessage(
+                                        Integer.parseInt(j.get("MESSAGE_ID").toString()), uFrom, this.me.getId(),
+                                        j.get("CONTENT").toString(), d, "IN"
+                                );
+                                if (uFrom.getId() != idOfCurrentContactPrinted) {
+                                    SlyxSound.playSound("NOTIFICATION");
+                                    needToRefreshContacts = true;
+                                    listOfContactWhoHasNewMessages.put(uFrom.getId(), uFrom.getId());
+                                }
+                                break;
                             case "GET_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
                                 arrayJsonParser.processMessage();
                                 Message[] messages = arrayJsonParser.getMessages();
                                 if (messages != null && messages.length > 0) {
-//                                    contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).messages.clear();
+                                    contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).messages.clear();
                                     for (Message m : messages) {
-                                        contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).addNewMessage(
+                                        contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).addMessage(
                                                 m.getId(), m.getFrom(), m.getTo(), m.getContent(), m.getSent(),
                                                 m.getInOrOut()
                                         );
                                     }
                                     needToEmptyVBoxMessages = true;
+                                }
+                                break;
+                            case "GET_NEW_MESSAGES_OF_CONTACT":
+                                arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
+                                arrayJsonParser.processMessage();
+                                Message[] messages1 = arrayJsonParser.getMessages();
+                                if (messages1 != null && messages1.length > 0) {
+                                    for (Message m : messages1) {
+                                        contacts.get(Integer.parseInt(j.get("CONTACT_ID").toString())).addMessage(
+                                                m.getId(), m.getFrom(), m.getTo(), m.getContent(), m.getSent(),
+                                                m.getInOrOut()
+                                        );
+                                    }
                                 }
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
@@ -240,21 +254,9 @@ public class SlyxSocket extends Thread {
     public void sendMessage(String content, User to, VBox vBox) {
         if (content.length() > 0) {
             writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
-            contacts.get(to.getId()).addNewMessage(
+            contacts.get(to.getId()).addMessage(
                     idx--, this.me, to.getId(), content, new Date(), "OUT"
             );
-//            try {
-//                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/message_out.fxml"));
-//                Parent parent = fxmlLoader.load();
-//                MessageOutController messageOutController = fxmlLoader.getController();
-//                messageOutController.setMessage(new Message(
-//                        0, this.getMe(), to.getId(), new Date(), content, "OUT"
-//                ));
-//                vBox.getChildren().add(parent);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
         }
     }
 
@@ -304,11 +306,18 @@ public class SlyxSocket extends Thread {
 
     /**
      * Send a get message of contact request to server, it will answer later
-     * @param user Me
-     * @param to We want messages of this contact
+     * @param contact We want messages of this contact
      */
-    public void sendGetMessagesOfContactRequest(User user, User to) {
-        writeInSocket(SocketSender_sendGetMessagesOfContactRequest(user.getId(), to.getId()));
+    public void sendGetMessagesOfContactRequest(User contact) {
+        writeInSocket(SocketSender_sendGetMessagesOfContactRequest(this.me.getId(), contact.getId()));
+    }
+
+    /**
+     * Send a get message of contact request to server, it will answer later
+     * @param contact We want messages of this contact
+     */
+    public void sendGetNewMessagesOfContactRequest(User contact, int last) {
+        writeInSocket(SocketSender_sendGetNewMessagesOfContactRequest(this.me.getId(), contact.getId(), last));
     }
 
     /**

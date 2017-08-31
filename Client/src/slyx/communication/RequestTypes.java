@@ -31,5 +31,6 @@ class RequestTypes {
 
     // On contact
     final static String GET_MESSAGES_OF_CONTACT_REQUEST = "GET_MESSAGES_OF_CONTACT";
+    final static String GET_NEW_MESSAGES_OF_CONTACT_REQUEST = "GET_NEW_MESSAGES_OF_CONTACT";
     final static String GET_CALLS_OF_CONTACT_REQUEST = "GET_CALLS_OF_CONTACT";
 }

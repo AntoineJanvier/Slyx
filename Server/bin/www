@@ -151,8 +151,9 @@ nodenet.createServer(function (socket) {
                     User.find({where: {
                         userid: clients[i].User.id
                     }}).then(user => {
-                        return user.update({connected: false}, {fields: ['connected']
-                        }).then(user => {
+                        return user.update(
+                            {connected: false}, {fields: ['connected']}
+                        ).then(user => {
                             console.log(user.first_name + ' ' + user.last_name + ' disconnected');
                             clients.splice(i, 1);
                             console.log(clients.length + ' clients connected');

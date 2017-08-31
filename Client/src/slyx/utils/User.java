@@ -80,9 +80,6 @@ public class User {
     public String getEmail() { return email; }
     public boolean isConnected() { return isConnected; }
     public String getPicture() { return picture; }
-//    public TreeMap<Date, Message> getMessages() {
-//        return messages;
-//    }
 
     public void setId(int id) { this.id = id; }
     public void setConnected(boolean connected) { isConnected = connected; }

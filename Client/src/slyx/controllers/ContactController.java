@@ -26,6 +26,7 @@ import slyx.utils.Message;
 import slyx.utils.User;
 
 import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -71,84 +72,89 @@ public class ContactController {
             anchorPane_contact.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    slyxSocket.idOfCurrentContactPrinted = user.getId();
-                    slyxSocket.sendGetMessagesOfContactRequest(slyxSocket.getMe(), user);
+                    slyxSocket.clearVBox(vBox);
+                    if (slyxSocket.idOfCurrentContactPrinted != user.getId()) {
+                        slyxSocket.idOfCurrentContactPrinted = user.getId();
 
-                    textField.setDisable(false);
-                    button.setDisable(false);
+                        slyxSocket.messagesPrinted = 0;
 
-                    if (circle_notifications.isVisible()) {
-                        circle_notifications.setVisible(false);
-                        slyxSocket.listOfContactWhoHasNewMessages.remove(user.getId());
-                        slyxSocket.needToRefreshContacts = true;
-                    }
+                        if (user.messages.size() == 0)
+                            slyxSocket.sendGetMessagesOfContactRequest(user);
+                        else
+                            slyxSocket.sendGetNewMessagesOfContactRequest(slyxSocket.getMe(), user.messages.get(user.messages.lastEntry().getKey()).getId());
 
-                    try {
+                        textField.setDisable(false);
+                        button.setDisable(false);
 
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
-                        Parent parent = fxmlLoader.load();
-                        ContactProfileController contactProfileController = fxmlLoader.getController();
-                        contactProfileController.setContact(user, vBox, textField, button);
+                        if (circle_notifications.isVisible()) {
+                            circle_notifications.setVisible(false);
+                            slyxSocket.listOfContactWhoHasNewMessages.remove(user.getId());
+                            slyxSocket.needToRefreshContacts = true;
+                        }
 
-                        // Add in scene
-                        anchorPane.getChildren().clear();
-                        anchorPane.getChildren().add(parent);
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
+                            Parent parent = fxmlLoader.load();
+                            ContactProfileController contactProfileController = fxmlLoader.getController();
+                            contactProfileController.setContact(user, vBox, textField, button);
 
-                        button.setOnMouseClicked(event1 -> {
-                            slyxSocket.sendMessage(
-                                    textField.getText(),
-                                    slyxSocket.getHashmapContacts().get(user.getId()),
-                                    vBox
-                            );
-                            textField.setText("");
-                        });
-                        textField.setOnKeyPressed(event12 -> {
-                            if (event12.getCode().equals(KeyCode.ENTER)) {
+                            // Add in scene
+                            anchorPane.getChildren().clear();
+                            anchorPane.getChildren().add(parent);
+
+                            button.setOnMouseClicked(event1 -> {
                                 slyxSocket.sendMessage(
                                         textField.getText(),
                                         slyxSocket.getHashmapContacts().get(user.getId()),
                                         vBox
                                 );
                                 textField.setText("");
+                            });
+                            textField.setOnKeyPressed(event12 -> {
+                                if (event12.getCode().equals(KeyCode.ENTER)) {
+                                    slyxSocket.sendMessage(
+                                            textField.getText(),
+                                            slyxSocket.getHashmapContacts().get(user.getId()),
+                                            vBox
+                                    );
+                                    textField.setText("");
+                                }
+                            });
+
+                            for (Message m : user.messages.values()) {
+                                putInVBoxMessages(m, vBox, scrollPane);
+                                m.printed = true;
+                                slyxSocket.messagesPrinted++;
                             }
-                        });
 
-//                        Message[] messages = slyxSocket.getMessagesOfContact(user);
-//                        slyxSocket.clearVBox(vBox);
-//                        for (Message message : messages) {
-//                            putInVBoxMessages(message, vBox, scrollPane);
-//                        }
-                        Timeline timeline = new Timeline(new KeyFrame(
-                                Duration.millis(500),
-                                ae -> {
-//                                    for (Message m : user.messages.values()) {
-//                                        System.out.println("M => " + m.getContent());
-//                                    }
-                                    try {
-                                        if (slyxSocket.needToEmptyVBoxMessages) {
-                                            slyxSocket.clearVBox(vBox);
-                                            slyxSocket.needToEmptyVBoxMessages = false;
-                                        }
-                                        if (!user.hashMapNewMessages.isEmpty()) {
-                                            Message[] messagesOfContact = user.getNewMessages();
-                                            for (Message m : messagesOfContact) {
-                                                user.messages.put(m.getSent(), m);
-                                                user.removeNewMessage(m);
-                                                if (slyxSocket.idOfCurrentContactPrinted == user.getId())
-                                                    putInVBoxMessages(m, vBox, scrollPane);
-
+                            Timeline timeline = new Timeline(new KeyFrame(
+                                    Duration.millis(500),
+                                    ae -> {
+                                        try {
+                                            if (slyxSocket.needToEmptyVBoxMessages) {
+                                                slyxSocket.clearVBox(vBox);
+                                                slyxSocket.needToEmptyVBoxMessages = false;
                                             }
-                                            scrollPane.setVvalue(1);
+                                            if (user.messages.size() > slyxSocket.messagesPrinted) {
+                                                for (Message m : user.messages.values()) {
+                                                    if (!m.printed) {
+                                                        putInVBoxMessages(m, vBox, scrollPane);
+                                                        m.printed = true;
+                                                        slyxSocket.messagesPrinted++;
+                                                    }
+                                                }
+                                            }
+                                        } catch (IOException e) {
+                                            System.out.println(e.getMessage());
                                         }
-                                    } catch (IOException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                }));
-                        timeline.setCycleCount(Animation.INDEFINITE);
-                        timeline.play();
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
+                                    }));
+                            timeline.setCycleCount(Animation.INDEFINITE);
+                            timeline.play();
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
                     }
+
                 }
             });
         } catch (IOException e) {

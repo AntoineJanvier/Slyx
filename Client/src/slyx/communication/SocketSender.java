@@ -63,6 +63,14 @@ class SocketSender {
         j.put("u2userid", contactID);
         return j.toString();
     }
+    static String SocketSender_sendGetNewMessagesOfContactRequest(int myID, int contactID, int idOfLastMessage) {
+        JSONObject j = new JSONObject();
+        j.put("request", RequestTypes.GET_NEW_MESSAGES_OF_CONTACT_REQUEST);
+        j.put("me", myID);
+        j.put("contact", contactID);
+        j.put("idOfLastMessage", idOfLastMessage);
+        return j.toString();
+    }
     static String SocketSender_sendAskVersion() {
         JSONObject j = new JSONObject();
         j.put("request", RequestTypes.GET_UPDATE_REQUEST);
@@ -73,12 +81,6 @@ class SocketSender {
         j.put("request", RequestTypes.CONNECTION_REQUEST);
         j.put("email", email);
         j.put("password", password);
-        return j.toString();
-    }
-    static String SocketSender_sendGetMySettings(int myID) {
-        JSONObject j = new JSONObject();
-        j.put("request", RequestTypes.GET_SETTINGS_REQUEST);
-        j.put("me", myID);
         return j.toString();
     }
     static String SocketSender_sendUpdateMySettings(int myID, boolean sounds, int volume, boolean notifications,

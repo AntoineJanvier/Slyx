@@ -16,10 +16,11 @@ public class Message {
     private String content;
     private String inOrOut;
 
+    public boolean printed = false;
+
     public Message(int id, User from, int to, Date sent, String content, String inOrOut) {
         this.id = id;
         this.from = from;
-        // this.to = to;
         this.to = to;
         this.sent = sent;
         this.content = content;
@@ -30,8 +31,6 @@ public class Message {
     public void setId(int id) { this.id = id; }
     public User getFrom() { return from; }
     public void setFrom(User from) { this.from = from; }
-    // public User getTo() { return to; }
-    // public void setTo(User to) { this.to = to; }
     public int getTo() { return to; }
     public void setTo(int to) { this.to = to; }
     public Date getSent() { return sent; }
