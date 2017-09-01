@@ -32,7 +32,6 @@ module.exports = {
                                 re.inOrOut = ior;
                                 resp.push(re);
                             }
-                            resp.ACTION = 'GET_MESSAGES_OF_CONTACT';
                             socket.write(JSON.stringify({
                                 ACTION: 'GET_MESSAGES_OF_CONTACT',
                                 CONTACT_ID: user2.userid,

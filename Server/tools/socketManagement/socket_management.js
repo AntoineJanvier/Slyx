@@ -5,6 +5,7 @@ module.exports = {
     disconnectUser: require('./auth/disconnectUser'),
     getContacts: require('./contacts/getContacts'),
     getMessagesOfContact: require('./messages/getMessagesOfContact'),
+    getNewMessagesOfContact: require('./messages/getNewMessagesOfContact'),
     getPendingContactRequests: require('./contacts/getPendingContactRequests'),
     getSettings: require('./settings/getSettings'),
     getUpdate: require('./auth/getUpdate'),

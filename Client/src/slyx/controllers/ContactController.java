@@ -34,6 +34,7 @@ import java.util.Date;
  * on 31/07/17.
  */
 public class ContactController {
+    private Timeline timelineRefreshMessages = null;
     @FXML
     AnchorPane anchorPane_contact;
     @FXML
@@ -72,11 +73,15 @@ public class ContactController {
             anchorPane_contact.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    slyxSocket.clearVBox(vBox);
-                    if (slyxSocket.idOfCurrentContactPrinted != user.getId()) {
-                        slyxSocket.idOfCurrentContactPrinted = user.getId();
 
+                    if (timelineRefreshMessages != null) {
+                        timelineRefreshMessages.stop();
+                    }
+
+                    if (slyxSocket.idOfCurrentContactPrinted != user.getId()) {
+                        slyxSocket.clearVBox(vBox);
                         slyxSocket.messagesPrinted = 0;
+                        slyxSocket.idOfCurrentContactPrinted = user.getId();
 
                         if (user.messages.size() == 0)
                             slyxSocket.sendGetMessagesOfContactRequest(user);
@@ -98,10 +103,11 @@ public class ContactController {
                             ContactProfileController contactProfileController = fxmlLoader.getController();
                             contactProfileController.setContact(user, vBox, textField, button);
 
-                            // Add in scene
+                            // Add in right panel
                             anchorPane.getChildren().clear();
                             anchorPane.getChildren().add(parent);
 
+                            // Add comportment to "SEND" button
                             button.setOnMouseClicked(event1 -> {
                                 slyxSocket.sendMessage(
                                         textField.getText(),
@@ -110,6 +116,8 @@ public class ContactController {
                                 );
                                 textField.setText("");
                             });
+
+                            // Set textfield comportment on ENTER key pressed
                             textField.setOnKeyPressed(event12 -> {
                                 if (event12.getCode().equals(KeyCode.ENTER)) {
                                     slyxSocket.sendMessage(
@@ -126,13 +134,16 @@ public class ContactController {
                                 m.printed = true;
                                 slyxSocket.messagesPrinted++;
                             }
+                            scrollPane.setVvalue(1);
+                            slyxSocket.needToEmptyVBoxMessages = false;
 
-                            Timeline timeline = new Timeline(new KeyFrame(
+                            timelineRefreshMessages = new Timeline(new KeyFrame(
                                     Duration.millis(500),
                                     ae -> {
                                         try {
                                             if (slyxSocket.needToEmptyVBoxMessages) {
                                                 slyxSocket.clearVBox(vBox);
+                                                slyxSocket.messagesPrinted = 0;
                                                 slyxSocket.needToEmptyVBoxMessages = false;
                                             }
                                             if (user.messages.size() > slyxSocket.messagesPrinted) {
@@ -143,13 +154,14 @@ public class ContactController {
                                                         slyxSocket.messagesPrinted++;
                                                     }
                                                 }
+                                                scrollPane.setVvalue(1);
                                             }
                                         } catch (IOException e) {
                                             System.out.println(e.getMessage());
                                         }
                                     }));
-                            timeline.setCycleCount(Animation.INDEFINITE);
-                            timeline.play();
+                            timelineRefreshMessages.setCycleCount(Animation.INDEFINITE);
+                            timelineRefreshMessages.play();
                         } catch (IOException e) {
                             System.out.println(e.getMessage());
                         }
@@ -189,6 +201,6 @@ public class ContactController {
         }
 
         vBox.getChildren().add(parent);
-        scrollPane.setVvalue(1);
+//        scrollPane.setVvalue(1);
     }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 public class ArrayJsonParser {
     private String base;
     private int nbKeys;
-    private HashMap<Integer, User> userHashMap = new HashMap<>();
+    public HashMap<Integer, User> userHashMap = new HashMap<>();
     private HashMap<Integer, Message> messageHashMap = new HashMap<>();
 
     public ArrayJsonParser(String base) {

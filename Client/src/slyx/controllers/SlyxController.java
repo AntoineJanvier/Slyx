@@ -5,7 +5,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,6 +26,10 @@ import java.io.IOException;
  * on 30/07/17.
  */
 public class SlyxController {
+    // Timelines
+    private Timeline timelineRefreshContacts = null;
+    private Timeline timelineRefreshContactRequests = null;
+
     // Containers
     @FXML
     AnchorPane anchorPane_top;
@@ -109,6 +112,9 @@ public class SlyxController {
         Parent parent = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         Stage stage = (Stage) btn_disconnection.getScene().getWindow();
         stage.close();
+        Thread.currentThread().interrupt();
+        timelineRefreshContacts.stop();
+        timelineRefreshContactRequests.stop();
         Stage next_stage = new Stage();
         next_stage.setTitle("Slyx");
         next_stage.setScene(new Scene(parent));
@@ -169,7 +175,7 @@ public class SlyxController {
      * @param user : The user to print in contact list
      * @throws IOException : On FXMLLoader.load(...) call
      */
-    private void refreshContactsInContactList(User user) throws IOException {
+    private void addOneContactToContactList(User user) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contact.fxml"));
         Parent parent = fxmlLoader.load();
         ContactController contactController = fxmlLoader.getController();
@@ -182,34 +188,30 @@ public class SlyxController {
      * Refresh the contact list
      * @throws IOException : When getting the instance of the SlyxSocket (singleton)
      */
-    public void refreshContacts() throws IOException {
+    private void refreshContacts() throws IOException {
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
-
-        // Get current contacts
-        User[] contacts = slyxSocket.getContacts();
 
         // Clear the VBox
         slyxSocket.clearVBox(vBox_left);
+        slyxSocket.contactsPrinted = 0;
 
         // Set all contacts in the contact area
-        for (User u : contacts)
-            refreshContactsInContactList(u);
-
+        for (User u : slyxSocket.contacts.values()) {
+            addOneContactToContactList(u);
+            slyxSocket.contactsPrinted++;
+        }
         // If needed, clear VBox to reset contact list (in case of connection or other things)
-        Timeline timeline = new Timeline(new KeyFrame(
+        timelineRefreshContacts = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
                     try {
-                        // If refresh is needed
-                        if (slyxSocket.needToRefreshContacts) {
-                            // Clear VBox
+                        if (slyxSocket.contactsPrinted != slyxSocket.contacts.size()) {
                             slyxSocket.clearVBox(vBox_left);
-                            // Get contacts
-                            User[] users = slyxSocket.getContacts();
-                            // Set contacts in contact list
-                            for (User u : users)
-                                refreshContactsInContactList(u);
-                            slyxSocket.needToRefreshContacts = false;
+                            slyxSocket.contactsPrinted = 0;
+                            for (User u : slyxSocket.contacts.values()) {
+                                addOneContactToContactList(u);
+                                slyxSocket.contactsPrinted++;
+                            }
                         }
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
@@ -217,11 +219,12 @@ public class SlyxController {
                     if (slyxSocket.needToClearCurrent) {
                         slyxSocket.needToClearCurrent = false;
                         slyxSocket.clearVBox(vBox_messages);
+                        slyxSocket.messagesPrinted = 0;
                         anchorPane_right.getChildren().clear();
                     }
                 }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
+        timelineRefreshContacts.setCycleCount(Animation.INDEFINITE);
+        timelineRefreshContacts.play();
     }
 
     /**
@@ -236,7 +239,7 @@ public class SlyxController {
         slyxSocket.clearVBox(vBox_request);
 
         // Add refresh when new request income
-        Timeline timeline = new Timeline(new KeyFrame(
+        timelineRefreshContactRequests = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
                     try {
@@ -255,7 +258,7 @@ public class SlyxController {
                         System.out.println(e.getMessage());
                     }
                 }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
+        timelineRefreshContactRequests.setCycleCount(Animation.INDEFINITE);
+        timelineRefreshContactRequests.play();
     }
 }

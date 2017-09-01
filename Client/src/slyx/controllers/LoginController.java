@@ -16,6 +16,7 @@ import slyx.communication.SlyxSocket;
 import slyx.validators.Validator;
 
 import java.io.IOException;
+import java.sql.Time;
 
 import static slyx.exceptions.SlyxError.ERR_CONNECTION;
 import static slyx.exceptions.SlyxError.ERR_EMAIL;
@@ -23,6 +24,8 @@ import static slyx.exceptions.SlyxError.ERR_PASSWORD;
 import static slyx.exceptions.SlyxErrors.getError;
 
 public class LoginController {
+    private Timeline timelineRefreshVersion = null;
+
     @FXML
     AnchorPane anchorPane_general;
     @FXML
@@ -87,6 +90,7 @@ public class LoginController {
                         Stage next_stage = new Stage();
                         next_stage.setTitle("Slyx");
                         next_stage.setScene(new Scene(parent));
+                        timelineRefreshVersion.stop();
                         next_stage.show();
                     } catch (IOException e) {
                         System.out.println("FXMLLoader.load(...) error");
@@ -107,11 +111,11 @@ public class LoginController {
 
             slyxSocket.sendAskVersion();
 
-            Timeline timeline = new Timeline(new KeyFrame(
+            timelineRefreshVersion = new Timeline(new KeyFrame(
                     Duration.millis(1000),
                     ae -> initSetUpdateLabel(SlyxSocket.getVersion().split("\\."))));
-            timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.play();
+            timelineRefreshVersion.setCycleCount(Animation.INDEFINITE);
+            timelineRefreshVersion.play();
 
         } catch (IOException e) {
             label_get_update.setText("Error while checking updates");

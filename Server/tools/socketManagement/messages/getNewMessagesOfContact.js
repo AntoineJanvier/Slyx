@@ -4,7 +4,7 @@ const Contact = models.Contact;
 const Message = models.Message;
 
 module.exports = {
-    getMessagesOfContact: function (socket, json) {
+    getNewMessagesOfContact: function (socket, json) {
         User.find({
             where: { userid: json.me }
         }).then(user1 => {
@@ -21,14 +21,7 @@ module.exports = {
                     }).then(contact2 => {
                         if (contact2) contactIDs.push(contact2.contactid);
                         return Message.findAll({
-                            where: {
-                                contact: {
-                                    $in: contactIDs
-                                },
-                                messageid: {
-                                    $gt: json.idOfLastMessage
-                                }
-                            }
+                            where: {contact: {$in: contactIDs}, messageid: {$gt: json.idOfLastMessage}}
                         }).then(messages => {
                             let resp = [], ior;
                             for (let m of messages) {
@@ -39,28 +32,32 @@ module.exports = {
                                 re.inOrOut = ior;
                                 resp.push(re);
                             }
-                            resp.ACTION = 'GET_NEW_MESSAGES_OF_CONTACT';
+                            console.log(JSON.stringify({
+                                ACTION: 'GET_NEW_MESSAGES_OF_CONTACT',
+                                CONTACT_ID: user2.userid,
+                                MESSAGES: resp
+                            }) + '\n');
                             socket.write(JSON.stringify({
-                                ACTION: 'GET_MESSAGES_OF_CONTACT',
+                                ACTION: 'GET_NEW_MESSAGES_OF_CONTACT',
                                 CONTACT_ID: user2.userid,
                                 MESSAGES: resp
                             }) + '\n');
                         }).catch(err => {
                             console.log(err);
-                            socket.write(JSON.stringify({request: 'ERROR - sockGetMessagesOfContact D'}) + '\n');
+                            socket.write(JSON.stringify({request: 'ERROR - sockGetNewMessagesOfContact D'}) + '\n');
                         });
                     })
                 }).catch(err => {
                     console.log(err);
-                    socket.write(JSON.stringify({request: 'ERROR - sockGetMessagesOfContact C'}) + '\n');
+                    socket.write(JSON.stringify({request: 'ERROR - sockGetNewMessagesOfContact C'}) + '\n');
                 });
             }).catch(err => {
                 console.log(err);
-                socket.write(JSON.stringify({request: 'ERROR - sockGetMessagesOfContact B'}) + '\n');
+                socket.write(JSON.stringify({request: 'ERROR - sockGetNewMessagesOfContact B'}) + '\n');
             });
         }).catch(err => {
             console.log(err);
-            socket.write(JSON.stringify({request: 'ERROR - sockGetMessagesOfContact A'}) + '\n');
+            socket.write(JSON.stringify({request: 'ERROR - sockGetNewMessagesOfContact A'}) + '\n');
         });
     }
 };

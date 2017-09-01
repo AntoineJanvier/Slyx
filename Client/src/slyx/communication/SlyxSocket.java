@@ -27,29 +27,32 @@ public class SlyxSocket extends Thread {
     private Socket socket;
     private BufferedReader bufferedReader;
     private PrintWriter printWriter;
-    private int idx = -1;
 
     private User me;
-    private HashMap<Integer, User> contacts = new HashMap<>();
-    public boolean needToRefreshContacts = false;
 
-    private static HashMap<Integer, User> otherUsers = new HashMap<>();
-
-    private static HashMap<Integer, User> userRequests = new HashMap<>();
     public HashMap<Integer, Integer> listOfContactWhoHasNewMessages = new HashMap<>();
-    public boolean hasNewPendingRequest = false;
+    public HashMap<Integer, User> contacts = new HashMap<>();
+    private static HashMap<Integer, User> otherUsers = new HashMap<>();
+    private static HashMap<Integer, User> userRequests = new HashMap<>();
+
+    private int idx = -1;
 
     private static String version = null;
 
     private static SlyxSocket instance = null;
 
     public int idOfCurrentContactPrinted = 0;
+
     public int messagesPrinted = 0;
+    public int contactsPrinted = 0;
+
+    public boolean hasNewPendingRequest = false;
+    public boolean needToRefreshContacts = false;
     public boolean needToClearCurrent = false;
     public boolean needToEmptyVBoxMessages = false;
 
     /**
-     * Private construstor, called only if the instance of this object is null
+     * Private constructor, called only if the instance of this object is null
      */
     private SlyxSocket() {
         try {
@@ -123,14 +126,19 @@ public class SlyxSocket extends Thread {
                                     this.me.setSetting_messages(Boolean.valueOf(j.get("messages").toString()));
                                     this.me.setSetting_connections(Boolean.valueOf(j.get("connections").toString()));
                                 }
+                                contacts.clear();
+                                System.out.println("CONTACTS : " + contacts.size());
+                                for (User u : contacts.values()) {
+                                    System.out.println(u.toString());
+                                }
                                 break;
                             case "GET_CONTACTS":
                                 arrayJsonParser = new ArrayJsonParser(j.get("CONTACTS").toString());
                                 arrayJsonParser.processUser();
-                                User[] users = arrayJsonParser.getUsers();
                                 contacts.clear();
-                                for (User u : users)
-                                    addNewContact(u);
+                                for (User u : arrayJsonParser.userHashMap.values())
+                                    contacts.put(u.getId(), u);
+                                needToRefreshContacts = true;
                                 break;
                             case "CONTACT_REQUEST":
                                 userRequests.put(Math.toIntExact((long) j.get("id")), new User(
@@ -421,6 +429,13 @@ public class SlyxSocket extends Thread {
         printWriter.close();
         instance = new SlyxSocket();
         this.me = null;
+
+        contacts.clear();
+        listOfContactWhoHasNewMessages.clear();
+        userRequests.clear();
+        otherUsers.clear();
+        needToClearCurrent = true;
+        needToEmptyVBoxMessages = true;
     }
 
     /**
@@ -531,6 +546,7 @@ public class SlyxSocket extends Thread {
     }
 
     public void clearVBox(VBox vBox) {
+        System.out.println("CLEAR");
         vBox.getChildren().clear();
         for (Node observable : vBox.getChildren()) {
             vBox.getChildren().remove(observable);

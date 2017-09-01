@@ -93,6 +93,10 @@ nodenet.createServer(function (socket) {
                     case 'GET_MESSAGES_OF_CONTACT':
                         sock.getMessagesOfContact.getMessagesOfContact(socket, json);
                         break;
+                    // Get NEW messages of a specific contact
+                    case 'GET_NEW_MESSAGES_OF_CONTACT':
+                        sock.getNewMessagesOfContact.getNewMessagesOfContact(socket, json);
+                        break;
                     case 'ACCEPT_CONTACT':
                         sock.acceptContactRequest.acceptContactRequest(socket, json, clients);
                         break;
@@ -138,7 +142,7 @@ nodenet.createServer(function (socket) {
                         }));
                         break;
                     default:
-                        socket.write({ACTION: 'ERROR'} + '\n');
+                        socket.write(JSON.stringify({ACTION: 'ERROR'}) + '\n');
                 }
             }
         }

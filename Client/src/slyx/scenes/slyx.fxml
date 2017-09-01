@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPane_general" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.SlyxController">
+<BorderPane fx:id="borderPane_general" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.SlyxController">
     <top>
         <HBox fx:id="hBox_top" alignment="TOP_RIGHT" prefHeight="140.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
@@ -68,7 +68,7 @@
         </HBox>
     </bottom>
    <center>
-      <ScrollPane fx:id="scrollPane_messages" fitToWidth="true" onMouseMoved="#refreshContacts" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane_messages" fitToWidth="true" prefHeight="598.0" prefWidth="840.0" BorderPane.alignment="CENTER">
          <content>
             <VBox fx:id="vBox_messages" prefHeight="540.0" prefWidth="748.0" />
          </content>
