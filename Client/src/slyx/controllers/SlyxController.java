@@ -179,7 +179,8 @@ public class SlyxController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contact.fxml"));
         Parent parent = fxmlLoader.load();
         ContactController contactController = fxmlLoader.getController();
-        contactController.setContact(user, vBox_messages, tf_message_to_send, btn_send_message, anchorPane_right, scrollPane_messages);
+        contactController.setContact(user, vBox_messages, tf_message_to_send, btn_send_message, anchorPane_right,
+                scrollPane_messages);
 
         vBox_left.getChildren().add(parent);
     }

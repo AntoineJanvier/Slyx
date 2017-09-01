@@ -34,7 +34,7 @@ import java.util.Date;
  * on 31/07/17.
  */
 public class ContactController {
-    private Timeline timelineRefreshMessages = null;
+private Timeline timelineRefreshMessages = null;
     @FXML
     AnchorPane anchorPane_contact;
     @FXML
@@ -69,33 +69,29 @@ public class ContactController {
             else
                 circle_notifications.setVisible(false);
 
-
             anchorPane_contact.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-
-                    if (timelineRefreshMessages != null) {
-                        timelineRefreshMessages.stop();
+                    textField.setDisable(false);
+                    button.setDisable(false);
+                    slyxSocket.refreshNumber = 2;
+                    if (circle_notifications.isVisible()) {
+                        circle_notifications.setVisible(false);
+                        slyxSocket.listOfContactWhoHasNewMessages.remove(user.getId());
+                        slyxSocket.needToRefreshContacts = true;
                     }
 
                     if (slyxSocket.idOfCurrentContactPrinted != user.getId()) {
-                        slyxSocket.clearVBox(vBox);
-                        slyxSocket.messagesPrinted = 0;
+                        slyxSocket.contactChange = true;
+
+                        slyxSocket.idOfCurrentContactPrinted = user.getId();
+                        slyxSocket.resetMessagePrinted(user.getId(), vBox);
                         slyxSocket.idOfCurrentContactPrinted = user.getId();
 
                         if (user.messages.size() == 0)
                             slyxSocket.sendGetMessagesOfContactRequest(user);
                         else
                             slyxSocket.sendGetNewMessagesOfContactRequest(slyxSocket.getMe(), user.messages.get(user.messages.lastEntry().getKey()).getId());
-
-                        textField.setDisable(false);
-                        button.setDisable(false);
-
-                        if (circle_notifications.isVisible()) {
-                            circle_notifications.setVisible(false);
-                            slyxSocket.listOfContactWhoHasNewMessages.remove(user.getId());
-                            slyxSocket.needToRefreshContacts = true;
-                        }
 
                         try {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/contactProfile.fxml"));
@@ -129,8 +125,16 @@ public class ContactController {
                                 }
                             });
 
+                            String contactIcon = user.getPicture();
+                            Image contactImageIcon = new Image(contactIcon);
+                            String myIcon = slyxSocket.getMe().getPicture();
+                            Image myContactIcon = new Image(myIcon);
+
                             for (Message m : user.messages.values()) {
-                                putInVBoxMessages(m, vBox, scrollPane);
+                                if ("IN".equals(m.getInOrOut()))
+                                    putInVBoxMessages(m, vBox, contactImageIcon);
+                                else
+                                    putInVBoxMessages(m, vBox, myContactIcon);
                                 m.printed = true;
                                 slyxSocket.messagesPrinted++;
                             }
@@ -140,16 +144,22 @@ public class ContactController {
                             timelineRefreshMessages = new Timeline(new KeyFrame(
                                     Duration.millis(500),
                                     ae -> {
+                                        System.out.println("NB MESSAGES : " + user.messages.size());
                                         try {
                                             if (slyxSocket.needToEmptyVBoxMessages) {
                                                 slyxSocket.clearVBox(vBox);
                                                 slyxSocket.messagesPrinted = 0;
                                                 slyxSocket.needToEmptyVBoxMessages = false;
                                             }
-                                            if (user.messages.size() > slyxSocket.messagesPrinted) {
+                                            if (user.messages.size() > slyxSocket.messagesPrinted ||
+                                                    slyxSocket.refreshNumber > 0) {
                                                 for (Message m : user.messages.values()) {
                                                     if (!m.printed) {
-                                                        putInVBoxMessages(m, vBox, scrollPane);
+                                                        if ("IN".equals(m.getInOrOut()))
+                                                            putInVBoxMessages(m, vBox, contactImageIcon);
+                                                        else
+                                                            putInVBoxMessages(m, vBox, myContactIcon);
+
                                                         m.printed = true;
                                                         slyxSocket.messagesPrinted++;
                                                     }
@@ -158,6 +168,10 @@ public class ContactController {
                                             }
                                         } catch (IOException e) {
                                             System.out.println(e.getMessage());
+                                        }
+                                        if (slyxSocket.refreshNumber > 0) {
+                                            slyxSocket.refreshNumber--;
+                                            scrollPane.setVvalue(1);
                                         }
                                     }));
                             timelineRefreshMessages.setCycleCount(Animation.INDEFINITE);
@@ -182,25 +196,25 @@ public class ContactController {
 
     /**
      * Add a specific message to the message list (VBox)
+     *
      * @param message : Message to print
      * @throws IOException : On FXMLLoader.load(...) call
      */
-    private void putInVBoxMessages(Message message, VBox vBox, ScrollPane scrollPane) throws IOException {
+    private void putInVBoxMessages(Message message, VBox vBox, Image image) throws IOException {
         FXMLLoader fxmlLoader;
         Parent parent;
         if ("IN".equals(message.getInOrOut())) {
             fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/message_in.fxml"));
             parent = fxmlLoader.load();
             MessageInController messageInController = fxmlLoader.getController();
-            messageInController.setMessage(message);
+            messageInController.setMessage(message, image, message.getContent());
         } else {
             fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/message_out.fxml"));
             parent = fxmlLoader.load();
             MessageOutController messageOutController = fxmlLoader.getController();
-            messageOutController.setMessage(message);
+            messageOutController.setMessage(message, image, message.getContent());
         }
 
         vBox.getChildren().add(parent);
-//        scrollPane.setVvalue(1);
     }
 }

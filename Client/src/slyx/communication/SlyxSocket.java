@@ -50,6 +50,9 @@ public class SlyxSocket extends Thread {
     public boolean needToRefreshContacts = false;
     public boolean needToClearCurrent = false;
     public boolean needToEmptyVBoxMessages = false;
+    public boolean contactChange = false;
+
+    public int refreshNumber = 0;
 
     /**
      * Private constructor, called only if the instance of this object is null
@@ -127,7 +130,6 @@ public class SlyxSocket extends Thread {
                                     this.me.setSetting_connections(Boolean.valueOf(j.get("connections").toString()));
                                 }
                                 contacts.clear();
-                                System.out.println("CONTACTS : " + contacts.size());
                                 for (User u : contacts.values()) {
                                     System.out.println(u.toString());
                                 }
@@ -182,6 +184,8 @@ public class SlyxSocket extends Thread {
                                     SlyxSound.playSound("NOTIFICATION");
                                     needToRefreshContacts = true;
                                     listOfContactWhoHasNewMessages.put(uFrom.getId(), uFrom.getId());
+                                } else {
+                                    refreshNumber = 3;
                                 }
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
@@ -198,6 +202,7 @@ public class SlyxSocket extends Thread {
                                     }
                                     needToEmptyVBoxMessages = true;
                                 }
+                                refreshNumber = 3;
                                 break;
                             case "GET_NEW_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
@@ -211,6 +216,7 @@ public class SlyxSocket extends Thread {
                                         );
                                     }
                                 }
+                                refreshNumber = 3;
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
                                 User user = new User(
@@ -265,6 +271,19 @@ public class SlyxSocket extends Thread {
             contacts.get(to.getId()).addMessage(
                     idx--, this.me, to.getId(), content, new Date(), "OUT"
             );
+        }
+        refreshNumber = 3;
+    }
+
+    public void resetMessagePrinted(int exceptThisUser, VBox vBox) {
+        for (User u : contacts.values())
+            if (u.getId() != exceptThisUser)
+                for (Message m : u.messages.values())
+                    m.printed = false;
+        messagesPrinted = 0;
+        vBox.getChildren().clear();
+        for (Node observable : vBox.getChildren()) {
+            vBox.getChildren().remove(observable);
         }
     }
 
@@ -497,18 +516,6 @@ public class SlyxSocket extends Thread {
     }
 
     /**
-     * Get an array of contacts of contact list
-     * @return The hashmap of contacts as an array
-     */
-    public User[] getContacts() {
-        User[] users = new User[contacts.size()];
-        int counter = 0;
-        for (User u : contacts.values())
-            users[counter++] = u;
-        return users;
-    }
-
-    /**
      * Get an array of contacts who are not in contact list
      * @return The hashmap of users as an array
      */
@@ -546,7 +553,6 @@ public class SlyxSocket extends Thread {
     }
 
     public void clearVBox(VBox vBox) {
-        System.out.println("CLEAR");
         vBox.getChildren().clear();
         for (Node observable : vBox.getChildren()) {
             vBox.getChildren().remove(observable);

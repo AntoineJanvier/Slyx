@@ -13,10 +13,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import slyx.Version;
 import slyx.communication.SlyxSocket;
-import slyx.validators.Validator;
+import slyx.validators.LoginValidator;
 
 import java.io.IOException;
-import java.sql.Time;
 
 import static slyx.exceptions.SlyxError.ERR_CONNECTION;
 import static slyx.exceptions.SlyxError.ERR_EMAIL;
@@ -59,9 +58,9 @@ public class LoginController {
         String u_pwd = tf_password.getText();
 
         // Test inputs
-        if (!Validator.isValidEmailAddress(u_email))
+        if (!LoginValidator.isValidEmailAddress(u_email))
             label_error_hint.setText(getError(ERR_EMAIL));
-        else if (!Validator.isValidPassword(u_pwd))
+        else if (!LoginValidator.isValidPassword(u_pwd))
             label_error_hint.setText(getError(ERR_PASSWORD));
         else {
             if (slyxSocket != null) {
