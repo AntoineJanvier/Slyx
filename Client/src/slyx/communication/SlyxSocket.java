@@ -1,5 +1,6 @@
 package slyx.communication;
 
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -81,6 +82,11 @@ public class SlyxSocket extends Thread {
         if (instance == null)
             instance = new SlyxSocket();
         return instance;
+    }
+    public Timeline timelineMessages = null;
+    public void stopTimeline() {
+        if (this.timelineMessages != null)
+            this.timelineMessages.stop();
     }
 
     /**

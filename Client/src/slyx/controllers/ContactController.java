@@ -130,7 +130,7 @@ private Timeline timelineRefreshMessages = null;
                             String myIcon = slyxSocket.getMe().getPicture();
                             Image myContactIcon = new Image(myIcon);
 
-                            for (Message m : user.messages.values()) {
+                            for (Message m : slyxSocket.contacts.get(slyxSocket.idOfCurrentContactPrinted).messages.values()) {
                                 if ("IN".equals(m.getInOrOut()))
                                     putInVBoxMessages(m, vBox, contactImageIcon);
                                 else
@@ -140,6 +140,8 @@ private Timeline timelineRefreshMessages = null;
                             }
                             scrollPane.setVvalue(1);
                             slyxSocket.needToEmptyVBoxMessages = false;
+
+                            slyxSocket.stopTimeline();
 
                             timelineRefreshMessages = new Timeline(new KeyFrame(
                                     Duration.millis(500),
@@ -153,7 +155,7 @@ private Timeline timelineRefreshMessages = null;
                                             }
                                             if (user.messages.size() > slyxSocket.messagesPrinted ||
                                                     slyxSocket.refreshNumber > 0) {
-                                                for (Message m : user.messages.values()) {
+                                                for (Message m : slyxSocket.contacts.get(slyxSocket.idOfCurrentContactPrinted).messages.values()) {
                                                     if (!m.printed) {
                                                         if ("IN".equals(m.getInOrOut()))
                                                             putInVBoxMessages(m, vBox, contactImageIcon);
@@ -176,6 +178,7 @@ private Timeline timelineRefreshMessages = null;
                                     }));
                             timelineRefreshMessages.setCycleCount(Animation.INDEFINITE);
                             timelineRefreshMessages.play();
+                            slyxSocket.timelineMessages = timelineRefreshMessages;
                         } catch (IOException e) {
                             System.out.println(e.getMessage());
                         }
