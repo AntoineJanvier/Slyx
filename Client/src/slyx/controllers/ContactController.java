@@ -6,7 +6,6 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,7 +25,6 @@ import slyx.utils.Message;
 import slyx.utils.User;
 
 import java.io.IOException;
-import java.util.Date;
 
 
 /**
@@ -64,7 +62,7 @@ private Timeline timelineRefreshMessages = null;
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
 
-            if (slyxSocket.listOfContactWhoHasNewMessages.containsKey(user.getId()))
+            if (user.hasNewMessages)
                 circle_notifications.setVisible(true);
             else
                 circle_notifications.setVisible(false);
@@ -72,13 +70,13 @@ private Timeline timelineRefreshMessages = null;
             anchorPane_contact.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    user.hasNewMessages = false;
                     textField.setDisable(false);
                     button.setDisable(false);
-                    slyxSocket.refreshNumber = 2;
+                    slyxSocket.refreshNumberForMessages = 2;
                     if (circle_notifications.isVisible()) {
                         circle_notifications.setVisible(false);
                         slyxSocket.listOfContactWhoHasNewMessages.remove(user.getId());
-                        slyxSocket.needToRefreshContacts = true;
                     }
 
                     if (slyxSocket.idOfCurrentContactPrinted != user.getId()) {
@@ -146,7 +144,6 @@ private Timeline timelineRefreshMessages = null;
                             timelineRefreshMessages = new Timeline(new KeyFrame(
                                     Duration.millis(500),
                                     ae -> {
-                                        System.out.println("NB MESSAGES : " + user.messages.size());
                                         try {
                                             if (slyxSocket.needToEmptyVBoxMessages) {
                                                 slyxSocket.clearVBox(vBox);
@@ -154,7 +151,7 @@ private Timeline timelineRefreshMessages = null;
                                                 slyxSocket.needToEmptyVBoxMessages = false;
                                             }
                                             if (user.messages.size() > slyxSocket.messagesPrinted ||
-                                                    slyxSocket.refreshNumber > 0) {
+                                                    slyxSocket.refreshNumberForMessages > 0) {
                                                 for (Message m : slyxSocket.contacts.get(slyxSocket.idOfCurrentContactPrinted).messages.values()) {
                                                     if (!m.printed) {
                                                         if ("IN".equals(m.getInOrOut()))
@@ -171,8 +168,8 @@ private Timeline timelineRefreshMessages = null;
                                         } catch (IOException e) {
                                             System.out.println(e.getMessage());
                                         }
-                                        if (slyxSocket.refreshNumber > 0) {
-                                            slyxSocket.refreshNumber--;
+                                        if (slyxSocket.refreshNumberForMessages > 0) {
+                                            slyxSocket.refreshNumberForMessages--;
                                             scrollPane.setVvalue(1);
                                         }
                                     }));

@@ -28,11 +28,11 @@
          </font>
       </Label>
       <Rectangle fx:id="rect_connected" fill="DODGERBLUE" height="5.0" layoutY="57.0" smooth="false" stroke="BLACK" strokeType="INSIDE" width="250.0" />
-      <Circle fx:id="circle_notifications" layoutX="146.0" layoutY="27.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+      <Circle fx:id="circle_notifications" layoutX="146.0" layoutY="27.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
          <fill>
             <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
                <stops>
-                  <Stop color="BLACK" />
+                  <Stop color="#005aff" />
                   <Stop color="WHITE" offset="1.0" />
                </stops>
             </RadialGradient>

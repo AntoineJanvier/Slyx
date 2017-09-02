@@ -48,7 +48,6 @@ public class ContactRequestController {
                     slyxSocket.removeContactRequest(user);
                 }
                 anchorPane_contact.setVisible(false);
-                slyxSocket.needToRefreshContacts = true;
             });
         } catch (IOException e) {
             e.printStackTrace();

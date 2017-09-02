@@ -200,28 +200,33 @@ public class SlyxController {
         for (User u : slyxSocket.contacts.values()) {
             addOneContactToContactList(u);
             slyxSocket.contactsPrinted++;
+            slyxSocket.sendGetMessagesOfContactRequest(u);
         }
         // If needed, clear VBox to reset contact list (in case of connection or other things)
         timelineRefreshContacts = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
+                    if (slyxSocket.needToClearCurrent) {
+                        slyxSocket.needToClearCurrent = false;
+                        slyxSocket.clearVBox(vBox_messages);
+                        slyxSocket.contactsPrinted = 0;
+                        anchorPane_right.getChildren().clear();
+                    }
                     try {
-                        if (slyxSocket.contactsPrinted != slyxSocket.contacts.size()) {
+                        if (slyxSocket.contactsPrinted != slyxSocket.contacts.size()
+                                || slyxSocket.refreshNumberForContacts > 0) {
+                            if (slyxSocket.refreshNumberForContacts > 0)
+                                slyxSocket.refreshNumberForContacts--;
                             slyxSocket.clearVBox(vBox_left);
                             slyxSocket.contactsPrinted = 0;
                             for (User u : slyxSocket.contacts.values()) {
+                                slyxSocket.sendGetMessagesOfContactRequest(u);
                                 addOneContactToContactList(u);
                                 slyxSocket.contactsPrinted++;
                             }
                         }
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
-                    }
-                    if (slyxSocket.needToClearCurrent) {
-                        slyxSocket.needToClearCurrent = false;
-                        slyxSocket.clearVBox(vBox_messages);
-                        slyxSocket.messagesPrinted = 0;
-                        anchorPane_right.getChildren().clear();
                     }
                 }));
         timelineRefreshContacts.setCycleCount(Animation.INDEFINITE);

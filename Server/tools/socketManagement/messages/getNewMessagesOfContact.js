@@ -32,11 +32,6 @@ module.exports = {
                                 re.inOrOut = ior;
                                 resp.push(re);
                             }
-                            console.log(JSON.stringify({
-                                ACTION: 'GET_NEW_MESSAGES_OF_CONTACT',
-                                CONTACT_ID: user2.userid,
-                                MESSAGES: resp
-                            }) + '\n');
                             socket.write(JSON.stringify({
                                 ACTION: 'GET_NEW_MESSAGES_OF_CONTACT',
                                 CONTACT_ID: user2.userid,

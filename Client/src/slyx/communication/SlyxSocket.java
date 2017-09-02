@@ -1,12 +1,8 @@
 package slyx.communication;
 
 import javafx.animation.Timeline;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
-import slyx.controllers.MessageOutController;
 import slyx.exceptions.SocketClosedException;
 import slyx.jsonsimple.JSONObject;
 import slyx.jsonsimple.parser.JSONParser;
@@ -48,12 +44,12 @@ public class SlyxSocket extends Thread {
     public int contactsPrinted = 0;
 
     public boolean hasNewPendingRequest = false;
-    public boolean needToRefreshContacts = false;
     public boolean needToClearCurrent = false;
     public boolean needToEmptyVBoxMessages = false;
     public boolean contactChange = false;
 
-    public int refreshNumber = 0;
+    public int refreshNumberForMessages = 0;
+    public int refreshNumberForContacts = 0;
 
     /**
      * Private constructor, called only if the instance of this object is null
@@ -136,9 +132,6 @@ public class SlyxSocket extends Thread {
                                     this.me.setSetting_connections(Boolean.valueOf(j.get("connections").toString()));
                                 }
                                 contacts.clear();
-                                for (User u : contacts.values()) {
-                                    System.out.println(u.toString());
-                                }
                                 break;
                             case "GET_CONTACTS":
                                 arrayJsonParser = new ArrayJsonParser(j.get("CONTACTS").toString());
@@ -146,7 +139,6 @@ public class SlyxSocket extends Thread {
                                 contacts.clear();
                                 for (User u : arrayJsonParser.userHashMap.values())
                                     contacts.put(u.getId(), u);
-                                needToRefreshContacts = true;
                                 break;
                             case "CONTACT_REQUEST":
                                 userRequests.put(Math.toIntExact((long) j.get("id")), new User(
@@ -173,7 +165,6 @@ public class SlyxSocket extends Thread {
                                     hasNewPendingRequest = true;
                                 break;
                             case "CALL_INCOMING":
-                                System.out.println("CALL_INCOMING");
                                 User caller = contacts.get(Integer.parseInt(j.get("FROM").toString()));
                                 contacts.get(caller.getId()).addCall(
                                         Integer.parseInt(j.get("CALL_ID").toString()), caller, this.me
@@ -186,12 +177,16 @@ public class SlyxSocket extends Thread {
                                         Integer.parseInt(j.get("MESSAGE_ID").toString()), uFrom, this.me.getId(),
                                         j.get("CONTENT").toString(), d, "IN"
                                 );
+                                uFrom.hasNewMessages = true;
                                 if (uFrom.getId() != idOfCurrentContactPrinted) {
+                                    System.out.println("A");
+                                    System.out.println("A");
                                     SlyxSound.playSound("NOTIFICATION");
-                                    needToRefreshContacts = true;
-                                    listOfContactWhoHasNewMessages.put(uFrom.getId(), uFrom.getId());
+                                    refreshNumberForContacts = 2;
                                 } else {
-                                    refreshNumber = 3;
+                                    System.out.println("B");
+                                    System.out.println("B");
+                                    refreshNumberForMessages = 3;
                                 }
                                 break;
                             case "GET_MESSAGES_OF_CONTACT":
@@ -208,7 +203,7 @@ public class SlyxSocket extends Thread {
                                     }
                                     needToEmptyVBoxMessages = true;
                                 }
-                                refreshNumber = 3;
+                                refreshNumberForMessages = 3;
                                 break;
                             case "GET_NEW_MESSAGES_OF_CONTACT":
                                 arrayJsonParser = new ArrayJsonParser(j.get("MESSAGES").toString());
@@ -222,7 +217,7 @@ public class SlyxSocket extends Thread {
                                         );
                                     }
                                 }
-                                refreshNumber = 3;
+                                refreshNumberForMessages = 2;
                                 break;
                             case "CONTACT_REQUEST_ACCEPTED":
                                 User user = new User(
@@ -232,20 +227,18 @@ public class SlyxSocket extends Thread {
                                 );
                                 user.setConnected(Boolean.valueOf(j.get("connected").toString()));
                                 addNewContact(user);
-                                needToRefreshContacts = true;
                                 break;
                             case "CONTACT_CONNECTION":
                                 User toConnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
                                 toConnect.setConnected(true);
-                                needToRefreshContacts = true;
+                                refreshNumberForContacts = 2;
                                 break;
                             case "CONTACT_DISCONNECTION":
                                 User toDisconnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
                                 toDisconnect.setConnected(false);
-                                needToRefreshContacts = true;
+                                refreshNumberForContacts = 2;
                                 break;
                             case "CONTACT_REMOVE":
-                                needToRefreshContacts = true;
                                 if (Integer.parseInt(j.get("USER_A").toString()) == idOfCurrentContactPrinted
                                         || Integer.parseInt(j.get("USER_B").toString()) == idOfCurrentContactPrinted) {
                                     needToClearCurrent = true;
@@ -278,7 +271,7 @@ public class SlyxSocket extends Thread {
                     idx--, this.me, to.getId(), content, new Date(), "OUT"
             );
         }
-        refreshNumber = 3;
+        refreshNumberForMessages = 3;
     }
 
     public void resetMessagePrinted(int exceptThisUser, VBox vBox) {
@@ -543,19 +536,6 @@ public class SlyxSocket extends Thread {
         for (User u : userRequests.values())
             users[counter++] = u;
         return users;
-    }
-
-    /**
-     * Get messages of a specific contact
-     * @param contact We want to get messages of this contact
-     * @return An array of messages
-     */
-    public Message[] getMessagesOfContact(User contact) {
-        Message[] messages = new Message[contacts.get(contact.getId()).messages.size()];
-        int counter = 0;
-        for (Message m : contacts.get(contact.getId()).messages.values())
-            messages[counter++] = m;
-        return messages;
     }
 
     public void clearVBox(VBox vBox) {

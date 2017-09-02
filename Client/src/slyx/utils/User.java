@@ -26,9 +26,9 @@ public class User {
     private boolean setting_calls;
     private boolean setting_messages;
     private boolean setting_connections;
+    public boolean hasNewMessages = false;
 
     public TreeMap<Date, Message> messages = new TreeMap<>();
-    public TreeMap<Date, Message> hashMapNewMessages = new TreeMap<>();
     private HashMap<Integer, Call> calls = new HashMap<>();
 
     public User() {
@@ -47,31 +47,9 @@ public class User {
         Message m = new Message(messageID, from, to, sent, content, inOrOut);
         messages.put(sent, m);
     }
-    public void addNewMessage(int messageID, User from, int to, String content, Date sent, String inOrOut) {
-        Message m = new Message(messageID, from, to, sent, content, inOrOut);
-        hashMapNewMessages.put(sent, m);
-    }
     public void addCall(int callID, User from, User to) {
         Call c = new Call(from, to);
         calls.put(callID, c);
-    }
-    public Message[] getMessages() {
-        Message[] messages = new Message[this.messages.size()];
-        int counter = 0;
-        for (Message m : this.messages.values())
-            messages[counter++] = m;
-        return messages;
-    }
-    public Message[] getNewMessages() {
-        Message[] messages = new Message[hashMapNewMessages.size()];
-        int counter = 0;
-        for (Message m : hashMapNewMessages.values())
-            messages[counter++] = m;
-        return messages;
-    }
-    public void removeNewMessage(Message m) {
-        if (hashMapNewMessages.containsValue(m))
-            hashMapNewMessages.remove(m.getSent());
     }
 
     public int getId() { return id; }
