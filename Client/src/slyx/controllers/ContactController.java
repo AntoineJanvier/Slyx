@@ -144,6 +144,8 @@ private Timeline timelineRefreshMessages = null;
                             timelineRefreshMessages = new Timeline(new KeyFrame(
                                     Duration.millis(500),
                                     ae -> {
+                                        if (slyxSocket.receivedCloseRequest)
+                                            timelineRefreshMessages.stop();
                                         try {
                                             if (slyxSocket.needToEmptyVBoxMessages) {
                                                 slyxSocket.clearVBox(vBox);

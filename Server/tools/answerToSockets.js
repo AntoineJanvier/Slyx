@@ -2,8 +2,10 @@
 module.exports = {
     toClient: function (clients, clientID, toSend) {
         for (let c of clients) {
-            if (c.User.id === clientID) {
-                let wrote = c.write(toSend + '\n');
+            if (c.User) {
+                if (c.User.id === clientID) {
+                    let wrote = c.write(toSend + '\n');
+                }
             }
         }
     },

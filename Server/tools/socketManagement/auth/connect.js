@@ -17,9 +17,7 @@ module.exports = {
             if (user) {
                 if (passwordHash.verify(json.password, user.pwd)) {
                     return Setting.find({
-                        where: {
-                            user: user.userid
-                        }
+                        where: {user: user.userid}
                     }).then(setting => {
                         jsonToReturn = user.responsify();
                         if (setting) {
@@ -32,22 +30,25 @@ module.exports = {
                         }
                         jsonToReturn.ACTION = "ACCEPT_CONNECTION";
                         socket.write(JSON.stringify(jsonToReturn) + '\n');
-                        socket.User = user.responsify();
+                        send.toClient(clients, user.userid, JSON.stringify({
+                            ACTION: 'DISCONNECT'
+                        }));
 
                         return Contact.findAll({
                             where: {user: user.userid}
                         }).then(contacts => {
                             let contactIDs = [];
-                            for (let c of contacts) {
+                            for (let c of contacts)
                                 contactIDs.push(c.contact);
-                            }
                             return User.findAll({
                                 where: {userid: {$in: contactIDs}}
                             }).then(users => {
                                 let r = [];
-                                for (let k of users) {
+                                for (let k of users)
                                     r.push(k.userid);
-                                }
+
+                                socket.User = user.responsify();
+
                                 send.toClients(clients, r, JSON.stringify({
                                     ACTION: 'CONTACT_CONNECTION',
                                     CONTACT_ID: user.userid

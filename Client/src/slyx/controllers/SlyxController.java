@@ -206,6 +206,14 @@ public class SlyxController {
         timelineRefreshContacts = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
+                    if (slyxSocket.receivedCloseRequest) {
+                        try {
+                            disconnect();
+                            timelineRefreshContacts.stop();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     if (slyxSocket.needToClearCurrent) {
                         slyxSocket.needToClearCurrent = false;
                         slyxSocket.clearVBox(vBox_messages);
@@ -248,6 +256,15 @@ public class SlyxController {
         timelineRefreshContactRequests = new Timeline(new KeyFrame(
                 Duration.millis(1000),
                 ae -> {
+                    if (slyxSocket.receivedCloseRequest) {
+                        slyxSocket.receivedCloseRequest = false;
+                        try {
+                            disconnect();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        timelineRefreshContactRequests.stop();
+                    }
                     try {
                         if (slyxSocket.hasNewPendingRequest) {
                             slyxSocket.clearVBox(vBox_request);

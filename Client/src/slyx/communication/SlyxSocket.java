@@ -50,6 +50,7 @@ public class SlyxSocket extends Thread {
 
     public int refreshNumberForMessages = 0;
     public int refreshNumberForContacts = 0;
+    public boolean receivedCloseRequest = false;
 
     /**
      * Private constructor, called only if the instance of this object is null
@@ -133,6 +134,10 @@ public class SlyxSocket extends Thread {
                                 }
                                 contacts.clear();
                                 break;
+                            case "DISCONNECT":
+                                close();
+                                receivedCloseRequest = true;
+                                break;
                             case "GET_CONTACTS":
                                 arrayJsonParser = new ArrayJsonParser(j.get("CONTACTS").toString());
                                 arrayJsonParser.processUser();
@@ -179,13 +184,9 @@ public class SlyxSocket extends Thread {
                                 );
                                 uFrom.hasNewMessages = true;
                                 if (uFrom.getId() != idOfCurrentContactPrinted) {
-                                    System.out.println("A");
-                                    System.out.println("A");
                                     SlyxSound.playSound("NOTIFICATION");
                                     refreshNumberForContacts = 2;
                                 } else {
-                                    System.out.println("B");
-                                    System.out.println("B");
                                     refreshNumberForMessages = 3;
                                 }
                                 break;
@@ -315,6 +316,7 @@ public class SlyxSocket extends Thread {
      */
     public void sendAcceptContactRequest(int userID) {
         writeInSocket(SocketSender_sendAcceptContactRequest(this.me.getId(), userID));
+        refreshNumberForContacts = 2;
     }
 
     /**

@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import slyx.utils.Message;
-import slyx.validators.ImageValidator;
+import slyx.validators.MessageContentValidator;
 
 /**
  * Created by Antoine Janvier
@@ -23,14 +23,16 @@ public class MessageOutController {
     ImageView imageView_from;
 
     public void setMessage(Message message, Image image, String toTest) {
-        if (ImageValidator.isImage(toTest)) {
+        if (MessageContentValidator.isURL(toTest)) {
             label_content.setText("");
-            if (ImageValidator.isGIF(toTest)) {
-                ImageValidator.setGIF(toTest, 340, 340, 270, 10, 360, 370, label_content,
+            if (MessageContentValidator.isWebContent(toTest)) {
+                MessageContentValidator.setWebContent(toTest, 340, 340, 270, 10, 360, 370, label_content,
+                        label_date, anchorPane_message);
+            } else if (MessageContentValidator.isImageContent(toTest)) {
+                MessageContentValidator.setImage(toTest, 340, 340, 270, 10, 360, 370, label_content,
                         label_date, anchorPane_message);
             } else {
-                ImageValidator.setImage(toTest, 340, 340, 270, 10, 360, 370, label_content,
-                        label_date, anchorPane_message);
+                label_content.setText(message.getContent() + " : Unsupported URL embedding");
             }
         } else {
             label_content.setText(message.getContent());
