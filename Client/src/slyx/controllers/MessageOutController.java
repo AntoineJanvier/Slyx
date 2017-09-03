@@ -39,6 +39,8 @@ public class MessageOutController {
         }
         label_date.setText(message.getSent().toString());
         imageView_from.setImage(image);
+
+        // TODO : Delete our own messages
     }
 
     public void initialize() {

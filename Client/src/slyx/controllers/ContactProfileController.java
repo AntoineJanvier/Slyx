@@ -58,6 +58,7 @@ public class ContactProfileController {
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             button_remove_contact.setOnMouseClicked(event -> {
+                // TODO : Test if contact is removed on both sides
                 slyxSocket.sendRemoveContactOfContactList(user.getId());
                 anchorPane_contactProfile.getChildren().clear();
                 clearAndDisable(textField, button, vBox);
