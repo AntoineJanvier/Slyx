@@ -26,7 +26,7 @@ module.exports = {
                             ACTION: 'CONTACT_DISCONNECTION',
                             CONTACT_ID: user.userid
                         }));
-                        return user.update({connected: true}, {fields: ['connected']});
+                        return user.update({connected: false}, {fields: ['connected']});
                     })
                 }
             }).catch(err => {

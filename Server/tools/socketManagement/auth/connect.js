@@ -30,9 +30,9 @@ module.exports = {
                         }
                         jsonToReturn.ACTION = "ACCEPT_CONNECTION";
                         socket.write(JSON.stringify(jsonToReturn) + '\n');
-                        send.toClient(clients, user.userid, JSON.stringify({
-                            ACTION: 'DISCONNECT'
-                        }));
+                        // send.toClient(clients, user.userid, JSON.stringify({
+                        //     ACTION: 'DISCONNECT'
+                        // }));
 
                         return Contact.findAll({
                             where: {user: user.userid}

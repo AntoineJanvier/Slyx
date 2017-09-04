@@ -115,9 +115,11 @@ public class SlyxController {
         Parent parent = FXMLLoader.load(getClass().getResource("/slyx/scenes/login.fxml"));
         Stage stage = (Stage) btn_disconnection.getScene().getWindow();
         stage.close();
-        Thread.currentThread().interrupt();
         timelineRefreshContacts.stop();
         timelineRefreshContactRequests.stop();
+        if (slyxSocket.timelineMessages != null)
+            slyxSocket.timelineMessages.stop();
+        Thread.currentThread().interrupt();
         Stage next_stage = new Stage();
         next_stage.setTitle("Slyx");
         next_stage.setScene(new Scene(parent));
