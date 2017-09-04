@@ -1,9 +1,12 @@
 package slyx.controllers;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import slyx.utils.Message;
 import slyx.validators.MessageContentValidator;
@@ -21,6 +24,8 @@ public class MessageOutController {
     Label label_date;
     @FXML
     ImageView imageView_from;
+    @FXML
+    Button button_deleteMessage;
 
     public void setMessage(Message message, Image image, String toTest) {
         if (MessageContentValidator.isURL(toTest)) {
@@ -40,12 +45,20 @@ public class MessageOutController {
         label_date.setText(message.getSent().toString());
         imageView_from.setImage(image);
 
-        // TODO : Delete our own messages
+        button_deleteMessage.setOnMouseClicked(event -> {
+            // TODO : Delete our own messages
+        });
     }
 
     public void initialize() {
         // CSS
         anchorPane_message
                 .getStylesheets().add(getClass().getResource("/slyx/css/messageOut.css").toExternalForm());
+
+        //ImageView imageView = new ImageView(new Image("/slyx/images/red-cross.png"));
+        //imageView.setFitHeight(20);
+        //imageView.setFitWidth(20);
+        //button_deleteMessage.setGraphic(imageView);
+        button_deleteMessage.setVisible(false);
     }
 }

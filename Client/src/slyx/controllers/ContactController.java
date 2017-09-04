@@ -32,7 +32,9 @@ import java.io.IOException;
  * on 31/07/17.
  */
 public class ContactController {
-private Timeline timelineRefreshMessages = null;
+
+    private Timeline timelineRefreshMessages = null;
+
     @FXML
     AnchorPane anchorPane_contact;
     @FXML
@@ -52,6 +54,7 @@ private Timeline timelineRefreshMessages = null;
         label_firstname.setText(user.getFirstname());
         label_lastname.setText(user.getLastname());
         imageView_contact_icon.setImage(new Image(user.getPicture()));
+
 
         if (user.isConnected())
             rect_connected.setStyle("-fx-fill: green");
@@ -105,8 +108,7 @@ private Timeline timelineRefreshMessages = null;
                             button.setOnMouseClicked(event1 -> {
                                 slyxSocket.sendMessage(
                                         textField.getText(),
-                                        slyxSocket.getHashmapContacts().get(user.getId()),
-                                        vBox
+                                        slyxSocket.getHashmapContacts().get(user.getId())
                                 );
                                 textField.setText("");
                             });
@@ -116,8 +118,7 @@ private Timeline timelineRefreshMessages = null;
                                 if (event12.getCode().equals(KeyCode.ENTER)) {
                                     slyxSocket.sendMessage(
                                             textField.getText(),
-                                            slyxSocket.getHashmapContacts().get(user.getId()),
-                                            vBox
+                                            slyxSocket.getHashmapContacts().get(user.getId())
                                     );
                                     textField.setText("");
                                 }

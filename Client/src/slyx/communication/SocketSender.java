@@ -39,10 +39,10 @@ class SocketSender {
         return j.toString();
     }
     static String SocketSender_sendMessage(User me, int toUserID, String content, String ior) {
-        return new Message(0, me, toUserID, new Date(), content, ior)
-                .toObject()
-                .put("request", RequestTypes.MESSAGE_REQUEST)
-                .toString();
+        Message message = new Message(0, me, toUserID, new Date(), content, ior);
+        JSONObject jsonObject = message.toObject();
+        jsonObject.put("request", RequestTypes.MESSAGE_REQUEST);
+        return jsonObject.toString();
     }
     static String SocketSender_sendGetUsersNotInContactList(int myID) {
         JSONObject j = new JSONObject();

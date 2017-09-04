@@ -1,6 +1,6 @@
 package slyx.utils;
 
-import slyx.libs.JSONObject;
+import slyx.jsonsimple.JSONObject;
 
 import java.util.Date;
 

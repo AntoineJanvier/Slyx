@@ -227,7 +227,7 @@ public class SlyxSocket extends Thread {
                                         j.get("email").toString(), j.get("picture").toString()
                                 );
                                 user.setConnected(Boolean.valueOf(j.get("connected").toString()));
-                                addNewContact(user);
+                                contacts.put(user.getId(), user);
                                 break;
                             case "CONTACT_CONNECTION":
                                 User toConnect = contacts.get(Math.toIntExact((long) j.get("CONTACT_ID")));
@@ -268,7 +268,7 @@ public class SlyxSocket extends Thread {
      * @param content Message content
      * @param to Recipient
      */
-    public void sendMessage(String content, User to, VBox vBox) {
+    public void sendMessage(String content, User to) {
         if (content.length() > 0) {
             writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
             contacts.get(to.getId()).addMessage(
@@ -506,14 +506,6 @@ public class SlyxSocket extends Thread {
      * @return The hashMap of contacts
      */
     public HashMap<Integer, User> getHashmapContacts() { return contacts; }
-
-    /**
-     * Add a contact to contact list
-     * @param u User to add in contact list
-     */
-    private void addNewContact(User u) {
-        contacts.put(u.getId(), u);
-    }
 
     /**
      * Remove a user of contact requests list

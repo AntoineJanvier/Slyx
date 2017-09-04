@@ -1,20 +1,14 @@
 package slyx.controllers;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import slyx.communication.SlyxSocket;
 import slyx.utils.User;
 
@@ -63,24 +57,25 @@ public class ContactProfileController {
                 anchorPane_contactProfile.getChildren().clear();
                 clearAndDisable(textField, button, vBox);
             });
-            button_call_contact.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    slyxSocket.sendCallContactRequest(slyxSocket.getMe().getId(), user.getId());
-
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/callWindow.fxml"));
-                        Parent parent = fxmlLoader.load();
-                        CallWindowController callWindowController = fxmlLoader.getController();
-                        callWindowController.setContacts(slyxSocket.getMe(), user);
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(parent));
-                        stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+//            button_call_contact.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    slyxSocket.sendCallContactRequest(slyxSocket.getMe().getId(), user.getId());
+//
+//                    try {
+//                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/slyx/scenes/callWindow.fxml"));
+//                        Parent parent = fxmlLoader.load();
+//                        CallWindowController callWindowController = fxmlLoader.getController();
+//                        callWindowController.setContacts(slyxSocket.getMe(), user);
+//                        Stage stage = new Stage();
+//                        stage.setScene(new Scene(parent));
+//                        stage.show();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+            button_call_contact.setDisable(true);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
