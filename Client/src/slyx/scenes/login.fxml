@@ -5,21 +5,23 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="anchorPane_general" prefHeight="275.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.LoginController">
+<AnchorPane fx:id="anchorPane_general" prefHeight="378.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slyx.controllers.LoginController">
     <children>
         <Label fx:id="label_connection" layoutX="239.0" layoutY="24.0" text="Connection to Slyx" />
-        <TextField fx:id="tf_email" layoutX="150.0" layoutY="54.0" prefHeight="26.0" prefWidth="300.0" promptText="Email" text="antoine.jan95@gmail.com" />
-      <PasswordField fx:id="tf_password" layoutX="150.0" layoutY="92.0" prefHeight="26.0" prefWidth="300.0" promptText="password" text="tototiti" />
-        <Button fx:id="btn_sign_in" layoutX="241.0" layoutY="138.0" mnemonicParsing="false" onAction="#launch_next_screen" prefHeight="40.0" prefWidth="120.0" text="Sign In" />
-        <Line endX="300.0" layoutX="200.0" layoutY="200.0" startX="-100.0" />
-        <Hyperlink fx:id="hyperlink_sign_up" disable="true" layoutX="295.0" layoutY="217.0" text="Sign Up" />
-        <Label layoutX="210.0" layoutY="221.0" text="No account ?" />
-        <Label layoutX="353.0" layoutY="221.0" text="now !" />
-      <Label fx:id="label_error_hint" layoutX="68.0" layoutY="241.0" />
-      <Label fx:id="label_get_update" alignment="BASELINE_RIGHT" contentDisplay="RIGHT" layoutX="195.0" layoutY="249.0" prefHeight="16.0" prefWidth="357.0" />
-      <Hyperlink fx:id="hyperlink_get_update" layoutX="552.0" layoutY="245.0" AnchorPane.rightAnchor="10.0" />
+        <TextField fx:id="tf_email" layoutX="150.0" layoutY="148.0" prefHeight="26.0" prefWidth="300.0" promptText="Email" text="antoine.jan95@gmail.com" />
+      <PasswordField fx:id="tf_password" layoutX="150.0" layoutY="186.0" prefHeight="26.0" prefWidth="300.0" promptText="password" text="tototiti" />
+        <Button fx:id="btn_sign_in" layoutX="241.0" layoutY="232.0" mnemonicParsing="false" onAction="#launch_next_screen" prefHeight="40.0" prefWidth="120.0" text="Sign In" />
+        <Line endX="300.0" layoutX="200.0" layoutY="294.0" startX="-100.0" />
+        <Hyperlink fx:id="hyperlink_sign_up" disable="true" layoutX="295.0" layoutY="311.0" text="Sign Up" />
+        <Label layoutX="210.0" layoutY="315.0" text="No account ?" />
+        <Label layoutX="353.0" layoutY="315.0" text="now !" />
+      <Label fx:id="label_error_hint" layoutX="68.0" layoutY="335.0" />
+      <Label fx:id="label_get_update" alignment="BASELINE_RIGHT" contentDisplay="RIGHT" layoutX="195.0" layoutY="343.0" prefHeight="16.0" prefWidth="357.0" />
+      <Hyperlink fx:id="hyperlink_get_update" layoutX="580.0" layoutY="339.0" AnchorPane.rightAnchor="10.0" />
+      <ImageView fx:id="imageView_logo" fitHeight="69.0" fitWidth="85.0" layoutX="253.0" layoutY="56.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="258.0" />
     </children>
 </AnchorPane>

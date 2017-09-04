@@ -240,10 +240,13 @@ public class SlyxSocket extends Thread {
                                 refreshNumberForContacts = 2;
                                 break;
                             case "CONTACT_REMOVE":
-                                if (Integer.parseInt(j.get("USER_A").toString()) == idOfCurrentContactPrinted
-                                        || Integer.parseInt(j.get("USER_B").toString()) == idOfCurrentContactPrinted) {
+                                timelineMessages.stop();
+                                int id = Integer.parseInt(j.get("USER").toString());
+                                if (id == idOfCurrentContactPrinted)
                                     needToClearCurrent = true;
-                                }
+                                if (contacts.containsKey(id))
+                                    contacts.remove(id);
+                                refreshNumberForContacts = 2;
                                 break;
                             default:
                                 System.out.println("Unknown ACTION...");
@@ -312,10 +315,12 @@ public class SlyxSocket extends Thread {
 
     /**
      * Send an accept contact request to server, it will answer later
-     * @param userID User to accept as new contact
+     * @param user User to accept as new contact
      */
-    public void sendAcceptContactRequest(int userID) {
-        writeInSocket(SocketSender_sendAcceptContactRequest(this.me.getId(), userID));
+    public void sendAcceptContactRequest(User user) {
+        writeInSocket(SocketSender_sendAcceptContactRequest(this.me.getId(), user.getId()));
+        if (!contacts.containsKey(user.getId()))
+            contacts.put(user.getId(), user);
         refreshNumberForContacts = 2;
     }
 
@@ -394,6 +399,10 @@ public class SlyxSocket extends Thread {
      */
     public void sendRemoveContactOfContactList(int userID) {
         writeInSocket(SocketSender_sendRemoveContactOfContactList(this.me.getId(), userID));
+        if (contacts.containsKey(userID)) {
+            contacts.remove(userID);
+            refreshNumberForContacts = 2;
+        }
     }
 
     /**

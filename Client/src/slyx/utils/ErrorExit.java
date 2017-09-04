@@ -17,7 +17,5 @@ public class ErrorExit {
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
-        //System.out.println(toWrite);
     }
 }

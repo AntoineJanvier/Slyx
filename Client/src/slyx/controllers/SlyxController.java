@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -63,6 +64,8 @@ public class SlyxController {
     // Utils
     @FXML
     ImageView imageView_my_icon;
+    @FXML
+    ImageView imageView_logo;
     @FXML
     TextField tf_message_to_send;
 
@@ -130,6 +133,7 @@ public class SlyxController {
 
         // Add CSS
         borderPane_general.getStylesheets().add(getClass().getResource("/slyx/css/slyx.css").toExternalForm());
+        imageView_logo.setImage(new Image("/slyx/images/slyx-logo.png"));
 
         SlyxSocket slyxSocket = SlyxSocket.getInstance();
 

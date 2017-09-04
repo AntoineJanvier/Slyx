@@ -44,7 +44,7 @@ public class ContactRequestController {
                 if (before) {
                     slyxSocket.sendAddContactRequest(user.getId());
                 } else {
-                    slyxSocket.sendAcceptContactRequest(user.getId());
+                    slyxSocket.sendAcceptContactRequest(user);
                     slyxSocket.removeContactRequest(user);
                 }
                 anchorPane_contact.setVisible(false);

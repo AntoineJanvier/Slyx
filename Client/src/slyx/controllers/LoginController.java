@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -15,7 +17,8 @@ import slyx.Version;
 import slyx.communication.SlyxSocket;
 import slyx.validators.LoginValidator;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.Date;
 
 import static slyx.exceptions.SlyxError.ERR_CONNECTION;
 import static slyx.exceptions.SlyxError.ERR_EMAIL;
@@ -43,6 +46,8 @@ public class LoginController {
     Hyperlink hyperlink_get_update;
     @FXML
     Label label_error_hint;
+    @FXML
+    ImageView imageView_logo;
 
     @FXML
     public void launch_next_screen() {
@@ -78,6 +83,15 @@ public class LoginController {
                 }
                 if (slyxSocket.getMe().isConnected()) {
 
+                    // Save email to a log file to retrieve on next login
+                    try {
+                        PrintWriter printWriter = new PrintWriter("logins.txt", "UTF-8");
+                        printWriter.write(slyxSocket.getMe().getEmail());
+                        printWriter.close();
+                    } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
                     // Close login window
                     Stage stage = (Stage) btn_sign_in.getScene().getWindow();
                     stage.close();
@@ -101,9 +115,39 @@ public class LoginController {
         }
     }
     public void initialize() {
+
+        String lastEmailConnected = null;
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader("logins.txt");
+        } catch (FileNotFoundException e) {
+            try {
+                PrintWriter printWriter = new PrintWriter("logins.txt");
+                printWriter.close();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        if (fileReader != null) {
+            try (BufferedReader br = new BufferedReader(fileReader)) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lastEmailConnected = line;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         // CSS
         anchorPane_general
                 .getStylesheets().add(getClass().getResource("/slyx/css/login.css").toExternalForm());
+
+        imageView_logo.setImage(new Image("/slyx/images/slyx-logo.png"));
+        tf_email.setText(lastEmailConnected != null ? lastEmailConnected : "");
+        tf_password.setText("");
+
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             label_get_update.setText("Checking updates...");

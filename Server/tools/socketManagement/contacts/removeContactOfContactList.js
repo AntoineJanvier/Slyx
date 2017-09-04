@@ -1,6 +1,7 @@
 const models = require('../../../models/index');
 const User = models.User;
 const Contact = models.Contact;
+const Message = models.Message;
 
 const send = require('../../answerToSockets');
 
@@ -20,11 +21,13 @@ module.exports = {
                             where: {user: userToRemove.userid, contact: user.userid}
                         }).then(contact2 => {
                             return contact2.destroy().then(() => {
-                                let r = [user.userid, userToRemove.userid];
-                                send.toClients(clients, r, JSON.stringify({
+                                send.toClient(clients, user.userid, JSON.stringify({
                                     ACTION: 'CONTACT_REMOVE',
-                                    USER_A: user.userid,
-                                    USER_B: userToRemove.userid
+                                    USER: userToRemove.userid
+                                }));
+                                send.toClient(clients, userToRemove.userid, JSON.stringify({
+                                    ACTION: 'CONTACT_REMOVE',
+                                    USER: user.userid
                                 }));
                             })
                         })
