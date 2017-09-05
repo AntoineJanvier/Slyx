@@ -13,6 +13,8 @@ let nodenet = require('net');
 const sock = require('../tools/socketManagement/socket_management');
 const passwordHash = require('password-hash');
 
+// const Peer = require('peerjs');
+
 const models = require('../models');
 const User = models.User;
 const Contact = models.Contact;
@@ -116,9 +118,10 @@ nodenet.createServer(function (socket) {
                         sock.removeContactOfContactList.removeContactOfContactList(socket, json, clients);
                         break;
                     case 'CALL':
-                        peer.on('open', function (id) {
-                            socket.rtcPeerID = id;
-                        });
+                        // let peer = new Peer({key: 'lwjd5qra8257b9'});
+                        // peer.on('open', function (id) {
+                        //     socket.rtcPeerID = id;
+                        // });
                         send.toClient(clients, json.to, JSON.stringify({
                             ACTION: 'CALL_INCOMING',
                             FROM: json.from,
@@ -126,11 +129,11 @@ nodenet.createServer(function (socket) {
                         }));
                         break;
                     case 'ACCEPT_CALL':
-                        send.toClient(clients, json.to, JSON.stringify({
-                            ACTION: 'CALL_ACCEPTED',
-                            FROM: json.from,
-                            PEERID: socket.rtcPeerId
-                        }));
+                        // send.toClient(clients, json.to, JSON.stringify({
+                        //     ACTION: 'CALL_ACCEPTED',
+                        //     FROM: json.from,
+                        //     PEERID: socket.rtcPeerId
+                        // }));
                         break;
                     case 'REJECT_CALL':
                         send.toClient(clients, json.to, JSON.stringify({

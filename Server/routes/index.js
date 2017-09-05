@@ -1,11 +1,15 @@
 const express = require('express');
 let router = express.Router();
+// const Peer = require('peerjs');
+
 
 const models = require('../models');
 const User = models.User;
 const Contact = models.Contact;
 
 let getUserMedia = require('getusermedia');
+
+// let peer = new Peer({key: 'y4hmxzxfng7m0a4i'});
 
 
 router.get('/', function (req, res) {
@@ -24,22 +28,22 @@ router.get('/sign', function (req, res) {
     });
 });
 
-router.get('/room/:from/:to/', function (req, res) {
+router.get('/call/:fromUser/:toUser/', function (req, res) {
     User.find({
-        where: {userid: parseInt(req.params.from)}
+        where: {userid: parseInt(req.params.fromUser)}
     }).then(user1 => {
         return User.find({
-            where: {userid: parseInt(req.params.to)}
+            where: {userid: parseInt(req.params.toUser)}
         }).then(user2 => {
-            peer.on('open', function(id) {
-                console.log('My peer ID is: ' + id);
-            });
-            res.render('room', {
-                title: 'Call between ' + user1.first_name + ' and ' + user2.first_name,
-                u1: user1,
-                u2: user2,
-                RTC: require('rtc')
-            });
+            res.redirect('/html/index.html');
+            // peer.on('open', function(id) {
+            //     console.log('My peer ID is: ' + id);
+            // });
+            // res.render('room', {
+            //     title: 'Call between ' + user1.first_name + ' and ' + user2.first_name,
+            //     u1: user1,
+            //     u2: user2
+            // });
         }).catch(err => {
             console.log('B');
             throw err;

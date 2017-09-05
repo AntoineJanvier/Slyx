@@ -38,8 +38,8 @@ class SocketSender {
         j.put("u2userid", userID);
         return j.toString();
     }
-    static String SocketSender_sendMessage(User me, int toUserID, String content, String ior) {
-        Message message = new Message(0, me, toUserID, new Date(), content, ior);
+    static String SocketSender_sendMessage(User me, int toUserID, String content) {
+        Message message = new Message(0, me, toUserID, new Date(), content, "OUT");
         JSONObject jsonObject = message.toObject();
         jsonObject.put("request", RequestTypes.MESSAGE_REQUEST);
         return jsonObject.toString();

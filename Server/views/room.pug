@@ -3,15 +3,11 @@ html
     head
         title rtc.io simple conferencing
         link(rel='stylesheet' href='http://yui.yahooapis.com/pure/0.5.0/pure-min.css')
-    body(onload="RTC()" class="pure-g")
+        script(src="127.0.0.1:3000/javascripts/peer.min.js")
+    body(class="pure-g")
         div.pure-u-1-5
             div#l-video
         div.pure-u-4-5#r-video
-        script(src="http://cdn.peerjs.com/0.3/peer.min.js")
-        - var peer = new Peer({key: 'y4hmxzxfng7m0a4i'});
-        //script(src="https://cdn.jsdelivr.net/rtc/latest/rtc.min.js")
-//        - rtc = RTC({room: 'room/' + json.from + '/' + json.to + '/',signaller: 'https://switchboard.rtc.io/'});
-//        - var localVideo = document.getElementById('l-video');
-//        - var remoteVideo = document.getElementById('r-video');
-//        - localVideo.appendChild(rtc.local);
-//        - remoteVideo.appendChild(rtc.remote);
+            - navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            - var peer = new Peer({key: 'y4hmxzxfng7m0a4i'});
+            - peer.on('open', function(id) {document.getElementsByTagName("body")[0].innerHTML += 'ID : ' + id;});

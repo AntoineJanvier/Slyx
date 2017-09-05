@@ -9,6 +9,7 @@ import slyx.jsonsimple.parser.JSONParser;
 import slyx.jsonsimple.parser.ParseException;
 import slyx.utils.*;
 
+import javax.management.Notification;
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
@@ -270,7 +271,8 @@ public class SlyxSocket extends Thread {
      */
     public void sendMessage(String content, User to) {
         if (content.length() > 0) {
-            writeInSocket(SocketSender_sendMessage(this.me, to.getId(), content, "OUT"));
+            // TODO : Encrypt messages
+            writeInSocket(SocketSender_sendMessage(this.me, to.getId(), MessageContentEncrypt.encrypt(content)));
             contacts.get(to.getId()).addMessage(
                     idx--, this.me, to.getId(), content, new Date(), "OUT"
             );
@@ -471,7 +473,7 @@ public class SlyxSocket extends Thread {
      * Get the IP address of the socket server
      * @return IP address of the socket server
      */
-    private String getIpAddress() {
+    public String getIpAddress() {
         return "127.0.0.1";
     }
 

@@ -32,7 +32,7 @@ public class MessageInController {
                 MessageContentValidator.setImage(toTest, 340, 340, 80, 10, 360, 370, label_content,
                         label_date, anchorPane_message);
             } else {
-                label_content.setText(message.getContent() + " : Unsupported URL embedding");
+                label_content.setText(message.getContent());
             }
         } else {
             label_content.setText(message.getContent());

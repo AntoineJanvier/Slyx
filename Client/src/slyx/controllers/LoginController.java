@@ -3,13 +3,18 @@ package slyx.controllers;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -17,7 +22,10 @@ import slyx.Version;
 import slyx.communication.SlyxSocket;
 import slyx.validators.LoginValidator;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 
 import static slyx.exceptions.SlyxError.ERR_CONNECTION;
@@ -103,6 +111,7 @@ public class LoginController {
                         Stage next_stage = new Stage();
                         next_stage.setTitle("Slyx");
                         next_stage.setScene(new Scene(parent));
+                        next_stage.setResizable(false);
                         timelineRefreshVersion.stop();
                         next_stage.show();
                     } catch (IOException e) {
@@ -151,6 +160,21 @@ public class LoginController {
         try {
             SlyxSocket slyxSocket = SlyxSocket.getInstance();
             label_get_update.setText("Checking updates...");
+
+            hyperlink_sign_up.setOnMouseClicked(event -> {
+                try {
+                    new ProcessBuilder("x-www-browser", slyxSocket.getIpAddress() + ":3000/sign").start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            hyperlink_get_update.setOnMouseClicked(event -> {
+                try {
+                    new ProcessBuilder("x-www-browser", slyxSocket.getIpAddress() + ":3000").start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
             slyxSocket.sendAskVersion();
 

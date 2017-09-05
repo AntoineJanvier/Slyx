@@ -19,7 +19,6 @@
     "navigator": "^1.0.1",
     "password-hash": "^1.2.2",
     "path": "^0.12.7",
-    "peerjs": "^0.3.14",
     "pug": "~2.0.0-beta10",
     "querystring": "^0.2.0",
     "rtc": "^3.4.0",

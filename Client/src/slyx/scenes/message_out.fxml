@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,5 +22,6 @@
         </Label>
       <ImageView fx:id="imageView_from" fitHeight="35.0" fitWidth="35.0" layoutX="524.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="6.0" />
       <Button fx:id="button_deleteMessage" layoutX="146.0" layoutY="6.0" mnemonicParsing="false" />
+      <Hyperlink fx:id="hyperlink_url" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="3.0" layoutY="11.0" prefHeight="24.0" prefWidth="531.0" textAlignment="RIGHT" />
     </children>
 </AnchorPane>

@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    // TODO : Redirect all errors to a log file with the ErrorExit class
+    // TODO : Redirect all errors to a log file with the ErrorExit class95@
 
     @Override
     public void start(Stage primaryStage) {
