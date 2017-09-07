@@ -5,12 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import slyx.utils.SlyxAnnotation;
+import slyx.utils.SlyxAnnotationProcessor;
 
 import java.io.IOException;
 
-public class Main extends Application {
+import static slyx.utils.SlyxAnnotation.Type.EXCEPTION;
 
-    // TODO : Redirect all errors to a log file with the ErrorExit class95@
+@SlyxAnnotation(todo = "Redirect all errors to a log file with the ErrorExit class", type = EXCEPTION)
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
@@ -29,6 +32,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+        SlyxAnnotationProcessor slyxAnnotationProcessor = new SlyxAnnotationProcessor();
         launch(args);
     }
 }

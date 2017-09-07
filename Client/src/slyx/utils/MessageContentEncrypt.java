@@ -1,9 +1,13 @@
 package slyx.utils;
 
+import static slyx.utils.SlyxAnnotation.Type.CLASS;
+
 /**
  * Created by Antoine Janvier
  * on 05/09/17.
  */
+
+@SlyxAnnotation(todo = "Add a strong encryption", type = CLASS)
 public class MessageContentEncrypt {
     public static String encrypt(String content) {
         if (content == null) return null;

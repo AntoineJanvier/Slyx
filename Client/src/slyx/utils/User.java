@@ -4,10 +4,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import static slyx.utils.SlyxAnnotation.Type.CLASS;
+
 /**
  * Created by Antoine Janvier
  * on 31/07/17.
  */
+
+@SlyxAnnotation(todo = "Change comportment of messages, how they are processed", type = CLASS)
 public class User {
     // To all contacts
     private int id;

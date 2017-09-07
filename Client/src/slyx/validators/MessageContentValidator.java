@@ -5,10 +5,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
+import slyx.utils.SlyxAnnotation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static slyx.utils.SlyxAnnotation.Type.DESIGN;
+
+@SlyxAnnotation(todo = "Integrate new extensions to make web integrations", type = DESIGN)
 public class MessageContentValidator {
     public static boolean isWebContent(String imageUrl) {
         if (!isURL(imageUrl)) return false;

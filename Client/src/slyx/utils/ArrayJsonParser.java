@@ -10,10 +10,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static slyx.utils.SlyxAnnotation.Type.CLASS;
+
 /**
  * Created by Antoine Janvier
  * on 08/08/17.
  */
+
+@SlyxAnnotation(todo = "Upgrade processes", type = CLASS)
 public class ArrayJsonParser {
     private String base;
     private int nbKeys;

@@ -7,10 +7,14 @@ import slyx.communication.SlyxSocket;
 import java.io.File;
 import java.io.IOException;
 
+import static slyx.utils.SlyxAnnotation.Type.SOUND;
+
 /**
  * Created by Antoine Janvier
  * on 19/08/17.
  */
+
+@SlyxAnnotation(todo = "Add new sounds", type = SOUND)
 public class SlyxSound {
     private static MediaPlayer login = new MediaPlayer(new Media(new File("src/slyx/utils/sounds/login1.mp3").toURI().toString()));
     private static MediaPlayer notification = new MediaPlayer(new Media(new File("src/slyx/utils/sounds/pop.mp3").toURI().toString()));

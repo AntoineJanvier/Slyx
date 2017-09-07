@@ -4,10 +4,14 @@ import slyx.jsonsimple.JSONObject;
 
 import java.util.Date;
 
+import static slyx.utils.SlyxAnnotation.Type.COMMUNICATION;
+
 /**
  * Created by Antoine Janvier
  * on 01/08/17.
  */
+
+@SlyxAnnotation(todo = "Store data for web integration", type = COMMUNICATION)
 public class Message {
     private int id;
     private User from;

@@ -16,11 +16,14 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static slyx.communication.SocketSender.*;
+import static slyx.utils.SlyxAnnotation.Type.DEFAULT;
 
 /**
  * Created by Antoine Janvier
  * on 31/07/17.
  */
+
+@SlyxAnnotation(todo = "Change way to store informations and counters for refresh views")
 public class SlyxSocket extends Thread {
     private Socket socket;
     private BufferedReader bufferedReader;

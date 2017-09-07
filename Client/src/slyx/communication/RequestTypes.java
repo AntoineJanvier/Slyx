@@ -5,9 +5,15 @@ package slyx.communication;
  * on 04/08/17.
  */
 
+import slyx.utils.SlyxAnnotation;
+
+import static slyx.utils.SlyxAnnotation.Type.COMMUNICATION;
+
 /**
  * This class serves as a formatter of request that will be transmitted in the socket link to the server
  */
+
+@SlyxAnnotation(todo = "Add more requests", type = COMMUNICATION)
 class RequestTypes {
     // Login
     final static String CONNECTION_REQUEST = "CONNECTION";

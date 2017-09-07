@@ -2,14 +2,19 @@ package slyx.communication;
 
 import slyx.jsonsimple.JSONObject;
 import slyx.utils.Message;
+import slyx.utils.SlyxAnnotation;
 import slyx.utils.User;
 
 import java.util.Date;
+
+import static slyx.utils.SlyxAnnotation.Type.COMMUNICATION;
 
 /**
  * Created by Antoine Janvier
  * on 16/08/17.
  */
+
+@SlyxAnnotation(todo = "Normify messages sent", type = COMMUNICATION)
 class SocketSender {
     static String SocketSender_sendGetContactsRequest(int userID) {
         JSONObject j = new JSONObject();

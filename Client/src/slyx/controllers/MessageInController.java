@@ -6,12 +6,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import slyx.utils.Message;
+import slyx.utils.SlyxAnnotation;
 import slyx.validators.MessageContentValidator;
+
+import static slyx.utils.SlyxAnnotation.Type.SOUND;
 
 /**
  * Created by Antoine Janvier
  * on 19/08/17.
  */
+@SlyxAnnotation(todo = "Change sound on message incoming", type = SOUND)
 public class MessageInController {
     @FXML
     AnchorPane anchorPane_message;
