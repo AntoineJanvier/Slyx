@@ -29,8 +29,6 @@ public class MessageOutController {
     @FXML
     ImageView imageView_from;
     @FXML
-    Button button_deleteMessage;
-    @FXML
     Hyperlink hyperlink_url;
 
     public void setMessage(Message message, Image image, String toTest) {
@@ -43,17 +41,18 @@ public class MessageOutController {
                 MessageContentValidator.setImage(toTest, 340, 340, 270, 10, 360, 370, label_content,
                         label_date, anchorPane_message);
             } else {
-                hyperlink_url.setVisible(true);
-                hyperlink_url.setLayoutX(100);
-                hyperlink_url.setText(message.getContent());
-                hyperlink_url.setOnMouseClicked(event -> {
-                    try {
-                        new ProcessBuilder("x-www-browser", message.getContent()).start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                label_content.setVisible(false);
+                label_content.setText(message.getContent());
+//                hyperlink_url.setVisible(true);
+//                hyperlink_url.setLayoutX(100);
+//                hyperlink_url.setText(message.getContent());
+//                hyperlink_url.setOnMouseClicked(event -> {
+//                    try {
+//                        new ProcessBuilder("x-www-browser", message.getContent()).start();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//                label_content.setVisible(false);
             }
         } else {
             label_content.setText(message.getContent());
@@ -61,9 +60,9 @@ public class MessageOutController {
         label_date.setText(message.getSent().toString());
         imageView_from.setImage(image);
 
-        button_deleteMessage.setOnMouseClicked(event -> {
-            // TODO : Delete our own messages
-        });
+//        button_deleteMessage.setOnMouseClicked(event -> {
+//            // TODO : Delete our own messages
+//        });
     }
 
     public void initialize() {
@@ -75,8 +74,6 @@ public class MessageOutController {
         //imageView.setFitHeight(20);
         //imageView.setFitWidth(20);
         //button_deleteMessage.setGraphic(imageView);
-        button_deleteMessage.setVisible(false);
         hyperlink_url.setVisible(false);
-        anchorPane_message.notify();
     }
 }

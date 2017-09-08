@@ -424,7 +424,7 @@ public class SlyxSocket extends Thread {
      * @param message Message content
      */
     private void writeInSocket(String message) {
-         System.out.println("\nSending : " + message);
+        // System.out.println("\nSending : " + message);
         printWriter.println(message);
     }
 
@@ -436,10 +436,10 @@ public class SlyxSocket extends Thread {
     private String listenInSocket() throws IOException {
         try {
             String s = bufferedReader.readLine();
-             System.out.println("Answer : " + s);
+            System.out.println("Answer : " + s);
             return s;
         } catch (IOException e) {
-            System.out.println(new SocketClosedException().getMessage());
+            // System.out.println(new SocketClosedException().getMessage());
             this.socket = new Socket(getIpAddress(), getPort());
         }
         return null;
@@ -477,7 +477,7 @@ public class SlyxSocket extends Thread {
      * @return IP address of the socket server
      */
     public String getIpAddress() {
-        return "127.0.0.1";
+        return "10.33.2.20";
     }
 
     /**
@@ -485,7 +485,7 @@ public class SlyxSocket extends Thread {
      * @return The port of the socket server
      */
     private int getPort() {
-        return 3895;
+        return 8092;
     }
 
     /**

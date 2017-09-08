@@ -2,29 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dd4d519e-039a-4ace-adc5-4c767e1ab79c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/META-INF/MANIFEST.MF" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/MANIFEST.MF" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/SlyxAnnotationProcessor.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Client/.idea/artifacts/JavaFXApp.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/Me.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/Gender.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/SlyxAnnotation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/.idea/compiler.xml" afterPath="$PROJECT_DIR$/../Client/.idea/compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/Main.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/Version.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/Version.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/RequestTypes.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/communication/RequestTypes.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/communication/SlyxSocket.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/communication/SocketSender.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/communication/SocketSender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/MessageInController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/MessageInController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/controllers/MessageOutController.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/controllers/MessageOutController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/scenes/message_out.fxml" afterPath="$PROJECT_DIR$/../Client/src/slyx/scenes/message_out.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/ArrayJsonParser.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/ArrayJsonParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/ErrorExit.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/ErrorExit.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/Message.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/Message.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/MessageContentEncrypt.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/MessageContentEncrypt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/SlyxSound.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/SlyxSound.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/User.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/User.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/validators/MessageContentValidator.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/validators/MessageContentValidator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Server.iml" afterPath="$PROJECT_DIR$/.idea/Server.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/src/slyx/utils/SlyxAnnotation.java" afterPath="$PROJECT_DIR$/../Client/src/slyx/utils/SlyxAnnotation.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/www" afterPath="$PROJECT_DIR$/bin/www" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -55,7 +42,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="stats.pug" pinned="false" current-in-tab="true">
+      <file leaf-file-name="stats.pug" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/stats.pug">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="198">
@@ -65,14 +52,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="www" pinned="false" current-in-tab="false">
+      <file leaf-file-name="www" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bin/www">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="13" />
+            <state relative-caret-position="80">
+              <caret line="183" column="33" lean-forward="false" selection-start-line="183" selection-start-column="33" selection-end-line="183" selection-end-column="33" />
               <folding>
-                <marker date="1504613419824" expanded="true" signature="983:1136" ph="{...}" />
-                <marker date="1504613419824" expanded="true" signature="8223:8263" ph="{...}" />
+                <marker date="1504864736359" expanded="true" signature="983:1136" ph="{...}" />
+                <marker date="1504864736359" expanded="true" signature="8224:8264" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -222,12 +209,12 @@
         <option value="$PROJECT_DIR$/tools/socketManagement/auth/disconnectUser.js" />
         <option value="$PROJECT_DIR$/tools/socketManagement/auth/connect.js" />
         <option value="$PROJECT_DIR$/public/javascripts/peerjs.js" />
-        <option value="$PROJECT_DIR$/bin/www" />
         <option value="$PROJECT_DIR$/views/room.pug" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/public/html/index.html" />
         <option value="$PROJECT_DIR$/public/javascripts/d3js.js" />
         <option value="$PROJECT_DIR$/views/stats.pug" />
+        <option value="$PROJECT_DIR$/bin/www" />
       </list>
     </option>
   </component>
@@ -247,7 +234,7 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="y" value="27" />
     <option name="width" value="2028" />
     <option name="height" value="1125" />
@@ -268,6 +255,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -342,8 +331,6 @@
       </pane>
       <pane id="PackagesPane" />
       <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -513,6 +500,7 @@
       <workItem from="1504596030838" duration="564000" />
       <workItem from="1504596955759" duration="10524000" />
       <workItem from="1504797199125" duration="670000" />
+      <workItem from="1504863081894" duration="1009000" />
     </task>
     <task id="LOCAL-00001" summary="First refacto, clean code">
       <created>1501254996808</created>
@@ -581,10 +569,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="155176000" />
+    <option name="totallyTimeSpent" value="156185000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="2028" height="1125" extended-state="0" />
+    <frame x="0" y="27" width="2028" height="1125" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -598,7 +587,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17272727" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17474748" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -917,17 +906,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/www">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="13" />
-          <folding>
-            <marker date="1504613419824" expanded="true" signature="983:1136" ph="{...}" />
-            <marker date="1504613419824" expanded="true" signature="8223:8263" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="666">
@@ -965,6 +943,17 @@
         <state relative-caret-position="198">
           <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/www">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="183" column="33" lean-forward="false" selection-start-line="183" selection-start-column="33" selection-end-line="183" selection-end-column="33" />
+          <folding>
+            <marker date="1504864736359" expanded="true" signature="983:1136" ph="{...}" />
+            <marker date="1504864736359" expanded="true" signature="8224:8264" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -103,7 +103,7 @@ public class ArrayJsonParser {
                     nbKeys = key;
                 }
             } else {
-                System.out.println("Empty JSON detected");
+                // System.out.println("Empty JSON detected");
             }
         }
     }

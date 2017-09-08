@@ -32,7 +32,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        SlyxAnnotationProcessor slyxAnnotationProcessor = new SlyxAnnotationProcessor();
         launch(args);
     }
 }

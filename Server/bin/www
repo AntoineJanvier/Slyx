@@ -24,7 +24,7 @@ const Contact = models.Contact;
  */
 let port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-const socketPort = 3895;
+const socketPort = 8092;
 
 app.set('navigator', navigator);
 
@@ -181,7 +181,7 @@ nodenet.createServer(function (socket) {
         console.log('SOCKET_ERROR');
         console.log(err);
     });
-}).listen(socketPort, '127.0.0.1');
+}).listen(socketPort, '10.33.2.20');
 
 server.on('listening', onListening);
 

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 
 @Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 public @interface SlyxAnnotation {
     String todo() default "";
     public enum Type {DEFAULT, COMMUNICATION, CSS, DESIGN, SCENE, EXCEPTION, SOUND, VALIDATOR, CLASS};
